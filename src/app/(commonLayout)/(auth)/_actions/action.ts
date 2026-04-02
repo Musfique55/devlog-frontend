@@ -1,8 +1,9 @@
 "use server";
-import { cookieUtils } from "@/lib/cookieUtils";
-import { envVars } from "../../../../../env";
+
+import { envVars } from "../../../../env";
 import { authValidator } from "@/zod/authValidator";
 import { redirect } from "next/navigation";
+import { setTokenInCookie } from "@/lib/tokenUtils";
 
 export const createAccount = async (payload: {
   name: string;
@@ -37,9 +38,9 @@ export const createAccount = async (payload: {
       };
     }
 
-    await cookieUtils.setCookie("better-auth.session_token", result.data.token,24 * 60 * 60); //1 day
-    await cookieUtils.setCookie("accessToken", result.data.accessToken);
-    await cookieUtils.setCookie("refreshToken", result.data.refreshToken);
+    await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60); //1 day
+    await setTokenInCookie("accessToken", result.data.accessToken);
+    await setTokenInCookie("refreshToken", result.data.refreshToken);
 
     return {
       success: true,
@@ -83,9 +84,9 @@ export const login = async (payload: { email: string; password: string }) => {
       };
     }
 
-    await cookieUtils.setCookie("better-auth.session_token", result.data.token,24 * 60 * 60); //1 day
-    await cookieUtils.setCookie("accessToken", result.data.accessToken);
-    await cookieUtils.setCookie("refreshToken", result.data.refreshToken);
+    await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60); //1 day
+    await setTokenInCookie("accessToken", result.data.accessToken);
+    await setTokenInCookie("refreshToken", result.data.refreshToken);
 
     redirect("/");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -9,7 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@material/web": "^2.4.1",
     "@t3-oss/env-nextjs": "^0.13.11",
     "@tanstack/react-form": "^1.28.6",
     "@tanstack/react-form-nextjs": "^1.28.6",

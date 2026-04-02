@@ -1,3 +1,4 @@
+"use server"
 import { cookies } from "next/headers"
 
 const setCookie  = async (key: string, value: string,maxAgeInSeconds ?: number ) => {
@@ -15,7 +16,7 @@ const setCookie  = async (key: string, value: string,maxAgeInSeconds ?: number )
 const getCookie = async (key: string) => {
     const cookieStore = await cookies();
 
-    return cookieStore.get(key);
+    return cookieStore.get(key)?.value;
 }
 
 const deleteCookie = async (key: string) => {
