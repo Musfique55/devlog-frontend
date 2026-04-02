@@ -1,24 +1,21 @@
-interface envVars  {
-    NEXT_PUBLIC_API_URL: string;
-    NEXT_PUBLIC_AUTH_URL: string;
-    NEXT_PUBLIC_BETTER_AUTH_SECRET: string;
-}
+import { createEnv } from "@t3-oss/env-nextjs";
+import z from "zod";
 
-const envVars = () => {
-    const envs = [
-        "NEXT_PUBLIC_API_URL",
-        "NEXT_PUBLIC_AUTH_URL",
-        "NEXT_PUBLIC_BETTER_AUTH_SECRET",
-    ];
-    envs.forEach(env => {
-        if (!process.env[env]) {
-            throw new Error(`Missing environment variable: ${env}`);
-        }
-    });
-
-    return {
-        NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL as string,
-        NEXT_PUBLIC_AUTH_URL: process.env.NEXT_PUBLIC_AUTH_URL as string,
-        NEXT_PUBLIC_BETTER_AUTH_SECRET: process.env.NEXT_PUBLIC_BETTER_AUTH_SECRET as string,
-    };
-}
+export const envVars = createEnv({
+  server: {
+    API_URL: z.url(),
+    AUTH_URL: z.url(),
+    BACKEND_URL: z.url(),
+    FRONTEND_URL: z.url(),
+    BETTER_AUTH_SECRET: z.string(),
+    JWT_SECRET_KEY :  z.string(),
+  },
+  runtimeEnv: {
+    API_URL: process.env.NEXT_PUBLIC_API_URL,
+    AUTH_URL: process.env.NEXT_PUBLIC_AUTH_URL,
+    BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
+    FRONTEND_URL: process.env.NEXT_PUBLIC_FRONTEND_URL,
+    BETTER_AUTH_SECRET: process.env.NEXT_PUBLIC_BETTER_AUTH_SECRET,
+    JWT_SECRET_KEY : process.env.NEXT_PUBLIC_JWT_SECRET_KEY,
+  },
+});
