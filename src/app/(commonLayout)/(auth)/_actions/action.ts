@@ -38,9 +38,9 @@ export const createAccount = async (payload: {
       };
     }
 
-    await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60); //1 day
     await setTokenInCookie("accessToken", result.data.accessToken);
     await setTokenInCookie("refreshToken", result.data.refreshToken);
+    await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60); //1 day
 
     return {
       success: true,
@@ -75,6 +75,7 @@ export const login = async (payload: { email: string; password: string }) => {
       body: JSON.stringify(payload),
     });
 
+
     const result = await res.json();
 
     if (!result.success) {
@@ -84,9 +85,10 @@ export const login = async (payload: { email: string; password: string }) => {
       };
     }
 
-    await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60); //1 day
+
     await setTokenInCookie("accessToken", result.data.accessToken);
     await setTokenInCookie("refreshToken", result.data.refreshToken);
+    await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60); //1 day
 
     redirect("/");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

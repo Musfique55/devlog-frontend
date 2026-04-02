@@ -2,7 +2,7 @@
 
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../env";
-import { cookieUtils } from "./cookieUtils";
+import { setCookie } from "./cookieUtils";
 
 
 const getRemainingSeconds = (token: string) => {
@@ -13,21 +13,22 @@ const getRemainingSeconds = (token: string) => {
       return 0;
     }
 
-    const remainingSeconds = payload.exp! - Math.floor(Date.now() / 1000);
+    const remainingSeconds = payload.exp as number - Math.floor(Date.now() / 1000);
 
     return remainingSeconds > 0 ? remainingSeconds : 0;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error : any) {
-    
+    console.log(error)
     throw new Error(error.message);
 
   } 
 }
 
 export const setTokenInCookie = async (name : string, token: string,fallbackMaxAge = 24 * 60 * 60) => {
-  const remainingSeconds = getRemainingSeconds(token);
+  console.log(name,token);
+  const maxAgeInSeconds = getRemainingSeconds(token);
 
-  await cookieUtils.setCookie(name, token, remainingSeconds || fallbackMaxAge);
+  await setCookie(name, token, maxAgeInSeconds || fallbackMaxAge);
 
 }
 

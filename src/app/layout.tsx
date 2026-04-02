@@ -29,7 +29,9 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${openSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-black text-gray-200">
+      <body 
+      suppressHydrationWarning={true}
+      className="min-h-full flex flex-col bg-black text-gray-200">
         <Providers>
           <Toaster richColors />
           {children}
