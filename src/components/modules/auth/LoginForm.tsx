@@ -98,7 +98,7 @@ export function LoginForm() {
             {/* Password */}
             <form.Field
               name="password"
-              validators={{ onChange: authValidator.register.shape.password }}
+              // validators={{ onChange: authValidator.login.shape }}
             >
               {(field) => (
                 <AppFields

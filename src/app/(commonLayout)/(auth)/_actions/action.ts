@@ -90,7 +90,10 @@ export const login = async (payload: { email: string; password: string }) => {
     await setTokenInCookie("refreshToken", result.data.refreshToken);
     await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60); //1 day
 
-    redirect("/");
+    if(result.data.user.role === "SUPER_ADMIN"){
+     return redirect("/admin/dashboard");
+    }
+    redirect("/dashboard");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error : any) {
     if(error && typeof error === "object" && "digest" in error && typeof error.digest === "string" && error.digest.startsWith("NEXT_REDIRECT")){
@@ -102,3 +105,7 @@ export const login = async (payload: { email: string; password: string }) => {
     };
   }
 };
+
+
+
+
