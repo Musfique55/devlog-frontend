@@ -1,3 +1,4 @@
+"use server"
 import { envVars } from "@/env";
 import axios from "axios";
 import { cookies, headers } from "next/headers";
@@ -61,6 +62,7 @@ const httpGet = async (endpoint: string, options?: ApiRequestOptions) => {
     const response = await instance.get(endpoint, {
       params: options?.params,
       headers: options?.headers,
+      withCredentials: true
     });
 
     return response.data;

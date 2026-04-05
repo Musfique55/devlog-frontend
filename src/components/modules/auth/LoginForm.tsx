@@ -44,17 +44,7 @@ export function LoginForm() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden  selection:bg-primary-container/30">
-      <div className="flex items-center justify-center gap-2 mb-4">
-        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-          <div className="grid grid-cols-2 gap-1">
-            <div className="w-2 h-2 bg-blue-600 rounded-sm"></div>
-            <div className="w-2 h-2 bg-background rounded-sm"></div>
-            <div className="w-2 h-2 bg-background rounded-sm"></div>
-            <div className="w-2 h-2 bg-blue-600 rounded-sm"></div>
-          </div>
-        </div>
-        <h1 className="text-3xl font-bold text-gray-200">DevLog</h1>
-      </div>
+      
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-sky-600/20 rounded-full blur-[120px]" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-sky-700/20 rounded-full blur-[100px]" />
 
