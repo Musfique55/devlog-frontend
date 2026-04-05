@@ -59,7 +59,6 @@ export async function proxy(request: NextRequest) {
   );
 
   if (!verifiedToken.success) {
-    console.log("not succeed vftoken")
     request.cookies.delete("accessToken");
     request.cookies.delete("refreshToken");
     request.cookies.delete("better-auth.session_token");
@@ -68,7 +67,6 @@ export async function proxy(request: NextRequest) {
 
   const user = jwtUtils.decodedToken(accessToken);
 
-
   //   proactively refresh token if refresh_token is expired or about to expire
   if (
     verifiedToken.success &&
@@ -76,8 +74,6 @@ export async function proxy(request: NextRequest) {
     (await isTokenExpiringSoon(refreshToken))
   ) {
     const requestHeaders = new Headers(request.headers);
-
-    console.log(requestHeaders);
 
     const response = NextResponse.next({
         request : {
