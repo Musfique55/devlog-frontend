@@ -3,8 +3,7 @@ import { Inter, Open_Sans } from "next/font/google";
 import "../styles/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "@/providers/QueryProvider";
-import { Navigation } from "@/components/modules/navbar/navbar";
-import { Footer } from "@/components/ui/footer";
+
 
 const inter = Inter({
   variable: "--font-inter",
@@ -38,10 +37,8 @@ export default  function RootLayout({
         className="min-h-full flex flex-col bg-background text-foreground"
       >
         <Providers>
-          <Navigation />
           <Toaster richColors />
-          <div className="">{children}</div>
-          <Footer />
+          {children}
         </Providers>
       </body>
     </html>

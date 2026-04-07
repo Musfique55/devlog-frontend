@@ -1,11 +1,12 @@
 
+import DashboardWrapper from '@/components/modules/(user)/dashboard/dashboard-wrapper';
 
-const DashboardPage = () => {
-    return (
-        <div>
-            dashboard route
-        </div>
-    );
-};
 
-export default DashboardPage;
+
+
+export default async function  DashboardPage() {
+    
+  return (
+    <DashboardWrapper />
+  );
+}
