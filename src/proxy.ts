@@ -10,6 +10,8 @@ import {
 import { getNewRefreshToken } from "./services/auth.services";
 import { isTokenExpiringSoon } from "./lib/tokenUtils";
 
+type UserRole = "SUPER_ADMIN" | "USER";
+
 async function refreshTokenMiddleware(refreshToken: string): Promise<boolean> {
   try {
     const refresh = await getNewRefreshToken(refreshToken);
@@ -25,125 +27,124 @@ async function refreshTokenMiddleware(refreshToken: string): Promise<boolean> {
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const routesOwner = getRoutesOwner(pathname);
-  const refreshToken = request.cookies.get("refreshToken")?.value;
   const accessToken = request.cookies.get("accessToken")?.value;
+  const refreshToken = request.cookies.get("refreshToken")?.value;
+  const isValidToken = accessToken
+    ? jwtUtils.verifyToken(accessToken, envVars.JWT_SECRET_KEY).success
+    : false;
+  const decodedToken = accessToken ? jwtUtils.decodedToken(accessToken) : null;
+  let user = null;
+  if (decodedToken) {
+    user = decodedToken;
+  }
   const isAuth = isAuthRoute(pathname);
+  const routeOwner = getRoutesOwner(pathname);
 
 
-  // public route
-  if (routesOwner === null && !isAuth ) {
-    return NextResponse.next();
+  // proactively refresh token if refresh token exists and access token expired or about to expire
+  const refreshedToken = request.headers.get("x-token-refreshed") === "1";
+  if (
+    !refreshedToken &&
+    isValidToken &&
+    refreshToken &&
+    (await isTokenExpiringSoon(refreshToken))
+  ) {
+    const requestHeaders = request.headers;
+    const response = NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+
+    try {
+      const refreshed = await refreshTokenMiddleware(refreshToken);
+      if (refreshed) {
+        requestHeaders.set("x-token-refreshed", "1");
+      }
+
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+        headers: response.headers,
+      });
+    } catch (error) {
+      console.log("error in refreshing token", error);
+    }
+
+    return response;
   }
 
-  // case -1 authenticated user trying to access auth routes -> not allowed
+  // authenticated user trying to access auth routes
 
-  if(isAuth){
-    if(accessToken){
-      const user = jwtUtils.decodedToken(accessToken);
-      return NextResponse.redirect(new URL(getDefaultDashboardRoute(user.role), request.url));
-    }
+
+  if (isAuth && isValidToken) {
+    return NextResponse.redirect(
+      new URL(getDefaultDashboardRoute(user!.role as UserRole), request.url),
+    );
+  }
+
+  // unauthenticated user
+  if (isAuth && !isValidToken) {
     return NextResponse.next();
   }
 
   // protected routes
-  if (!accessToken) {
+  if (!isValidToken) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  const verifiedToken = jwtUtils.verifyToken(
-    accessToken,
-    envVars.JWT_SECRET_KEY,
-  );
-
-  if (!verifiedToken.success) {
-    request.cookies.delete("accessToken");
-    request.cookies.delete("refreshToken");
-    request.cookies.delete("better-auth.session_token");
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  const user = jwtUtils.decodedToken(accessToken);
-
-  //   proactively refresh token if refresh_token is expired or about to expire
-  if (
-    verifiedToken.success &&
-    refreshToken &&
-    (await isTokenExpiringSoon(refreshToken))
-  ) {
-    const requestHeaders = new Headers(request.headers);
-
-    const response = NextResponse.next({
-        request : {
-            headers : requestHeaders
-        }
-    })
-
-    try {
-
-        const refreshed = await refreshTokenMiddleware(refreshToken);
-
-        if(refreshed){
-          console.log("refreshing");
-            requestHeaders.set("x-token-refreshed","1");
-        }
-        return NextResponse.next({
-            request : {
-                headers : requestHeaders
-            },
-            headers : response.headers
-        })
-        
-    } catch (error) {
-        console.log("Error refreshing token:", error);
+  // for users with not verified email
+  if (pathname.startsWith("/verify-email")) {
+    if (isValidToken) {
+      if (!user?.emailVerified) {
+        return NextResponse.next();
+      } else {
+        return NextResponse.redirect(
+          new URL(
+            getDefaultDashboardRoute(user?.role as UserRole),
+            request.url,
+          ),
+        );
+      }
+    } else {
+      return NextResponse.redirect(new URL("/login", request.url));
     }
-
-    console.log(response);
-    return response;
   }
 
+  // public routes
+  if (routeOwner === null) {
+    return NextResponse.next();
+  }
 
-  // case - 2 if authenticated user needs password reset
-  // if (pathname === "/reset-password") {
-  //   if (user.email) {
-  //     return NextResponse.redirect(
-  //       new URL(`/forgot-password?email=${user.email}`, request.url),
-  //     );
-  //   }
-  // }
+  // free user catch
 
-  // case - 3 free plan user trying to access pro content
-  if (proUserRoutes.includes(pathname) && user.plan === "FREE") {
+  if (user?.plan === "FREE" && proUserRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL("/upgrade-plan", request.url));
   }
 
-
-  // case - 4 super-admin route access attempt
-  if (routesOwner === "SUPER_ADMIN" && user.role !== "SUPER_ADMIN") {
+  // admin route
+  if (routeOwner === "SUPER_ADMIN" && user?.role !== "SUPER_ADMIN") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  //   case - 5 solo-user-route
-  if (routesOwner === "USER" && user.role === "SUPER_ADMIN") {
+  // prevent admin to access users route
+  if (routeOwner === "USER" && user?.role === "SUPER_ADMIN") {
     return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 
-  //   case - 6 workspace route
-  if (routesOwner === "WORKSPACE" && user.role === "SUPER_ADMIN") {
+  if (routeOwner === "WORKSPACE" && user?.role === "SUPER_ADMIN") {
     return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 
-  //   case - 7 common routes
-  if (routesOwner === "COMMON") {
+  if (routeOwner === "COMMON") {
     return NextResponse.next();
   }
-  
 
   return NextResponse.next();
 }
-
 
 export const config = {
   matcher: [
@@ -154,6 +155,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };

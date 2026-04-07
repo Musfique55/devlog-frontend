@@ -10,10 +10,12 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const router = useRouter();
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: createAccount,
@@ -36,6 +38,7 @@ export function RegisterForm() {
         toast.success("Account Created Successfully");
         form.reset();
         setServerError(null);
+        router.push(`/verify-email-notice?email=${value.email}`)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         setServerError(error.message!);

@@ -1,8 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { getUserInfo } from "@/services/auth.services";
-import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -10,15 +9,7 @@ import { useState } from "react";
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { data: user } = useQuery({
-    queryKey: ["user"],
-    queryFn: async () => {
-      const res = await getUserInfo();
-      return res.data;
-    },
-    enabled: true,
-  });
-
+  const {data : user} = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-transparent border-b border-border">
