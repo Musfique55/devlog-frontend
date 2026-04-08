@@ -4,7 +4,8 @@ import { StatCard } from "./stat-card";
 import { ArrowUpRight } from "lucide-react";
 import { getMyInfo } from "@/services/dashboard.services";
 import { StandupForm } from "./standup-form";
-import { ContributionChart } from "./contributation-chart";
+import { ContributionChart } from "./contribution-chart"
+import { ActivityItem } from "./activity-item";
 
 const DashboardWrapper = () => {
     const {data : myDashboardInfo} = useQuery<MyDashboardInfo>({
@@ -76,16 +77,14 @@ const DashboardWrapper = () => {
 
             {/* Activity Items */}
             <div className="space-y-4">
-              {/* {activityData.map((activity, index) => (
+              {myDashboardInfo && myDashboardInfo?.recentLogs.length && myDashboardInfo?.recentLogs
+             .map((activity, index) => (
                 <ActivityItem
                   key={index}
-                  title={activity.title}
-                  description={activity.description}
-                  timestamp={activity.timestamp}
-                  tags={activity.tags}
-                  borderColor={activity.borderColor}
+                  standupLog={activity}
+                  borderColor={index === 0 ? "border-l-indigo-500" : ""}
                 />
-              ))} */}
+              ))}
             </div>
           </div>
         </div>

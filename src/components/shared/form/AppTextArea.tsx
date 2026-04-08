@@ -20,6 +20,9 @@ const AppTextArea = ({
   className,
   rows = 6,
 }: AppTextAreaProps) => {
+
+  const firstError = field.state.meta.errors.length > 0 ? field.state.meta.errors[0]?.message : null;
+  const hasError = firstError !== null;
   return (
     <div className="flex flex-col gap-2">
       <Label htmlFor={field.name} className="text-sm font-medium text-gray-300">
@@ -41,6 +44,7 @@ const AppTextArea = ({
           )}
         />
       </div>
+      {hasError && <p id={`${field.name}-error`} role="alert" className="text-sm text-red-500">{firstError}</p>}
     </div>
   );
 };

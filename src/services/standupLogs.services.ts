@@ -1,5 +1,6 @@
 "use server";
 
+import { StandupData } from "@/components/modules/(user)/dashboard/standup-form";
 import { envVars } from "@/env";
 import { cookies } from "next/headers";
 
@@ -12,17 +13,12 @@ const getCookieHeader = async () => {
   return cookieHeader;
 };
 
-export const createLog = async (payload: Record<string, unknown>) => {
+export const createLog = async (payload: StandupData) => {
   const cookieHeader = await getCookieHeader();
 
-  let data;
-
-  Object.entries(payload).forEach(([key, value]) => {
-    if (value === "") {
-      delete payload[key];
-    }
-    data = payload;
-  });
+  const data = Object.fromEntries(
+    Object.entries(payload).filter(([_, value]) => value !== "")
+  ) as Partial<StandupData>
 
   try {
     const res = await fetch(`${envVars.API_URL}/logs`, {
