@@ -3,18 +3,21 @@
 import { Button } from '@/components/ui/button';
 import { LayoutDashboard, FileText, Users, Settings } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-interface SidebarProps {
-  activeItem?: string;
-}
 
-export function Sidebar({ activeItem = 'dashboard' }: SidebarProps) {
+export function Sidebar() {
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, href: '#' },
-    { id: 'logs', label: 'My Logs', icon: FileText, href: '#' },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
+    { id: 'logs', label: 'My Logs', icon: FileText, href: '/dashboard/my-logs' },
     { id: 'team', label: 'Team', icon: Users, href: '#' },
-    { id: 'settings', label: 'Settings', icon: Settings, href: '#' },
+    { id: 'settings', label: 'Settings', icon: Settings, href: '/dashboard/settings' },
   ];
+
+  const pathname = usePathname();
+
+  const activeItem = navItems.find((item) => item.href === pathname)?.id;
+
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-zinc-900/50 backdrop-blur-xl flex flex-col py-8 px-4 z-50 border-r border-zinc-800/20">

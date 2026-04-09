@@ -18,7 +18,7 @@ import { toast } from "sonner";
 export interface StandupData {
   today: string;
   tomorrow: string;
-  blocker?: string;
+  blocker: string | null;
   projectTag?: string;
   userId: string;
   workspaceId?: string;
