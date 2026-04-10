@@ -3,7 +3,6 @@
 import { LogPromise } from "@/components/modules/(user)/dashboard/my-logs/my-logs-wrapper";
 import { StandupData } from "@/components/modules/(user)/dashboard/standup-form";
 import { envVars } from "@/env";
-import { httpClient } from "@/lib/axios/httpClient";
 import { cookies } from "next/headers";
 
 const getCookieHeader = async () => {
@@ -73,8 +72,6 @@ export const getMyLogs = async (
   try {
     const url = new URL(`${envVars.API_URL}/logs`);
     url.search = new URLSearchParams(query).toString();
-
-    console.log(url);
 
     const res = await fetch(url, {
       method: "GET",
