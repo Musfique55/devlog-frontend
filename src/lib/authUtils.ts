@@ -30,7 +30,7 @@ const adminRoutes: RoutesConfig = {
 };
 
 const workSpaceRoutes: RoutesConfig = {
-  pattern: [/^\/workspace\/[^/]+/],
+  pattern: [/^\/workspace\/*/],
   exact: [],
 };
 

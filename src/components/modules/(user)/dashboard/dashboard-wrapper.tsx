@@ -6,6 +6,7 @@ import { getMyInfo } from "@/services/dashboard.services";
 import { StandupForm } from "./standup-form";
 import { ContributionChart } from "./contribution-chart"
 import { ActivityItem } from "./activity-item";
+import Link from "next/link";
 
 const DashboardWrapper = () => {
     const {data : myDashboardInfo} = useQuery<MyDashboardInfo>({
@@ -67,12 +68,12 @@ const DashboardWrapper = () => {
               <h2 className="text-xl font-bold text-zinc-100">
                 Recent Activity
               </h2>
-              <a
-                href="#"
+              <Link
+                href="/dashboard/my-logs"
                 className="text-xs font-semibold text-indigo-400 uppercase tracking-widest hover:text-indigo-300 transition-colors"
               >
                 View All Logs
-              </a>
+              </Link>
             </div>
 
             {/* Activity Items */}

@@ -14,7 +14,7 @@ const getCookieHeader = async () => {
   return cookieHeader;
 };
 
-export const createLog = async (payload: StandupData) => {
+export const createLog = async (payload: Partial<StandupData>) => {
   const cookieHeader = await getCookieHeader();
 
   const data = Object.fromEntries(

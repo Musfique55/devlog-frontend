@@ -1,30 +1,47 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { LayoutDashboard, FileText, Users, Settings } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-
+import { Button } from "@/components/ui/button";
+import { LayoutDashboard, FileText, Users, Settings } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function Sidebar() {
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
-    { id: 'logs', label: 'My Logs', icon: FileText, href: '/dashboard/my-logs' },
-    { id: 'team', label: 'Team', icon: Users, href: '#' },
-    { id: 'settings', label: 'Settings', icon: Settings, href: '/dashboard/settings' },
+    {
+      id: "dashboard",
+      label: "Dashboard",
+      icon: LayoutDashboard,
+      href: "/dashboard",
+    },
+    {
+      id: "logs",
+      label: "My Logs",
+      icon: FileText,
+      href: "/dashboard/my-logs",
+    },
+    { id: "team", label: "Team", icon: Users, href: "#" },
+    {
+      id: "settings",
+      label: "Settings",
+      icon: Settings,
+      href: "/dashboard/settings",
+    },
   ];
 
   const pathname = usePathname();
 
   const activeItem = navItems.find((item) => item.href === pathname)?.id;
 
-
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-zinc-900/50 backdrop-blur-xl flex flex-col py-8 px-4 z-50 border-r border-zinc-800/20">
       {/* Logo */}
       <div className="mb-10 px-4">
-        <h1 className="text-xl font-bold tracking-tighter text-indigo-400">DevLog</h1>
-        <p className="text-sm font-medium text-zinc-500 tracking-tight">Developer Workspace</p>
+        <h1 className="text-xl font-bold tracking-tighter text-indigo-400">
+          DevLog
+        </h1>
+        <p className="text-sm font-medium text-zinc-500 tracking-tight">
+          Developer Workspace
+        </p>
       </div>
 
       {/* Navigation */}
@@ -39,8 +56,8 @@ export function Sidebar() {
               href={item.href}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
                 isActive
-                  ? 'text-indigo-400 font-semibold bg-indigo-500/5 border-r-2 border-indigo-400'
-                  : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50'
+                  ? "text-indigo-400 font-semibold bg-indigo-500/5 border-r-2 border-indigo-400"
+                  : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50"
               }`}
             >
               <Icon className="w-5 h-5" />
@@ -52,9 +69,11 @@ export function Sidebar() {
 
       {/* Create Log Button */}
       <div className="mt-auto px-4">
-        <Button className="w-full bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-bold py-3 rounded-lg shadow-lg shadow-indigo-500/20">
-          Create Log
-        </Button>
+        <Link href={"/dashboard#create-log"}>
+          <Button className="w-full bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-bold py-3 rounded-lg shadow-lg shadow-indigo-500/20 cursor-pointer transition-colors">
+            Create Log
+          </Button>
+        </Link>
       </div>
     </aside>
   );

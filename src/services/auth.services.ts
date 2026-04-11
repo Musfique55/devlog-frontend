@@ -43,7 +43,6 @@ export const getNewRefreshToken = async (
     }
 
     const { accessToken, refreshToken: newRefreshToken, sessionToken } = result;
-    console.log(result);
 
     if (accessToken) {
       await setTokenInCookie("accessToken", accessToken);
@@ -106,6 +105,7 @@ export const getUserInfo = async () => {
     return {
       success: true,
       data: result.data,
+      message : result.message
     };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {

@@ -1,29 +1,28 @@
 import { getUserInfo } from "@/services/auth.services";
 import { useQuery } from "@tanstack/react-query";
 
-// {
-//     "id": "MwnbaYs5AUWWLwouBHyhpo5TyW1HPDk9",
-//     "name": "Musfique Shuvo",
-//     "email": "mdmusfiquepatwary@gmail.com",
-//     "emailVerified": true,
-//     "image": null,
-//     "role": "USER",
-//     "plan": "FREE",
-//     "lastLogDate": "2026-04-07T18:00:00.000Z",
-//     "currentStreak": 2,
-//     "longestStreak": 2,
-//     "isDeleted": false,
-//     "deletedAt": null,
-//     "isBlocked": false,
-//     "blockedReason": null,
-//     "blockedAt": null,
-//     "createdAt": "2026-04-07T11:53:23.837Z",
-//     "updatedAt": "2026-04-08T08:42:23.673Z",
-//     "workspaces": []
-// }
+
+export interface Workspace {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  isActive: boolean;
+  members: Member[];
+}
+
+export interface Member {
+  id: string;
+  userId: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+  joinedAt: string;
+  deletedAt: string | null;
+}
 
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
@@ -41,7 +40,7 @@ interface User {
   blockedAt: string | null;
   createdAt: string;
   updatedAt: string;
-  workspaces: [];
+  workspaces: Workspace[];
 }
 
 export const useAuth = () => {
@@ -52,7 +51,7 @@ export const useAuth = () => {
         const res = await getUserInfo();
         return res.data;
       } catch (error) {
-        console.log(error)
+        console.log(error);
         throw null;
       }
     },

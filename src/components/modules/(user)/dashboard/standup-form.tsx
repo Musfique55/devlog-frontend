@@ -52,8 +52,7 @@ export function StandupForm() {
       try {
         const result = await mutateAsync({
           ...value,
-          userId: user.id as string,
-          ...(user?.workspaceId && { workspaceId: user.workspaceId }),
+          userId: user?.id as string
         });
 
         if (result.success === false) {
@@ -75,10 +74,10 @@ export function StandupForm() {
     const currentTags = form.getFieldValue("projectTags") || [];
 
     if (trimmedTag && !currentTags.includes(trimmedTag)) {
-      if (user.plan === "FREE" && currentTags.length < 2) {
+      if (user?.plan === "FREE" && currentTags.length < 2) {
         form.setFieldValue("projectTags", [...currentTags, trimmedTag]);
         setTags("");
-      } else if (user.plan === "PRO" && currentTags.length < 5) {
+      } else if (user?.plan === "PRO" && currentTags.length < 5) {
         form.setFieldValue("projectTags", [...currentTags, trimmedTag]);
         setTags("");
       } else {
@@ -104,7 +103,7 @@ export function StandupForm() {
 
 
   return (
-    <section className="bg-zinc-900/60 p-8 rounded-xl border border-zinc-800/50 relative overflow-hidden">
+    <section id="create-log" tabIndex={0} className="bg-zinc-900/60 p-8 rounded-xl border border-zinc-800/50 relative overflow-hidden focus:bg-zinc-700/80  transition-colors">
       {/* Decorative blur */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 blur-3xl rounded-full"></div>
 
