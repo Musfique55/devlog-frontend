@@ -14,30 +14,16 @@ import { toast } from "sonner";
 export default function ProfileSection() {
   const { data: user } = useAuth();
   const imageRef = useRef<HTMLInputElement | null>(null);
-  const [profileData, setProfileData] = useState<{
-    name: string;
-    image: File | null;
-  }>({
-    name: user?.name as string,
-    image: null,
-  });
+  const [profileImage, setProfileImage] = useState<File | null>(null);
 
   const queryClient = useQueryClient();
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: async () => {
-      const formData = new FormData();
-      formData.append("file", profileData.image as Blob);
-      formData.append(
-        "data",
-        JSON.stringify({ name: profileData.name }) as string,
-      );
+    mutationFn: async (formData: FormData) => {
       const res = await handleProfileUpdate(formData);
       if (!res.success) {
         toast.error(res.message);
       }
-
-      console.log(res);
       toast.success(res.message);
       queryClient.invalidateQueries({
         queryKey: ["user"],
@@ -45,7 +31,16 @@ export default function ProfileSection() {
     },
   });
 
-  
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const name = (form.elements.namedItem("name") as HTMLInputElement).value;
+    
+    const formData = new FormData();
+    formData.append("file", profileImage as Blob);
+    formData.append("data", JSON.stringify({ name }) as string);
+    mutateAsync(formData);
+  };
 
   return (
     <section className="relative" id="profile">
@@ -57,17 +52,20 @@ export default function ProfileSection() {
             collaborators.
           </p>
         </div>
-        <form className="w-full md:w-2/3 bg-zinc-900/40 rounded-xl p-8 border border-zinc-800/50">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full md:w-2/3 bg-zinc-900/40 rounded-xl p-8 border border-zinc-800/50"
+        >
           {/* Avatar Section */}
           <div className="flex items-center gap-6 mb-8 pb-8 border-b border-zinc-800/30">
             <div className="relative group cursor-pointer">
-              {profileData.image ? (
+              {profileImage ? (
                 <Image
                   width={200}
                   height={200}
                   alt="Avatar"
                   className="w-20 h-20 rounded-xl object-cover hover:grayscale-0 transition-all duration-300"
-                  src={URL.createObjectURL(profileData.image)}
+                  src={URL.createObjectURL(profileImage)}
                 />
               ) : user?.image ? (
                 <Image
@@ -89,12 +87,7 @@ export default function ProfileSection() {
               >
                 <span className="text-white text-2xl">📷</span>
                 <input
-                  onChange={(e) =>
-                    setProfileData({
-                      ...profileData,
-                      image: e.target.files?.[0] as File,
-                    })
-                  }
+                  onChange={(e) => setProfileImage(e.target.files?.[0] as File)}
                   name="image"
                   ref={imageRef}
                   type="file"
@@ -116,13 +109,7 @@ export default function ProfileSection() {
               <Input
                 name="name"
                 type="text"
-                value={profileData.name}
-                onChange={(e) =>
-                  setProfileData({
-                    ...profileData,
-                    name: e.target.value,
-                  })
-                }
+                defaultValue={user?.name ?? ""}
                 className="bg-zinc-950 border-zinc-800 text-zinc-100 placeholder:text-zinc-600"
               />
             </div>
@@ -132,24 +119,25 @@ export default function ProfileSection() {
               </label>
               <Input
                 type="email"
-                value={user?.email}
+                defaultValue={user?.email ?? ""}
                 readOnly
                 className="bg-zinc-950 border-zinc-800 text-zinc-100 placeholder:text-zinc-600"
               />
             </div>
             <div className="pt-4 flex justify-end">
               <Button
-                onClick={() => mutateAsync()}
-                type="button"
+                type="submit"
                 disabled={isPending}
                 className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold"
               >
-                {
-                    isPending ?
-                    <span className="flex items-center gap-2"><LoaderCircle className="animate-spin transition-all"/> Saving...</span> 
-                    : "Save Changes"
-                }
-                
+                {isPending ? (
+                  <span className="flex items-center gap-2">
+                    <LoaderCircle className="animate-spin transition-all" />{" "}
+                    Saving...
+                  </span>
+                ) : (
+                  "Save Changes"
+                )}
               </Button>
             </div>
           </div>

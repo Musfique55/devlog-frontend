@@ -19,7 +19,7 @@ export function Sidebar() {
       icon: FileText,
       href: "/dashboard/my-logs",
     },
-    { id: "team", label: "Team", icon: Users, href: "#" },
+    { id: "team", label: "Team", icon: Users, href: "/dashboard/team" },
     {
       id: "settings",
       label: "Settings",

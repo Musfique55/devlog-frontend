@@ -29,6 +29,7 @@ export default  function RootLayout({
 
   return (
     <html
+      data-scroll-behavior="smooth"
       lang="en"
       className={`${inter.variable} ${openSans.variable} h-full antialiased dark`}
     >

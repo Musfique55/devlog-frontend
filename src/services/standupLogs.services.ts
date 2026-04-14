@@ -1,9 +1,27 @@
 "use server";
 
-import { LogPromise } from "@/components/modules/(user)/dashboard/my-logs/my-logs-wrapper";
 import { StandupData } from "@/components/modules/(user)/dashboard/standup-form";
 import { envVars } from "@/env";
+import { User } from "@/hooks/useAuth";
 import { cookies } from "next/headers";
+
+export interface Log {
+  id: string;
+  workspaceId: string | null;
+  user : User;
+  todayWork: string;
+  tomorrowWork: string;
+  blocker: string;
+  blockerUrl: string[];
+  blockerStatus: string;
+  blockerResolvedAt: string | null;
+  blockerResolvedBy: string | null;
+  projectTags: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+
 
 const getCookieHeader = async () => {
   const cookieStore = await cookies();
@@ -67,7 +85,7 @@ export const createLog = async (payload: Partial<StandupData>) => {
 
 export const getMyLogs = async (
   query: Record<string, string>,
-): Promise<LogPromise> => {
+) => {
   const cookieHeader = await getCookieHeader();
   try {
     const url = new URL(`${envVars.API_URL}/logs`);
@@ -86,7 +104,6 @@ export const getMyLogs = async (
         success: false,
         message: res.statusText,
         data: null,
-        meta: null,
       };
     }
 
@@ -97,7 +114,6 @@ export const getMyLogs = async (
         success: false,
         message: result.message,
         data: null,
-        meta: null,
       };
     }
 
@@ -113,7 +129,6 @@ export const getMyLogs = async (
       success: false,
       message: "Something went wrong",
       data: null,
-      meta: null,
     };
   }
 };
@@ -195,8 +210,53 @@ export const updateLog = async (id: string, payload: Partial<StandupData>) => {
       data: result.data,
       message: result.message,
     };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error : any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message || "Something went wrong",
+      data: null,
+    };
+  }
+};
+
+export const getWorkspaceLogs = async (workspaceId: string) => {
+  const cookieHeader = await getCookieHeader();
+  try {
+    const url = new URL(`${envVars.API_URL}/logs/workspace/${workspaceId}`);
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieHeader,
+      },
+    });
+
+    if (!res.ok) {
+      return {
+        success: false,
+        message: res.statusText,
+        data: null,
+      };
+    }
+    const result = await res.json();
+
+    if (!result.success) {
+      return {
+        success: false,
+        message: result.message,
+        data: null,
+      };
+    }
+    return {
+      success: true,
+      message: result.message,
+      data: result.data,
+      meta: result.meta,
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     console.log(error);
     return {
       success: false,

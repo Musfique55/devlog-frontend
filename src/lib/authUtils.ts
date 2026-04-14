@@ -9,7 +9,7 @@ interface RoutesConfig {
 
 export const authRoutes = [ "/login", "/register", "/forgot-password", "/reset-password",];
 
-export const proUserRoutes = ["/workspace/create-workspace","/workspace/invite-member","/workspace/:id/weekly-report"];
+export const proUserRoutes = ["/workspace/:id/create-workspace","/workspace/:id/invite-member","/workspace/:id/weekly-report"];
 
 const isRouteMatches = (pathname: string, routes: RoutesConfig) => {
   if (routes.exact.includes(pathname)) {

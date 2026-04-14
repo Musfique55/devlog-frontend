@@ -15,16 +15,16 @@ import { deleteLog, getMyLogs, updateLog } from "@/services/standupLogs.services
 import { toast } from "sonner";
 import LogList from "./log-list";
 
-export interface LogPromise {
+export interface LogPromise <T>{
   success: boolean;
   message: string;
-  data: LogEntry[] | null;
-  meta: {
+  data: T[] | null;
+  meta?: {
     total: number;
     page: number;
     limit: number;
     totalPages: number;
-  } | null;
+  };
 }
 
 interface LogEntry {
@@ -58,7 +58,7 @@ export default function MyLogsWrapper() {
   
   const queryClient = useQueryClient();
 
-  const { data: logsData } = useQuery<LogPromise>({
+  const { data: logsData } = useQuery<LogPromise<LogEntry>>({
     queryKey: ["logs", sortBy, debouncedSearchQuery, currentPage, limit],
     queryFn: async () => {
       const data = await getMyLogs({
@@ -110,7 +110,7 @@ export default function MyLogsWrapper() {
 
 
   const handlePagination = (operation: string) => {
-    if (logsData && logsData.meta && logsData.meta.totalPages > 1) {
+    if (logsData && logsData?.meta && logsData?.meta.totalPages > 1) {
       if (operation === "next") {
         setCurrentPage(currentPage + 1);
       } else {
