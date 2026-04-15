@@ -1,19 +1,12 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TeamCard } from "./team-card";
-import { Code, LoaderCircle, Plus } from "lucide-react";
-import {
-  createWorkspace,
-  getWorkspacesByUser,
-} from "@/services/workspace.services";
+import { Code, Plus } from "lucide-react";
 import { useState } from "react";
 import Modal from "@/components/ui/modal";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { toast } from "sonner";
+import Upgrade from "@/components/ui/upgrade";
+import WorkspaceCreationForm from "@/components/shared/form/workspace-creation-form";
 
 interface Team {
   id: string;
@@ -23,52 +16,10 @@ interface Team {
   logs: string[];
 }
 
-export function TeamGrid() {
+export function TeamGrid({ teams }: { teams: Team[] }) {
   const [open, setOpen] = useState(false);
   const { data: user } = useAuth();
 
-  const queryClient = useQueryClient();
-
-  const { data: teams } = useQuery({
-    queryKey: ["user-workspaces"],
-    queryFn: async () => {
-      const res = await getWorkspacesByUser();
-      return res.data;
-    },
-  });
-
-  const { mutateAsync, error, isPending } = useMutation({
-    mutationFn: async (payload: { name: string; adminId: string }) => {
-      const res = await createWorkspace(payload);
-      return res.data;
-    },
-  });
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const name = (form.elements.namedItem("name") as HTMLInputElement).value;
-
-    const payload = {
-      name,
-      adminId: user?.id as string,
-    };
-
-    try {
-      await mutateAsync(payload);
-      if (error) {
-        toast.error(error.message);
-        return;
-      }
-      queryClient.invalidateQueries({ queryKey: ["user-workspaces"] });
-      setOpen(false);
-      form.reset();
-      toast.success("Workspace created successfully");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      toast.error(error.message);
-    }
-  };
   return (
     <section>
       {/* Header */}
@@ -120,23 +71,16 @@ export function TeamGrid() {
         </div>
       </div>
 
-      {open && (
+      {user?.plan === "PRO" && open ? (
         <Modal title="Create Workspace" setOpen={setOpen} open={open}>
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <Label htmlFor="name">Workspace Name</Label>
-            <Input placeholder="eg. thunders" type="text" name="name" />
-            <Button disabled={isPending} type="submit" >
-              {!isPending ? (
-                <span className="flex gap-2 items-center text-gray-200">
-                  <LoaderCircle className="animate-spin transition-all" />{" "}
-                  Creating...
-                </span>
-              ) : (
-                "Create Workspace"
-              )}
-            </Button>
-          </form>
+          <WorkspaceCreationForm setOpen={setOpen}/>
         </Modal>
+      ) : (
+        open && (
+          <Modal title="Buy Subscription" setOpen={setOpen} open={open}>
+            <Upgrade />
+          </Modal>
+        )
       )}
     </section>
   );

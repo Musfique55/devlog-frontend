@@ -241,3 +241,31 @@ export const inviteUserToWorkspace = async (payload: {
     }
   }
 };
+
+export const verifyTeamLink = async (link : string) => {
+  try {
+    const token = link.split("?token=")[1];
+    const res = await fetch(`${envVars.API_URL}/invite/accept/${token}`)
+    console.log(res);
+    if(!res.ok){
+      return {
+        success : false,
+        message : res.statusText
+      }
+    }
+
+    const result = await res.json();
+    console.log(result);
+    return {
+      success : true,
+      message : result.message
+    }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error : any) {
+    console.log(error);
+    return {
+    success: false,
+    message: error.message,
+  };
+  }
+}

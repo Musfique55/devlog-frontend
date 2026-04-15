@@ -49,7 +49,6 @@ export function TeamDirectory({ members, workspaceId }: TeamDirectoryProps) {
     };
     try {
       const res = await mutateAsync(payload);
-      console.log(res);
       setOpen(false);
       toast.success(res.message);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -63,7 +62,7 @@ export function TeamDirectory({ members, workspaceId }: TeamDirectoryProps) {
   );
 
   return (
-    <aside className="w-full lg:w-72 bg-surface-container-low h-full flex flex-col p-4 sm:p-6 overflow-y-auto border-l border-white/5">
+    <aside className="w-full lg:w-72 bg-zinc-900/60 min-h-[91vh] flex flex-col p-4 sm:p-6 overflow-y-auto border-l border-white/5">
       <div className="mb-6 sm:mb-8">
         <h2 className="text-[10px] sm:text-xs font-black uppercase tracking-[0.25em] text-zinc-500 mb-4 sm:mb-6">
           Team Directory
@@ -82,7 +81,7 @@ export function TeamDirectory({ members, workspaceId }: TeamDirectoryProps) {
       </div>
 
       {/* Invite CTA */}
-      {isAdmin?.role === "ADMIN" ? (
+      {isAdmin?.role === "ADMIN" && user?.plan === "PRO"? (
         <div className="mt-auto bg-surface-container-highest/30 rounded-xl p-3 sm:p-4 border border-white/5">
           <div className="flex items-center gap-3 mb-2 sm:mb-3">
             <Users className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-primary flex-shrink-0" />
@@ -112,7 +111,7 @@ export function TeamDirectory({ members, workspaceId }: TeamDirectoryProps) {
               className="text-white/80 cursor-pointer"
             >
               {
-                isPending ? <span className="flex gap-2 items-center"><LoaderCircle className="animate-spin transition-all"/>Sending...</span> : "Send"
+                isPending ? <span className="flex gap-2 items-center"><LoaderCircle className="animate-spin transition-all"/>Sending Invite</span> : "Invite"
               }
               
             </Button>

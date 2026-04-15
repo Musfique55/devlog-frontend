@@ -1,7 +1,5 @@
 "use client";
 
-import { MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Log } from "@/services/standupLogs.services";
 
