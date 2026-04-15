@@ -1,9 +1,10 @@
 "use client";
-import { IMember, TeamDirectory } from "./team-directory";
+import { TeamDirectory } from "./team-directory";
 import { ActivityCard } from "./activity-card";
 import { useQuery } from "@tanstack/react-query";
 import { getWorkspaceLogs, Log } from "@/services/standupLogs.services";
 import { LogPromise } from "../../(user)/dashboard/my-logs/my-logs-wrapper";
+import { getWorkspaceMembers } from "@/services/workspace.services";
 import useWorkspace from "@/hooks/useWorkspace";
 
 const ActivityWrapper = ({ id }: { id: string }) => {
@@ -16,7 +17,14 @@ const ActivityWrapper = ({ id }: { id: string }) => {
     staleTime : 60 * 5 * 1000,
     refetchOnWindowFocus : false
   });
-  const { data: workspace } = useWorkspace<IMember>(id);
+  const {data : workspace} = useWorkspace(id);
+  const {data : members} = useQuery({
+    queryKey : ['workspace-members'],
+    queryFn : async () => {
+      const response = await getWorkspaceMembers(id);
+      return response;
+    }
+  })
 
   return (
     <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
@@ -45,24 +53,13 @@ const ActivityWrapper = ({ id }: { id: string }) => {
                 ))
               : null}
 
-            {/* System Notice */}
-            {/* <SystemNotice
-              title="System Notice"
-              message="Deployment Successful in Production"
-              version="v1.2.9-beta"
-              details={[
-                "SUCCESS: Build completed in 42s",
-                "-- artifacts uploaded to s3://prod-assets",
-                "DEPLOY: Global edge cache purged",
-              ]}
-            /> */}
           </div>
         </div>
       </section>
 
       {/* Team Directory Sidebar - Hidden on mobile/tablet, visible on large screens */}
       <div className="hidden lg:block lg:w-80 lg:border-l lg:border-border">
-        {workspace?.members && <TeamDirectory workspaceId={id} members={workspace.members} />}
+        {members?.data && members.data.length && <TeamDirectory workspaceId={id} members={members.data} isAdmin={workspace!.userRole}/>}
       </div>
     </div>
   );

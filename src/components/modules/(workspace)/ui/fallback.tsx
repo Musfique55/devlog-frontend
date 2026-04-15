@@ -23,7 +23,7 @@ const TeamFallback = () => {
     mutationFn: async (link: string) => {
       const response = await verifyTeamLink(link);
       if (response.success) {
-        queryClient.invalidateQueries({ queryKey: ["user-workspaces"] });
+        queryClient.invalidateQueries({ queryKey: ["user-workspaces","workspace-members"] });
       }
       return response;
     },
@@ -48,6 +48,7 @@ const TeamFallback = () => {
       toast.error(error.message);
     }
   };
+
   return (
     <div className="max-w-4xl w-full flex flex-col items-center justify-center mx-auto text-center space-y-12 z-10">
       {/* Illustration Section */}

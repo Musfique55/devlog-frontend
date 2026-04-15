@@ -1,25 +1,6 @@
 import { getUserInfo } from "@/services/auth.services";
 import { useQuery } from "@tanstack/react-query";
-
-
-export interface Workspace {
-  id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-  isActive: boolean;
-  members: Member[];
-}
-
-export interface Member {
-  id: string;
-  userId: string;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
-  joinedAt: string;
-  deletedAt: string | null;
-}
+import { Workspace } from "./useWorkspace";
 
 
 export interface User {

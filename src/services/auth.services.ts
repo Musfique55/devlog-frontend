@@ -73,6 +73,7 @@ export const getUserInfo = async () => {
     return {
       success: false,
       message: "Access token not found",
+      data: null,
     };
   }
   try {

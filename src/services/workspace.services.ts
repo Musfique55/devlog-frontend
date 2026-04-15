@@ -103,6 +103,50 @@ export const getWorkspacesByUser = async () => {
   }
 };
 
+export const getWorkspaceMembers = async (workspaceId: string) => {
+  const cookieHeader = await getCookieHeader();
+
+  try {
+    const res = await fetch(`${envVars.API_URL}/workspace/${workspaceId}/members`,{
+      headers : {
+        Cookie : cookieHeader,
+        "Content-Type" : "application/json"
+      }
+    });
+    if(!res.ok) {
+      return {
+        success : false,
+        message : res.statusText,
+        data : null
+      }
+    }
+
+    const result = await res.json();
+
+    if(!result.success) {
+      return {
+        success : false,
+        message : result.message,
+        data : null
+      }
+    }
+
+    return {
+      success : true,
+      message : result.message,
+      data : result.data
+    }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error : any) {
+      return {
+        success : false,
+        message : error.message,
+        data : null
+      }
+  }
+}
+
 export const getUsersOverallWorkspaceStats = async () => {
   const cookieHeader = await getCookieHeader();
 
@@ -206,7 +250,7 @@ export const inviteUserToWorkspace = async (payload: {
       `${envVars.API_URL}/workspace/${payload.workspaceId}/invite`,
       {
         method: "POST",
-        body: JSON.stringify({email : payload.email}),
+        body: JSON.stringify({ email: payload.email }),
         headers: {
           Cookie: cookieHeaders,
           "Content-Type": "application/json",
@@ -232,40 +276,40 @@ export const inviteUserToWorkspace = async (payload: {
       success: true,
       message: result.message,
     };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error : any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     console.log(error);
     return {
       success: false,
       message: error.message,
-    }
+    };
   }
 };
 
-export const verifyTeamLink = async (link : string) => {
+export const verifyTeamLink = async (link: string) => {
   try {
     const token = link.split("?token=")[1];
-    const res = await fetch(`${envVars.API_URL}/invite/accept/${token}`)
+    const res = await fetch(`${envVars.API_URL}/invite/accept/${token}`);
     console.log(res);
-    if(!res.ok){
+    if (!res.ok) {
       return {
-        success : false,
-        message : res.statusText
-      }
+        success: false,
+        message: res.statusText,
+      };
     }
 
     const result = await res.json();
     console.log(result);
     return {
-      success : true,
-      message : result.message
-    }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error : any) {
+      success: true,
+      message: result.message,
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     console.log(error);
     return {
-    success: false,
-    message: error.message,
-  };
+      success: false,
+      message: error.message,
+    };
   }
-}
+};

@@ -6,14 +6,21 @@ export interface Member {
     id : string;
     workspaceId : string;
     userId : string;
-    role : string;
+    role : "ADMIN" | "MEMBER";
     createdAt : string;
     updatedAt : string;
     joinedAt : string;
     deletedAt : string | null;
+    user : {
+        name : string;
+        email : string;
+        id : string;
+        image : string;
+        role : "USER" 
+    }
 }
 
-interface Workspace <T>{
+export interface Workspace {
     id : string;
     name : string;
     createdAt : string;
@@ -21,11 +28,11 @@ interface Workspace <T>{
     deletedAt : string | null;
     isDeleted : boolean;
     isActive : boolean;
-    members : T[]
+    userRole : "ADMIN" | "MEMBER";
 }
 
-const useWorkspace = <T>(id : string) => {
-    return useQuery<Workspace<T>>({
+const useWorkspace = (id : string) => {
+    return useQuery<Workspace>({
     queryKey : ['workspace'],
     queryFn : async () => {
       const res = await getWorkspace(id);

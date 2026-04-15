@@ -3,29 +3,23 @@
 import { Button } from "@/components/ui/button";
 import { LoaderCircle, Users } from "lucide-react";
 import { RoleType, TeamMember } from "./team-member";
-import { Member, useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
 import Modal from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import { inviteUserToWorkspace } from "@/services/workspace.services";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
+import { Member } from "@/hooks/useWorkspace";
 
-export interface IMember extends Member {
-  user: {
-    name: string;
-    image: string | null;
-    id: string;
-    email: string;
-  };
-}
 
 interface TeamDirectoryProps {
-  members: IMember[];
+  members: Member[];
   workspaceId: string;
+  isAdmin : "ADMIN" | "MEMBER";
 }
 
-export function TeamDirectory({ members, workspaceId }: TeamDirectoryProps) {
+export function TeamDirectory({ members, workspaceId,isAdmin }: TeamDirectoryProps) {
   const [open, setOpen] = useState(false);
   const { data: user } = useAuth();
 
@@ -57,9 +51,6 @@ export function TeamDirectory({ members, workspaceId }: TeamDirectoryProps) {
     }
   };
 
-  const isAdmin = members.find(
-    (member) => user?.id === member.user.id && member.role === "ADMIN",
-  );
 
   return (
     <aside className="w-full lg:w-72 bg-zinc-900/60 min-h-[91vh] flex flex-col p-4 sm:p-6 overflow-y-auto border-l border-white/5">
@@ -81,7 +72,7 @@ export function TeamDirectory({ members, workspaceId }: TeamDirectoryProps) {
       </div>
 
       {/* Invite CTA */}
-      {isAdmin?.role === "ADMIN" && user?.plan === "PRO"? (
+      {isAdmin === "ADMIN" && user?.plan === "PRO"? (
         <div className="mt-auto bg-surface-container-highest/30 rounded-xl p-3 sm:p-4 border border-white/5">
           <div className="flex items-center gap-3 mb-2 sm:mb-3">
             <Users className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-primary flex-shrink-0" />
