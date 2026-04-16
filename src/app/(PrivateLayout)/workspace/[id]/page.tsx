@@ -1,4 +1,3 @@
-import ActivityWrapper from "@/components/modules/(workspace)/activity-feed/activity-wrapper";
 import { Workspace } from "@/hooks/useWorkspace";
 import { getWorkspace } from "@/services/workspace.services";
 import { redirect } from "next/navigation";
@@ -18,10 +17,8 @@ const WorkspacePage = async ({params} : {params : Promise<{id : string}>}) => {
     if(workspace.data?.userRole === "ADMIN"){
         redirect(`/workspace/${id}/admin-dashboard`);
     }
-    
-    return <main>
-        <ActivityWrapper id={id}/>
-    </main>
+
+    redirect(`/workspace/${id}/activity`);
 
 };
 

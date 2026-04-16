@@ -11,6 +11,7 @@ import { inviteUserToWorkspace } from "@/services/workspace.services";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { Member } from "@/hooks/useWorkspace";
+import Upgrade from "@/components/ui/upgrade";
 
 
 interface TeamDirectoryProps {
@@ -33,6 +34,7 @@ export function TeamDirectory({ members, workspaceId,isAdmin }: TeamDirectoryPro
     },
   });
 
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
@@ -53,7 +55,7 @@ export function TeamDirectory({ members, workspaceId,isAdmin }: TeamDirectoryPro
 
 
   return (
-    <aside className="w-full lg:w-72 bg-zinc-900/60 min-h-[91vh] flex flex-col p-4 sm:p-6 overflow-y-auto border-l border-white/5">
+    <aside className="w-full lg:w-72 bg-zinc-900/60 min-h-screen max-h-full flex flex-col p-4 sm:p-6 overflow-y-auto border-l border-white/5">
       <div className="mb-6 sm:mb-8">
         <h2 className="text-[10px] sm:text-xs font-black uppercase tracking-[0.25em] text-zinc-500 mb-4 sm:mb-6">
           Team Directory
@@ -72,7 +74,7 @@ export function TeamDirectory({ members, workspaceId,isAdmin }: TeamDirectoryPro
       </div>
 
       {/* Invite CTA */}
-      {isAdmin === "ADMIN" && user?.plan === "PRO"? (
+      {isAdmin === "ADMIN" ? (
         <div className="mt-auto bg-surface-container-highest/30 rounded-xl p-3 sm:p-4 border border-white/5">
           <div className="flex items-center gap-3 mb-2 sm:mb-3">
             <Users className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-primary flex-shrink-0" />
@@ -92,7 +94,7 @@ export function TeamDirectory({ members, workspaceId,isAdmin }: TeamDirectoryPro
         </div>
       ) : null}
 
-      {open && (
+      {open && user?.role === "PRO" ? (
         <Modal open={open} setOpen={setOpen} title="Invite Member">
           <form onSubmit={handleSubmit} className="space-y-3">
             <Input type="email" name="email" placeholder="enter an email" required />
@@ -108,7 +110,9 @@ export function TeamDirectory({ members, workspaceId,isAdmin }: TeamDirectoryPro
             </Button>
           </form>
         </Modal>
-      )}
+      ) : <Modal title="Subscription Required" open={open} setOpen={setOpen}>
+          <Upgrade />
+        </Modal>}
     </aside>
   );
 }

@@ -26,6 +26,7 @@ const ActivityWrapper = ({ id }: { id: string }) => {
     }
   })
 
+
   return (
     <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
       {/* Central Feed */}

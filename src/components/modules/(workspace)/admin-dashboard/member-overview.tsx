@@ -1,37 +1,56 @@
-'use client';
+"use client";
 
-import { Search, Filter, MoreVertical } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { Search, Filter, MoreVertical } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import Image from "next/image";
+import { useQuery } from "@tanstack/react-query";
+import { getWorkspaceMembers } from "@/services/workspace.services";
+import { useDebounce } from "use-debounce";
 
 interface Member {
   id: string;
-  name: string;
-  email: string;
-  role: string;
-  streak: string;
-  lastLog: string;
-  avatar: string;
+  workspaceId: string;
+  userId: string;
+  role: "ADMIN" | "MEMBER";
+  createdAt: Date;
+  updatedAt: Date;
+  joinedAt: Date;
+  deletedAt: Date | null;
+  lastLog: Date | null;
+  user: {
+    name: string;
+    email: string;
+    id: string;
+    image: string | null;
+  };
 }
 
-interface MemberTableProps {
-  members: Member[];
-}
 
-export function MemberTable({ members }: MemberTableProps) {
-  const [searchQuery, setSearchQuery] = useState('');
 
-//   const filteredMembers = members.filter(
-//     (member) =>
-//       member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-//       member.email.toLowerCase().includes(searchQuery.toLowerCase())
-//   );
+export function MemberTable({ id } : {id : string}) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery] = useDebounce(searchQuery, 500);
+
+  const {data : members} = useQuery<Member[]>({
+    queryKey : ['workspace-members',debouncedQuery],
+    queryFn : async () => {
+      const response = await getWorkspaceMembers(id,{
+        searchTerm : debouncedQuery
+      })
+        return response.data;
+    },
+    placeholderData : (prevData) => prevData
+  })
+
 
   return (
     <div className="bg-surface-container rounded-xl overflow-hidden shadow-2xl shadow-black/20">
       <div className="px-8 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-surface-container-high/30">
-        <h3 className="text-lg font-bold tracking-tight text-on-background">Member Overview</h3>
+        <h3 className="text-lg font-bold tracking-tight text-on-background">
+          Member Overview
+        </h3>
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <div className="relative flex-1 sm:flex-initial">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4" />
@@ -43,7 +62,11 @@ export function MemberTable({ members }: MemberTableProps) {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="ghost" size="icon" className="bg-surface-container-highest ring-1 ring-outline-variant/15">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-surface-container-highest ring-1 ring-outline-variant/15"
+          >
             <Filter className="w-4 h-4" />
           </Button>
         </div>
@@ -55,20 +78,39 @@ export function MemberTable({ members }: MemberTableProps) {
             <tr className="bg-surface-container-high/50 text-[0.6875rem] font-bold uppercase tracking-widest text-zinc-500 border-b border-outline-variant/10">
               <th className="px-8 py-4">Name</th>
               <th className="px-8 py-4">Role</th>
-              <th className="px-8 py-4">Streak</th>
               <th className="px-8 py-4">Last Log</th>
               <th className="px-8 py-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant/10">
-            {members.map((member) => (
-              <tr key={member.id} className="hover:bg-surface-container-high transition-colors group">
+            {members && members.length && members.map((member) => (
+              <tr
+                key={member.id}
+                className="hover:bg-surface-container-high transition-colors group"
+              >
                 <td className="px-8 py-5">
                   <div className="flex items-center gap-3">
-                    <img alt={member.name} className="w-8 h-8 rounded object-cover" src={member.avatar} />
+                    {member.user.image ? (
+                      <Image
+                        width={32}
+                        height={32}
+                        alt={member.user.name}
+                        className="w-8 h-8 rounded object-cover"
+                        src={member.user.image}
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-xl object-cover hover:grayscale-0 transition-all duration-300 bg-amber-800 flex items-center justify-center text-white font-bold text-2xl">
+                        <p>{member.user.name[0]}</p>
+                      </div>
+                    )}
+
                     <div>
-                      <p className="font-bold text-on-background">{member.name}</p>
-                      <p className="text-xs text-zinc-500">{member.email}</p>
+                      <p className="font-bold text-on-background">
+                        {member.user.name}
+                      </p>
+                      <p className="text-xs text-zinc-500">
+                        {member.user.email}
+                      </p>
                     </div>
                   </div>
                 </td>
@@ -77,10 +119,17 @@ export function MemberTable({ members }: MemberTableProps) {
                     {member.role}
                   </span>
                 </td>
-                <td className="px-8 py-5 font-mono text-xs">{member.streak}</td>
-                <td className="px-8 py-5 text-zinc-400 text-xs">{member.lastLog}</td>
+                <td className="px-8 py-5 text-zinc-400 text-xs">
+                  {member.lastLog
+                    ? new Date(member.lastLog).toLocaleDateString()
+                    : "N/A"}
+                </td>
                 <td className="px-8 py-5 text-right">
-                  <Button variant="ghost" size="icon" className="text-zinc-500 hover:text-on-background">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-zinc-500 hover:text-on-background"
+                  >
                     <MoreVertical className="w-4 h-4" />
                   </Button>
                 </td>

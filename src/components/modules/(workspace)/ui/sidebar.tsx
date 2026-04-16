@@ -4,41 +4,40 @@ import { Button } from "@/components/ui/button";
 import useWorkspace from "@/hooks/useWorkspace";
 import { Plus, Briefcase, TrendingUp, Settings, Grid } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
+import { WorkspaceSidebarSkeleton } from "./sidebar-skeleton";
 
 export function WorkspaceSidebar() {
   const pathname = usePathname();
-  const id = pathname.split("/").pop();
-  
-  const { data: workspace } = useWorkspace(id as string);
-  
+  const {id} = useParams();
+  const {data : workspace,isLoading}  = useWorkspace(id as string);
+  if(isLoading){
+    return <WorkspaceSidebarSkeleton />
+  }
 
   const navItems = [
-    ...(workspace?.userRole === "ADMIN"
+    ...(workspace?.userRole
       ? [
           {
             icon: Grid,
             label: "Dashboard",
-            href: `${pathname}/admin-dashboard`,
+            href: `/workspace/${id}/admin-dashboard`,
           },
         ]
       : []),
-    { icon: TrendingUp, label: "Activity", href: `${pathname}` },
+    { icon: TrendingUp, label: "Activity", href: `/workspace/${id}/activity` },
     { icon: Briefcase, label: "Workspaces", href: "/dashboard/team" },
-    { icon: Settings, label: "Settings", href: `${pathname}/settings` },
+    { icon: Settings, label: "Settings", href: `/workspace/${id}/settings` },
   ];
-  console.log(workspace, navItems);
+ 
 
   return (
     <aside className="h-screen w-64 fixed left-0 top-0 bg-surface-container-low dark:bg-surface-container-low flex flex-col py-4 sm:py-6 px-3 sm:px-4 z-50 transition-all duration-200 border-r border-white/5">
       {/* Logo */}
       <div className="mb-6 sm:mb-10 px-2">
         <h1 className="text-base sm:text-lg font-bold tracking-tighter text-primary">
-          Indigo Terminal
+          DevLog
         </h1>
-        <p className="text-[9px] sm:text-[10px] font-medium tracking-widest text-zinc-600 uppercase">
-          v2.4.0
-        </p>
       </div>
 
       {/* Navigation */}

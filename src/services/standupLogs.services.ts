@@ -2,13 +2,16 @@
 
 import { StandupData } from "@/components/modules/(user)/dashboard/standup-form";
 import { envVars } from "@/env";
-import { User } from "@/hooks/useAuth";
 import { cookies } from "next/headers";
 
 export interface Log {
   id: string;
   workspaceId: string | null;
-  user : User;
+  user : {
+    id : string,
+    name : string,
+    image : string | null
+  };
   todayWork: string;
   tomorrowWork: string;
   blocker: string;

@@ -103,49 +103,56 @@ export const getWorkspacesByUser = async () => {
   }
 };
 
-export const getWorkspaceMembers = async (workspaceId: string) => {
+export const getWorkspaceMembers = async (
+  workspaceId: string,
+  query?: Record<string, string>,
+) => {
   const cookieHeader = await getCookieHeader();
 
   try {
-    const res = await fetch(`${envVars.API_URL}/workspace/${workspaceId}/members`,{
-      headers : {
-        Cookie : cookieHeader,
-        "Content-Type" : "application/json"
-      }
+    const url = new URL(`${envVars.API_URL}/workspace/${workspaceId}/members`);
+    if (query) {
+      url.search = new URLSearchParams(query).toString();
+    }
+    const res = await fetch(url, {
+      headers: {
+        Cookie: cookieHeader,
+        "Content-Type": "application/json",
+      },
     });
-    if(!res.ok) {
+    if (!res.ok) {
       return {
-        success : false,
-        message : res.statusText,
-        data : null
-      }
+        success: false,
+        message: res.statusText,
+        data: null,
+      };
     }
 
     const result = await res.json();
 
-    if(!result.success) {
+    if (!result.success) {
       return {
-        success : false,
-        message : result.message,
-        data : null
-      }
+        success: false,
+        message: result.message,
+        data: null,
+      };
     }
 
     return {
-      success : true,
-      message : result.message,
-      data : result.data
-    }
+      success: true,
+      message: result.message,
+      data: result.data,
+    };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error : any) {
-      return {
-        success : false,
-        message : error.message,
-        data : null
-      }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+      data: null,
+    };
   }
-}
+};
 
 export const getUsersOverallWorkspaceStats = async () => {
   const cookieHeader = await getCookieHeader();
@@ -188,6 +195,49 @@ export const getUsersOverallWorkspaceStats = async () => {
       message: "Something went wrong",
       data: null,
     };
+  }
+};
+
+export const getWorkspaceStats = async (id: string) => {
+  const cookieHeader = await getCookieHeader();
+
+  try {
+    const res = await fetch(`${envVars.API_URL}/workspace/${id}/stats`, {
+      headers: {
+        Cookie: cookieHeader,
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      return {
+        success: false,
+        message: res.statusText,
+        data: null,
+      };
+    }
+
+    const result = await res.json();
+
+    if (!result.success) {
+      return {
+        success: false,
+        message: result.message,
+        data: null,
+      };
+    }
+
+    return {
+      success: true,
+      message: result.message,
+      data: result.data,
+    }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error : any) {
+    return {
+      success: false,
+      message: error.message,
+      data: null,
+    }
   }
 };
 
