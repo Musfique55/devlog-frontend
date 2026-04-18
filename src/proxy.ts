@@ -12,9 +12,9 @@ import { isTokenExpiringSoon } from "./lib/tokenUtils";
 
 type UserRole = "SUPER_ADMIN" | "USER";
 
-async function refreshTokenMiddleware(refreshToken: string): Promise<boolean> {
+async function refreshTokenMiddleware(): Promise<boolean> {
   try {
-    const refresh = await getNewRefreshToken(refreshToken);
+    const refresh = await getNewRefreshToken();
     if (!refresh) {
       return false;
     }
@@ -45,9 +45,9 @@ export async function proxy(request: NextRequest) {
   const refreshedToken = request.headers.get("x-token-refreshed") === "1";
   if (
     !refreshedToken &&
-    isValidToken &&
     refreshToken &&
-    (await isTokenExpiringSoon(refreshToken))
+    !isValidToken &&
+    (await isTokenExpiringSoon(accessToken as string))
   ) {
     const requestHeaders = request.headers;
     const response = NextResponse.next({
@@ -57,7 +57,7 @@ export async function proxy(request: NextRequest) {
     });
 
     try {
-      const refreshed = await refreshTokenMiddleware(refreshToken);
+      const refreshed = await refreshTokenMiddleware();
       if (refreshed) {
         requestHeaders.set("x-token-refreshed", "1");
       }

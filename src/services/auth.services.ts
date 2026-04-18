@@ -14,9 +14,7 @@ const getCookieHeader = async () => {
   return cookieHeader;
 };
 
-export const getNewRefreshToken = async (
-  refreshToken: string,
-): Promise<boolean> => {
+export const getNewRefreshToken = async (): Promise<boolean> => {
   const cookieHeader = await getCookieHeader();
   if (!cookieHeader.length) {
     return false;
@@ -32,7 +30,6 @@ export const getNewRefreshToken = async (
     });
 
     if (!res.ok) {
-      console.log(res);
       return false;
     }
 
@@ -48,7 +45,7 @@ export const getNewRefreshToken = async (
       await setTokenInCookie("accessToken", accessToken);
     }
 
-    if (refreshToken) {
+    if (newRefreshToken) {
       await setTokenInCookie("refreshToken", newRefreshToken);
     }
 
