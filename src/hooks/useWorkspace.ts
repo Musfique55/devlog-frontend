@@ -33,13 +33,13 @@ export interface Workspace {
 
 const useWorkspace = (id : string) => {
     return useQuery<Workspace>({
-    queryKey : ['workspace'],
+    queryKey : ['workspace',id],
     queryFn : async () => {
       const res = await getWorkspace(id);
       return res.data;
     },
-    staleTime : 1000 * 60 * 5,// 5min
-    retry : true
+    staleTime : Infinity,// 5min
+    retry : false
   })
 };
 
