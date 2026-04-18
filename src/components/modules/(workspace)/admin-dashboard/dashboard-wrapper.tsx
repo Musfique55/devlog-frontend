@@ -3,13 +3,37 @@
 import { Button } from "@/components/ui/button";
 import { MemberTable } from "./member-overview";
 
-import { AlertTriangle, Calendar } from "lucide-react";
+import { AlertTriangle, Calendar, LoaderCircle, Subscript } from "lucide-react";
 import { WorkspaceAdminStatCard } from "./stat-card";
-import { useQuery } from "@tanstack/react-query";
-import { getWorkspaceStats } from "@/services/workspace.services";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getWorkspaceStats, inviteUserToWorkspace } from "@/services/workspace.services";
 import { getWorkspaceLogs, Log } from "@/services/standupLogs.services";
 import { TeamAlerts } from "./team-alert";
 import TeamHealthHeatmap from "./team-health-heat-map";
+import { useState } from "react";
+import Modal from "@/components/ui/modal";
+import { Input } from "@/components/ui/input";
+import Upgrade from "@/components/ui/upgrade";
+import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
+import SubscriptionAlert from "@/components/ui/subscription-alert";
+
+interface WorkspaceResponse {
+  data: WorkspaceStats;
+  success: boolean;
+  message: string;
+}
+export interface WorkspaceLogResponse <T>{
+  data: T[] | null;
+  success: boolean;
+  message: string;
+  meta? : {
+    totalPages : number
+    total: number
+    page : number
+    limit : number
+  }
+}
 
 interface WorkspaceStats {
   totalLogs: number;
@@ -18,23 +42,51 @@ interface WorkspaceStats {
 }
 
 const AdminDashboardWrapper = ({ id }: { id: string }) => {
-  const { data: workspaceStats } = useQuery<WorkspaceStats>({
+  const [open,setOpen] = useState(false);
+
+  const {data : user} = useAuth();
+
+  const { data: workspaceStats } = useQuery<WorkspaceResponse>({
     queryKey: ["workspace-stats", id],
-    queryFn: async () => {
-      const res = await getWorkspaceStats(id);
-      return res.data;
-    },
+    queryFn:  () => getWorkspaceStats(id)
+    ,
   });
 
-  const { data: workspaceLogs } = useQuery<Log[]>({
+  const { data: workspaceLogs } = useQuery<WorkspaceLogResponse<Log>>({
     queryKey: ["workspace-logs", id],
-    queryFn: async () => {
-      const res = await getWorkspaceLogs(id);
-      return res.data;
+    queryFn:  () =>  getWorkspaceLogs(id)
+  });
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async (payload: {
+      email: string;
+      workspaceId: string;
+    }) => {
+      const result = await inviteUserToWorkspace(payload);
+      return result;
     },
   });
 
-  const blockedLogs = workspaceLogs?.filter(
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    const email = form.get("email") as string;
+    const payload = {
+      email,
+      workspaceId : id,
+    };
+    try {
+      const res = await mutateAsync(payload);
+      setOpen(false);
+      toast.success(res.message);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const blockedLogs = workspaceLogs?.data?.filter(
     (log) => log.blocker && log.blockerStatus === "OPEN",
   );
 
@@ -43,7 +95,7 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Content */}
-        <main className="flex-1 overflow-y-auto p-8 max-w-7xl mx-auto w-full space-y-12">
+        <main className="flex-1 p-8 max-w-7xl mx-auto w-full space-y-12">
           {/* Page Header */}
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
             <div>
@@ -61,8 +113,11 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
               >
                 Export Reports
               </Button>
-              <Button className="bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold shadow-lg shadow-primary/10">
-                Invite Member
+              <Button
+                onClick={() => setOpen(!open)}
+                className=" text-[9px] sm:text-xs py-1.5 sm:py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg font-bold transition-colors cursor-pointer"
+              >
+                Send Invite
               </Button>
             </div>
           </div>
@@ -71,7 +126,7 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
           <div className="grid grid-cols-1 lg:grid-cols-3 ">
             <WorkspaceAdminStatCard
               label="Active Blockers"
-              value={workspaceStats?.totalBlockers || 0}
+              value={workspaceStats?.data?.totalBlockers || 0}
               //   subtext="3 issues pending more than 24 hours."
               trend="Critical"
               trendColor="text-tertiary"
@@ -83,7 +138,7 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
 
             <WorkspaceAdminStatCard
               label="Log Compliance"
-              value={`${workspaceStats?.complianceRate}%`}
+              value={`${workspaceStats?.data?.complianceRate || 0}%`}
             >
               <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
                 <div className="bg-primary h-full w-[94.2%]"></div>
@@ -92,7 +147,7 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
 
             <WorkspaceAdminStatCard
               label="Total Standups (Week)"
-              value={workspaceStats?.totalLogs || 0}
+              value={workspaceStats?.data?.totalLogs || 0}
               subtext="Across 14 active projects."
               icon={<Calendar className="w-5 h-5 text-zinc-400" />}
             />
@@ -110,6 +165,24 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
 
           {/* Member Table */}
           {<MemberTable id={id} />}
+
+          {open && user?.role === "PRO" ? (
+        <Modal open={open} setOpen={setOpen} title="Invite Member">
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <Input type="email" name="email" placeholder="enter an email" required />
+            <Button
+              disabled={isPending}
+              type="submit"
+              className="text-white/80 cursor-pointer"
+            >
+              {
+                isPending ? <span className="flex gap-2 items-center"><LoaderCircle className="animate-spin transition-all"/>Sending Invite</span> : "Invite"
+              }
+              
+            </Button>
+          </form>
+        </Modal>
+      ) : <SubscriptionAlert open={open} setOpen={setOpen}/>}
         </main>
       </div>
     </div>

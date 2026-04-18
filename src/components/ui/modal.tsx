@@ -35,12 +35,14 @@ export default function Modal({
         ""
       )}
 
-      <DialogContent className="sm:max-w-sm">
+      <DialogContent className="sm:max-w-sm ">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description && description}</DialogDescription>
         </DialogHeader>
-        {children}
+        <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4">
+          {children}
+        </div>
       </DialogContent>
     </Dialog>
   );

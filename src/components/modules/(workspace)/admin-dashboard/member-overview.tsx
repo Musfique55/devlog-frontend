@@ -8,11 +8,11 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { getWorkspaceMembers } from "@/services/workspace.services";
 import { useDebounce } from "use-debounce";
+import PopoverAction from "./popover-action";
 
 interface Member {
   id: string;
   workspaceId: string;
-  userId: string;
   role: "ADMIN" | "MEMBER";
   createdAt: Date;
   updatedAt: Date;
@@ -27,22 +27,20 @@ interface Member {
   };
 }
 
-
-
-export function MemberTable({ id } : {id : string}) {
+export function MemberTable({ id }: { id: string }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery] = useDebounce(searchQuery, 500);
 
-  const {data : members} = useQuery<Member[]>({
-    queryKey : ['workspace-members',debouncedQuery],
-    queryFn : async () => {
-      const response = await getWorkspaceMembers(id,{
-        searchTerm : debouncedQuery
-      })
-        return response.data;
+  const { data: members } = useQuery<Member[]>({
+    queryKey: ["workspace-members", id ,debouncedQuery],
+    queryFn: async () => {
+      const response = await getWorkspaceMembers(id, {
+        searchTerm: debouncedQuery,
+      });
+      return response.data;
     },
-    placeholderData : (prevData) => prevData
-  })
+    placeholderData: (prevData) => prevData,
+  });
 
 
   return (
@@ -83,58 +81,82 @@ export function MemberTable({ id } : {id : string}) {
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant/10">
-            {members && members.length && members.map((member) => (
-              <tr
-                key={member.id}
-                className="hover:bg-surface-container-high transition-colors group"
-              >
-                <td className="px-8 py-5">
-                  <div className="flex items-center gap-3">
-                    {member.user.image ? (
-                      <Image
-                        width={32}
-                        height={32}
-                        alt={member.user.name}
-                        className="w-8 h-8 rounded object-cover"
-                        src={member.user.image}
-                      />
-                    ) : (
-                      <div className="w-8 h-8 rounded-xl object-cover hover:grayscale-0 transition-all duration-300 bg-amber-800 flex items-center justify-center text-white font-bold text-2xl">
-                        <p>{member.user.name[0]}</p>
-                      </div>
-                    )}
+            {members && members.length ? (
+              members.map((member) => (
+                <tr
+                  key={member.id}
+                  className="hover:bg-surface-container-high transition-colors group"
+                >
+                  <td className="px-8 py-5">
+                    <div className="flex items-center gap-3">
+                      {member.user.image ? (
+                        <Image
+                          width={32}
+                          height={32}
+                          alt={member.user.name}
+                          className="w-8 h-8 rounded object-cover"
+                          src={member.user.image}
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-xl object-cover hover:grayscale-0 transition-all duration-300 bg-amber-800 flex items-center justify-center text-white font-bold text-2xl">
+                          <p>{member.user.name[0]}</p>
+                        </div>
+                      )}
 
-                    <div>
-                      <p className="font-bold text-on-background">
-                        {member.user.name}
-                      </p>
-                      <p className="text-xs text-zinc-500">
-                        {member.user.email}
-                      </p>
+                      <div>
+                        <p className="font-bold text-on-background">
+                          {member.user.name}
+                        </p>
+                        <p className="text-xs text-zinc-500">
+                          {member.user.email}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="px-8 py-5">
-                  <span className="bg-primary/10 text-primary px-2 py-1 rounded text-[0.6875rem] font-bold uppercase tracking-tight">
-                    {member.role}
-                  </span>
-                </td>
-                <td className="px-8 py-5 text-zinc-400 text-xs">
-                  {member.lastLog
-                    ? new Date(member.lastLog).toLocaleDateString()
-                    : "N/A"}
-                </td>
-                <td className="px-8 py-5 text-right">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-zinc-500 hover:text-on-background"
-                  >
-                    <MoreVertical className="w-4 h-4" />
-                  </Button>
-                </td>
+                  </td>
+                  <td className="px-8 py-5">
+                    <span className="bg-primary/10 text-primary px-2 py-1 rounded text-[0.6875rem] font-bold uppercase tracking-tight">
+                      {member.role}
+                    </span>
+                  </td>
+                  <td className="px-8 py-5 text-zinc-400 text-xs">
+                    {member.lastLog
+                      ? new Date(member.lastLog).toLocaleDateString()
+                      : "N/A"}
+                  </td>
+                  <td className="px-8 py-5 text-right">
+                    {/* <Button
+                      onClick={() =>
+                        setOpen(() => ({
+                          [member.id]: !open[member.id],
+                        }))
+                      }
+                      variant="ghost"
+                      size="icon"
+                      className="text-zinc-500 hover:text-on-background"
+                    >
+                      <MoreVertical className="w-4 h-4" />
+                    </Button> */}
+                    <PopoverAction workspaceId={id} memberId={member.user.id}/>
+                  </td>
+                  {/* {open[member.id] && ( */}
+                    {/* <PopoverAction
+                      open={!!open[member.id]}
+                      onOpenChange={() =>
+                        setOpen((prev) => ({
+                          ...prev,
+                          [member.id]: prev[member.id],
+                        }))
+                      }
+                      memberId={member.id}
+                    /> */}
+                  {/* )} */}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td>No Member Found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

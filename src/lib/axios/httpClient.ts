@@ -7,7 +7,6 @@ import { getNewRefreshToken } from "@/services/auth.services";
 
 const tryRefreshToken = async (
   accessToken: string,
-  refreshToken: string,
 ): Promise<void> => {
   if (!isTokenExpiringSoon(accessToken)) {
     return;
@@ -20,7 +19,7 @@ const tryRefreshToken = async (
   }
 
   try {
-    await getNewRefreshToken(refreshToken);
+    await getNewRefreshToken();
   } catch (error) {
     console.error("Error refreshing token in http client:", error);
   }
@@ -32,7 +31,7 @@ const axiosInstance = async () => {
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
   if (accessToken && refreshToken) {
-    await tryRefreshToken(accessToken, refreshToken);
+    await tryRefreshToken(accessToken);
   }
 
   const cookieHeader = cookieStore

@@ -1,25 +1,12 @@
 "use server"
 
 import { envVars } from "@/env"
-import { cookies } from "next/headers"
-
-const getCookieHeader = async() => {
-    const cookieStore = await cookies()
-    const cookieHeader = cookieStore.getAll().map(cookie => `${cookie.name}=${cookie.value}`).join("; ")
-    return cookieHeader;
-}
+import fetchWithAuthServer from "@/lib/fetchWithAuth"
 
 export const getMyInfo = async () => {
-    const cookieHeader = await getCookieHeader();
   
     try {
-        const res = await fetch(`${envVars.API_URL}/dashboard/me`, {
-            method: "GET",
-            headers : {
-                "Content-Type": "application/json",
-                Cookie : cookieHeader
-            }
-        })
+        const res = await fetchWithAuthServer(`${envVars.API_URL}/dashboard/me`)
         if(!res.ok) {
             return {
                 success : false,

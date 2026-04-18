@@ -2,30 +2,17 @@
 
 import { envVars } from "@/env";
 import { deleteCookie } from "@/lib/cookieUtils";
+import fetchWithAuthServer from "@/lib/fetchWithAuth";
 import { setTokenInCookie } from "@/lib/tokenUtils";
-import { cookies } from "next/headers";
 
-const getCookieHeader = async () => {
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join("; ");
-  return cookieHeader;
-};
 
 export const getNewRefreshToken = async (): Promise<boolean> => {
-  const cookieHeader = await getCookieHeader();
-  if (!cookieHeader.length) {
-    return false;
-  }
 
   try {
-    const res = await fetch(`${envVars.AUTH_URL}/refresh-token`, {
+    const res = await fetchWithAuthServer(`${envVars.AUTH_URL}/refresh-token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Cookie: cookieHeader,
       },
     });
 
@@ -65,22 +52,8 @@ export const getNewRefreshToken = async (): Promise<boolean> => {
 };
 
 export const getUserInfo = async () => {
-  const cookieHeader = await getCookieHeader();
-  if (!cookieHeader.length) {
-    return {
-      success: false,
-      message: "Access token not found",
-      data: null,
-    };
-  }
   try {
-    const res = await fetch(`${envVars.AUTH_URL}/me`, {
-      method: "GET",
-      headers: new Headers({
-        "Content-Type": "application/json",
-        Cookie: cookieHeader,
-      }),
-    });
+    const res = await fetchWithAuthServer(`${envVars.AUTH_URL}/me`);
 
     if (!res.ok) {
       return {
@@ -116,19 +89,11 @@ export const getUserInfo = async () => {
 };
 
 export const logout = async () => {
-  const cookieHeader = await getCookieHeader();
-  if (!cookieHeader.length) {
-    return {
-      success: false,
-      message: "Access token not found",
-    };
-  }
   try {
-    await fetch(`${envVars.AUTH_URL}/logout`, {
+    await fetchWithAuthServer(`${envVars.AUTH_URL}/logout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Cookie: cookieHeader,
       },
     });
     deleteCookie("accessToken");

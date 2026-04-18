@@ -1,6 +1,5 @@
 "use client";
 
-
 import { AppSubmitButton } from "@/components/shared/form/AppSubmitButton";
 import AppTextArea from "@/components/shared/form/AppTextArea";
 import { Button } from "@/components/ui/button";
@@ -24,7 +23,7 @@ export interface StandupData {
   workspaceId?: string;
 }
 
-export function StandupForm() {
+export function StandupForm({ workspaceId = undefined }: { workspaceId?: string }) {
   const [serverError, setServerError] = useState<string | null>(null);
   const [tags, setTags] = useState("");
   const { data: user } = useAuth();
@@ -35,7 +34,7 @@ export function StandupForm() {
     mutationFn: createLog,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["myDashboardInfo"],
+        queryKey: ["my-dashboard-info"],
       });
     },
   });
@@ -52,7 +51,8 @@ export function StandupForm() {
       try {
         const result = await mutateAsync({
           ...value,
-          userId: user?.id as string
+          userId: user?.id as string,
+          ...(workspaceId && { workspaceId }),
         });
 
         if (result.success === false) {
@@ -101,9 +101,12 @@ export function StandupForm() {
     }
   };
 
-
   return (
-    <section id="create-log" tabIndex={0} className="bg-zinc-900/60 p-8 rounded-xl border border-zinc-800/50 relative overflow-hidden focus:bg-zinc-700/80  transition-colors">
+    <section
+      id="create-log"
+      tabIndex={0}
+      className="bg-zinc-900/60 p-8 rounded-xl border border-zinc-800/50 relative overflow-hidden focus:bg-zinc-700/80  transition-colors"
+    >
       {/* Decorative blur */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 blur-3xl rounded-full"></div>
 

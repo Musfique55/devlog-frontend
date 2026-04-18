@@ -10,7 +10,7 @@ import Link from "next/link";
 
 const DashboardWrapper = () => {
     const {data : myDashboardInfo} = useQuery<MyDashboardInfo>({
-        queryKey : ['myDashboardInfo'],
+        queryKey : ['my-dashboard-info'],
         queryFn : async () => {
             const res = await getMyInfo();
             return res.data;

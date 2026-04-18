@@ -6,8 +6,12 @@ import { Plus, Briefcase, TrendingUp, Settings, Grid } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { WorkspaceSidebarSkeleton } from "./sidebar-skeleton";
+import { useState } from "react";
+import Modal from "@/components/ui/modal";
+import { StandupForm } from "../../(user)/dashboard/standup-form";
 
 export function WorkspaceSidebar() {
+  const [open,setOpen] = useState(false);
   const pathname = usePathname();
   const {id} = useParams();
   const {data : workspace,isLoading}  = useWorkspace(id as string);
@@ -63,11 +67,19 @@ export function WorkspaceSidebar() {
 
       {/* Bottom Section */}
       <div className="mt-auto px-2">
-        <Button className="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-lg py-2 sm:py-3 flex items-center justify-center gap-2 hover:opacity-90 transition-opacity text-xs sm:text-sm">
+        <Button onClick={() => setOpen(!open)} className="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-lg py-2 sm:py-3 flex items-center justify-center gap-2 hover:opacity-90 transition-opacity text-xs sm:text-sm">
           <Plus className="w-4 h-4 flex-shrink-0" />
           <span className="hidden sm:inline">New Log</span>
         </Button>
       </div>
+
+      {
+        open && (
+          <Modal title="create-log" open={open} setOpen={setOpen}>
+            <StandupForm workspaceId={id as string}/>
+          </Modal>
+        )
+      }
     </aside>
   );
 }

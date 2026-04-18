@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { Member } from "@/hooks/useWorkspace";
 import Upgrade from "@/components/ui/upgrade";
+import SubscriptionAlert from "@/components/ui/subscription-alert";
 
 
 interface TeamDirectoryProps {
@@ -110,9 +111,7 @@ export function TeamDirectory({ members, workspaceId,isAdmin }: TeamDirectoryPro
             </Button>
           </form>
         </Modal>
-      ) : <Modal title="Subscription Required" open={open} setOpen={setOpen}>
-          <Upgrade />
-        </Modal>}
+      ) : <SubscriptionAlert open={open} setOpen={setOpen}/>}
     </aside>
   );
 }

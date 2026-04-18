@@ -1,8 +1,9 @@
 "use server";
 
 import { StandupData } from "@/components/modules/(user)/dashboard/standup-form";
+import { WorkspaceLogResponse } from "@/components/modules/(workspace)/admin-dashboard/dashboard-wrapper";
 import { envVars } from "@/env";
-import { cookies } from "next/headers";
+import fetchWithAuthServer from "@/lib/fetchWithAuth";
 
 export interface Log {
   id: string;
@@ -26,28 +27,17 @@ export interface Log {
 
 
 
-const getCookieHeader = async () => {
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join("; ");
-  return cookieHeader;
-};
-
 export const createLog = async (payload: Partial<StandupData>) => {
-  const cookieHeader = await getCookieHeader();
 
   const data = Object.fromEntries(
     Object.entries(payload).filter(([_, value]) => value !== ""),
   ) as Partial<StandupData>;
 
   try {
-    const res = await fetch(`${envVars.API_URL}/logs`, {
+    const res = await fetchWithAuthServer(`${envVars.API_URL}/logs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Cookie: cookieHeader,
       },
       body: JSON.stringify(data),
     });
@@ -89,18 +79,11 @@ export const createLog = async (payload: Partial<StandupData>) => {
 export const getMyLogs = async (
   query: Record<string, string>,
 ) => {
-  const cookieHeader = await getCookieHeader();
   try {
     const url = new URL(`${envVars.API_URL}/logs`);
     url.search = new URLSearchParams(query).toString();
 
-    const res = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookieHeader,
-      },
-    });
+    const res = await fetchWithAuthServer(`${url}`);
 
     if (!res.ok) {
       return {
@@ -137,14 +120,11 @@ export const getMyLogs = async (
 };
 
 export const deleteLog = async (id: string) => {
-  console.log(id);
-  const cookieHeader = await getCookieHeader();
   try {
-    const res = await fetch(`${envVars.API_URL}/logs/${id}`, {
+    const res = await fetchWithAuthServer(`${envVars.API_URL}/logs/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Cookie: cookieHeader,
       },
     });
 
@@ -178,14 +158,12 @@ export const deleteLog = async (id: string) => {
 };
 
 export const updateLog = async (id: string, payload: Partial<StandupData>) => {
-  const cookieHeader = await getCookieHeader();
 
   try {
-    const res = await fetch(`${envVars.API_URL}/logs/${id}`, {
+    const res = await fetchWithAuthServer(`${envVars.API_URL}/logs/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Cookie: cookieHeader,
       },
       body: JSON.stringify(payload),
     });
@@ -224,17 +202,10 @@ export const updateLog = async (id: string, payload: Partial<StandupData>) => {
   }
 };
 
-export const getWorkspaceLogs = async (workspaceId: string) => {
-  const cookieHeader = await getCookieHeader();
+export const getWorkspaceLogs = async (workspaceId: string) : Promise<WorkspaceLogResponse<Log>> => {
   try {
     const url = new URL(`${envVars.API_URL}/logs/workspace/${workspaceId}`);
-    const res = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookieHeader,
-      },
-    });
+    const res = await fetchWithAuthServer(`${url}`);
 
     if (!res.ok) {
       return {

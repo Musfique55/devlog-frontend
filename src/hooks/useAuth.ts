@@ -36,7 +36,10 @@ export const useAuth = () => {
         throw null;
       }
     },
-    staleTime: 1000 * 60 * 5,
+    staleTime: Infinity,
+    gcTime :Infinity,
+    retryOnMount : false,
+    refetchOnWindowFocus : false,
     retry: false,
   });
 };
