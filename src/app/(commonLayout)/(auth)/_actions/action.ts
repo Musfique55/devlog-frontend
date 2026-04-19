@@ -38,9 +38,9 @@ export const createAccount = async (payload: {
       };
     }
 
-    await setTokenInCookie("accessToken", result.data.accessToken);
-    await setTokenInCookie("refreshToken", result.data.refreshToken);
-    await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60); //1 day
+    await setTokenInCookie("accessToken", result.data.accessToken,15 * 60);
+    await setTokenInCookie("refreshToken", result.data.refreshToken,24 * 60 * 60 * 7);
+    await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60 * 7); //7 days
 
     return {
       success: true,
@@ -86,9 +86,9 @@ export const login = async (payload: { email: string; password: string }) => {
     }
 
 
-    await setTokenInCookie("accessToken", result.data.accessToken);
-    await setTokenInCookie("refreshToken", result.data.refreshToken);
-    await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60); //1 day
+    await setTokenInCookie("accessToken", result.data.accessToken,15 * 60);
+    await setTokenInCookie("refreshToken", result.data.refreshToken,24 * 60 * 60 * 7);
+    await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60 * 7); //7 days
 
     if(result.data.user.role === "SUPER_ADMIN"){
      return redirect("/admin/dashboard");

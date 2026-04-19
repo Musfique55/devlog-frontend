@@ -6,8 +6,7 @@ import fetchWithAuthServer from "@/lib/fetchWithAuth";
 import { setTokenInCookie } from "@/lib/tokenUtils";
 
 
-export const getNewRefreshToken = async (): Promise<boolean> => {
-
+export const getNewRefreshToken = async () : Promise<boolean> => {
   try {
     const res = await fetchWithAuthServer(`${envVars.AUTH_URL}/refresh-token`, {
       method: "POST",
@@ -26,22 +25,22 @@ export const getNewRefreshToken = async (): Promise<boolean> => {
       return false;
     }
 
-    const { accessToken, refreshToken: newRefreshToken, sessionToken } = result;
+    const { accessToken, refreshToken: newRefreshToken, sessionToken } = result.data;
 
     if (accessToken) {
-      await setTokenInCookie("accessToken", accessToken);
+      await setTokenInCookie("accessToken", accessToken, 15 * 60);
     }
 
     if (newRefreshToken) {
-      await setTokenInCookie("refreshToken", newRefreshToken);
+      await setTokenInCookie("refreshToken", newRefreshToken, 24 * 60 * 60 * 7);
     }
 
     if (sessionToken) {
       await setTokenInCookie(
         "better-auth.session_token",
         sessionToken,
-        24 * 60 * 60,
-      ); //1 day
+        24 * 60 * 60 * 7,
+      ); //7 day
     }
 
     return true;

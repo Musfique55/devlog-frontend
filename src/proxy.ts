@@ -7,23 +7,24 @@ import {
   isAuthRoute,
   proUserRoutes,
 } from "./lib/authUtils";
-import { getNewRefreshToken } from "./services/auth.services";
-import { isTokenExpiringSoon } from "./lib/tokenUtils";
+// import { getNewRefreshToken } from "./services/auth.services";
+// import { isTokenExpiringSoon } from "./lib/tokenUtils";
 
 type UserRole = "SUPER_ADMIN" | "USER";
 
-async function refreshTokenMiddleware(): Promise<boolean> {
-  try {
-    const refresh = await getNewRefreshToken();
-    if (!refresh) {
-      return false;
-    }
+// async function refreshTokenMiddleware(): Promise<boolean> {
+//   try {
+//     const refresh = await getNewRefreshToken();
+//     console.log(refresh);
+//     if (!refresh) {
+//       return false;
+//     }
 
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
+//     return true;
+//   } catch (error) {
+//     return false;
+//   }
+// }
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -40,43 +41,33 @@ export async function proxy(request: NextRequest) {
   const isAuth = isAuthRoute(pathname);
   const routeOwner = getRoutesOwner(pathname);
 
-
   // proactively refresh token if refresh token exists and access token expired or about to expire
-  const refreshedToken = request.headers.get("x-token-refreshed") === "1";
-  if (
-    !refreshedToken &&
-    refreshToken &&
-    !isValidToken &&
-    (await isTokenExpiringSoon(accessToken as string))
-  ) {
-    const requestHeaders = request.headers;
-    const response = NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
+  // const refreshedToken = request.headers.get("x-token-refreshed") === "1";
+  // if (
+  //   (!refreshedToken && refreshToken && !isValidToken) ||
+  //   (accessToken && (await isTokenExpiringSoon(accessToken as string)))
+  // ) {
+  //   const requestHeaders = new Headers(request.headers);
 
-    try {
-      const refreshed = await refreshTokenMiddleware();
-      if (refreshed) {
-        requestHeaders.set("x-token-refreshed", "1");
-      }
+  //   try {
+  //     const refreshed = await refreshTokenMiddleware();
+  //     if (refreshed) {
+  //       requestHeaders.set("x-token-refreshed", "1");
+  //     }
 
-      return NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
-        headers: response.headers,
-      });
-    } catch (error) {
-      console.log("error in refreshing token", error);
-    }
+  //     return NextResponse.next({
+  //       request: {
+  //         headers: requestHeaders,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.log("error in refreshing token", error);
+  //   }
 
-    return response;
-  }
+  //   return NextResponse.next();
+  // }
 
   // authenticated user trying to access auth routes
-
 
   if (isAuth && isValidToken) {
     return NextResponse.redirect(
@@ -90,7 +81,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // protected routes
-  if (!isValidToken) {
+  if (!isValidToken && !refreshToken) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);

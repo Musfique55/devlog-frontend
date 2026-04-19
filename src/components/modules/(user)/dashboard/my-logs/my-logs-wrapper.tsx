@@ -3,19 +3,18 @@
 import { useDebounce } from "use-debounce";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Search,
-  Filter,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, Filter } from "lucide-react";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteLog, getMyLogs, updateLog } from "@/services/standupLogs.services";
+import {
+  deleteLog,
+  getMyLogs,
+  updateLog,
+} from "@/services/standupLogs.services";
 import { toast } from "sonner";
 import LogList from "./log-list";
 
-export interface LogPromise <T>{
+export interface LogPromise<T> {
   success: boolean;
   message: string;
   data: T[] | null;
@@ -27,7 +26,7 @@ export interface LogPromise <T>{
   };
 }
 
-interface LogEntry {
+export interface LogEntry {
   id: string;
   todayWork: string;
   tomorrowWork: string;
@@ -45,8 +44,6 @@ export interface EditingLog {
   blocker: string | null;
 }
 
-
-
 export default function MyLogsWrapper() {
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -55,7 +52,7 @@ export default function MyLogsWrapper() {
   const [editingLog, setEditingLog] = useState<EditingLog | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
-  
+
   const queryClient = useQueryClient();
 
   const { data: logsData } = useQuery<LogPromise<LogEntry>>({
@@ -72,7 +69,7 @@ export default function MyLogsWrapper() {
     placeholderData: (previousData) => previousData,
   });
 
-  const { mutateAsync, isPending } = useMutation({
+  const { mutateAsync: deleteLogAsync, isPending } = useMutation({
     mutationFn: async (id: string) => {
       const data = await deleteLog(id);
       if (!data.success) {
@@ -90,7 +87,7 @@ export default function MyLogsWrapper() {
     },
   });
 
-  const { mutateAsync : updateLogAsync, isPending : isUpdating } = useMutation({
+  const { mutateAsync: updateLogAsync, isPending: isUpdating } = useMutation({
     mutationFn: async (id: string) => {
       const data = await updateLog(id, editingLog as EditingLog);
       if (!data.success) {
@@ -108,6 +105,31 @@ export default function MyLogsWrapper() {
     },
   });
 
+  const handleDelete = async (id: string) => {
+    try {
+      toast.message("Are you sure?", {
+        action: {
+          label: "Yes",
+          onClick: async () => {
+            await deleteLogAsync(id);
+          },actionButtonStyle : {
+            backgroundColor : "red",
+            color : "white",
+            width : "100%"
+          }
+        },
+        cancel: {
+          label: "No",
+          onClick: () => {
+            toast.dismiss();
+          },
+        },
+      });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error : any) {
+      toast.error(error.message);
+    }
+  };
 
   const handlePagination = (operation: string) => {
     if (logsData && logsData?.meta && logsData?.meta.totalPages > 1) {
@@ -118,8 +140,6 @@ export default function MyLogsWrapper() {
       }
     }
   };
-
-  
 
   return (
     <main className="ml-64 pt-24 pb-12 px-12 min-h-screen bg-background">
@@ -171,8 +191,19 @@ export default function MyLogsWrapper() {
       </section>
 
       {/* Logs List */}
-      <LogList editingLog={editingLog} editingLogId={editingLogId} setEditingLog={setEditingLog} setEditingLogId={setEditingLogId} logsData={logsData} mutateAsync={mutateAsync} isPending={isPending} updateLogAsync={updateLogAsync} isUpdating={isUpdating}/>
-
+      {logsData && logsData.data && (
+        <LogList
+          editingLog={editingLog}
+          editingLogId={editingLogId}
+          setEditingLog={setEditingLog}
+          setEditingLogId={setEditingLogId}
+          logsData={logsData}
+          deleteLogAsync={handleDelete}
+          isPending={isPending}
+          updateLogAsync={updateLogAsync}
+          isUpdating={isUpdating}
+        />
+      )}
 
       {/* Pagination */}
       <footer className="mt-12 flex items-center justify-between">

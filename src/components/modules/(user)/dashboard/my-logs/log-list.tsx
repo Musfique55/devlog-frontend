@@ -2,9 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Edit, LoaderCircle, Trash } from "lucide-react";
-import { EditingLog, LogPromise } from "./my-logs-wrapper";
+import { EditingLog, LogEntry, LogPromise } from "./my-logs-wrapper";
 import { StandupData } from "../standup-form";
 import { UseMutateAsyncFunction } from "@tanstack/react-query";
+
 
 
 
@@ -13,11 +14,8 @@ interface LogListProps {
     setEditingLogId: React.Dispatch<React.SetStateAction<string | null>>;
     editingLog: EditingLog | null;
     setEditingLog: React.Dispatch<React.SetStateAction<EditingLog | null>>;
-    logsData: LogPromise | undefined,
-    mutateAsync: UseMutateAsyncFunction<{
-    success: boolean;
-    message: string;
-} | undefined, Error, string, unknown>,
+    logsData: LogPromise<LogEntry> | undefined,
+    deleteLogAsync: (id : string) => void,
     isPending: boolean,
     updateLogAsync: UseMutateAsyncFunction<{
     success: boolean;
@@ -27,7 +25,7 @@ interface LogListProps {
     isUpdating: boolean
 }
 
-const LogList = ({ editingLog, editingLogId, setEditingLog, setEditingLogId, logsData, mutateAsync, isPending, updateLogAsync, isUpdating}: LogListProps) => {
+const LogList = ({ editingLog, editingLogId, setEditingLog, setEditingLogId, logsData, deleteLogAsync, isPending, updateLogAsync, isUpdating}: LogListProps) => {
   
 
   return (
@@ -79,7 +77,7 @@ const LogList = ({ editingLog, editingLogId, setEditingLog, setEditingLogId, log
                           <Edit className="w-5 h-5" />
                         </Button>
                         <Button
-                          onClick={() => mutateAsync(log.id)}
+                          onClick={() => deleteLogAsync(log.id)}
                           variant="ghost"
                           size="icon"
                           className="text-zinc-500 hover:text-zinc-200 cursor-pointer"

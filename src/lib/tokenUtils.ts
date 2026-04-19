@@ -14,7 +14,6 @@ const getRemainingSeconds = (token: string) => {
     
     const remainingSeconds = payload.exp as number - Math.floor(Date.now() / 1000);
 
-
     return remainingSeconds > 0 ? remainingSeconds : 0;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error : any) {
@@ -24,13 +23,8 @@ const getRemainingSeconds = (token: string) => {
   } 
 }
 
-export const setTokenInCookie = async (name : string, token: string,fallbackMaxAge = 24 * 60 * 60) => {
-  let maxAgeInSeconds;
-  if(name !== "better-auth.session_token")
-   maxAgeInSeconds = getRemainingSeconds(token);
-
-  await setCookie(name, token, maxAgeInSeconds || fallbackMaxAge);
-
+export const setTokenInCookie = async (name : string, token: string,maxAgeInSeconds :number) => {
+  await setCookie(name, token, maxAgeInSeconds );
 }
 
 export const isTokenExpiringSoon = async(token: string,threshold = 300) => {

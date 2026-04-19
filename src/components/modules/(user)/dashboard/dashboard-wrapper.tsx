@@ -78,7 +78,7 @@ const DashboardWrapper = () => {
 
             {/* Activity Items */}
             <div className="space-y-4">
-              {myDashboardInfo && myDashboardInfo?.recentLogs.length && myDashboardInfo?.recentLogs
+              {myDashboardInfo && myDashboardInfo?.recentLogs?.length && myDashboardInfo?.recentLogs
              .map((activity, index) => (
                 <ActivityItem
                   key={index}
