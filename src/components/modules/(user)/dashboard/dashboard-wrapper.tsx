@@ -7,14 +7,18 @@ import { StandupForm } from "./standup-form";
 import { ContributionChart } from "./contribution-chart"
 import { ActivityItem } from "./activity-item";
 import Link from "next/link";
+import { MyDashboardInfo } from "@/app/(PrivateLayout)/(User)/dashboard/types";
+
+interface MyDashboardResponse  {
+  data : MyDashboardInfo | null,
+  success : boolean,
+  message : string
+}
 
 const DashboardWrapper = () => {
-    const {data : myDashboardInfo} = useQuery<MyDashboardInfo>({
+    const {data : myDashboardInfo} = useQuery<MyDashboardResponse>({
         queryKey : ['my-dashboard-info'],
-        queryFn : async () => {
-            const res = await getMyInfo();
-            return res.data;
-        }
+        queryFn : () =>  getMyInfo()
     })
     
   return (
@@ -25,23 +29,23 @@ const DashboardWrapper = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           <StatCard
             label="Streak"
-            value={myDashboardInfo?.currentStreak || 0}
+            value={myDashboardInfo?.data?.currentStreak || 0}
             unit="Days"
             accent="primary"
           />
           <StatCard
             label="Longest Streak"
-            value={myDashboardInfo?.longestStreak || 0}
+            value={myDashboardInfo?.data?.longestStreak || 0}
             unit="Days"
           />
-          <StatCard label="Total Logs" value={myDashboardInfo?.totalLogs || 0} />
+          <StatCard label="Total Logs" value={myDashboardInfo?.data?.totalLogs || 0} />
           <div className="bg-zinc-900/60 p-6 rounded-xl hover:bg-zinc-900/80 transition-colors border border-zinc-800/50">
             <p className="text-xs font-medium uppercase tracking-widest text-zinc-500 mb-2">
               This Week Logs
             </p>
             <div className="flex items-baseline gap-2">
               <h3 className="text-3xl font-bold text-zinc-100">
-                {myDashboardInfo?.thisWeekLogs || 0}
+                {myDashboardInfo?.data?.thisWeekLogs || 0}
               </h3>
               <span className="text-indigo-400 text-sm font-semibold flex items-center gap-0.5">
                 <ArrowUpRight className="w-4 h-4" />
@@ -78,7 +82,7 @@ const DashboardWrapper = () => {
 
             {/* Activity Items */}
             <div className="space-y-4">
-              {myDashboardInfo && myDashboardInfo?.recentLogs?.length && myDashboardInfo?.recentLogs
+              {myDashboardInfo && myDashboardInfo.data && myDashboardInfo.data?.recentLogs?.length && myDashboardInfo.data?.recentLogs
              .map((activity, index) => (
                 <ActivityItem
                   key={index}

@@ -13,6 +13,7 @@ import {
 } from "@/services/standupLogs.services";
 import { toast } from "sonner";
 import LogList from "./log-list";
+import { MyLogsSkeleton } from "./logs-skeleton";
 
 export interface LogPromise<T> {
   success: boolean;
@@ -55,7 +56,7 @@ export default function MyLogsWrapper() {
 
   const queryClient = useQueryClient();
 
-  const { data: logsData } = useQuery<LogPromise<LogEntry>>({
+  const { data: logsData,isLoading } = useQuery<LogPromise<LogEntry>>({
     queryKey: ["logs", sortBy, debouncedSearchQuery, currentPage, limit],
     queryFn: async () => {
       const data = await getMyLogs({
@@ -141,9 +142,15 @@ export default function MyLogsWrapper() {
     }
   };
 
+
+  if(isLoading){
+    return <MyLogsSkeleton />
+  }
+
   return (
     <main className="ml-64 pt-24 pb-12 px-12 min-h-screen bg-background">
       {/* Header & Breadcrumbs */}
+      
       <div className="mb-10">
         <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-zinc-500 mb-2 font-semibold">
           <span>Workspace</span>

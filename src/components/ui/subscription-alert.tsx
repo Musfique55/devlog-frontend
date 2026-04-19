@@ -31,7 +31,7 @@ const SubscriptionAlert = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction>
-            <Link href="/upgrade-plan">Upgrade</Link>
+            <Link href="/pricing">Upgrade</Link>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

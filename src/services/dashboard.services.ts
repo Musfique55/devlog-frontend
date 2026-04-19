@@ -27,7 +27,8 @@ export const getMyInfo = async () => {
 
         return {
             success : true,
-            data : result.data
+            data : result.data,
+            message : result.message
         }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

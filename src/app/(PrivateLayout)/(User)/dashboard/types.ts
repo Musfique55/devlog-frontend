@@ -1,4 +1,4 @@
-interface MyDashboardInfo {
+export interface MyDashboardInfo {
     currentStreak: number,
     longestStreak: number,
     lastLogDate: string | null,

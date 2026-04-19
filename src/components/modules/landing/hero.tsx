@@ -3,7 +3,7 @@ import { Play } from "lucide-react";
 
 export function HeroSection() {
   return (
-    <section className="relative pt-20 sm:pt-32 pb-16 sm:pb-24 overflow-hidden px-4 sm:px-0">
+    <section className="relative">
       <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent opacity-50" />
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-16 items-center relative z-10">
         <div className="flex flex-col gap-6 sm:gap-8">

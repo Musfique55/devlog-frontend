@@ -5,8 +5,8 @@ import { Code, Plus } from "lucide-react";
 import { useState } from "react";
 import Modal from "@/components/ui/modal";
 import { useAuth } from "@/hooks/useAuth";
-import Upgrade from "@/components/ui/upgrade";
 import WorkspaceCreationForm from "@/components/shared/form/workspace-creation-form";
+import SubscriptionAlert from "@/components/ui/subscription-alert";
 
 interface Team {
   id: string;
@@ -77,9 +77,7 @@ export function TeamGrid({ teams }: { teams: Team[] }) {
         </Modal>
       ) : (
         open && (
-          <Modal title="Buy Subscription" setOpen={setOpen} open={open}>
-            <Upgrade />
-          </Modal>
+          <SubscriptionAlert open={open} setOpen={setOpen}/>
         )
       )}
     </section>

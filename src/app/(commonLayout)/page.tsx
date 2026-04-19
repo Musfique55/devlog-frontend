@@ -7,14 +7,12 @@ import { TestimonialsSection } from "@/components/modules/landing/testimonial";
 
 export default function Home() {
   return (
-    <div className="">
-      <main className="">
+      <main >
         <HeroSection />
         <HowItWorks />
         <FeaturesSection/>
         <PricingSection />
         <TestimonialsSection />
       </main>
-    </div>
   );
 }

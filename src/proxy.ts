@@ -75,8 +75,13 @@ export async function proxy(request: NextRequest) {
     );
   }
 
+  // public routes
+  if (routeOwner === null) {
+    return NextResponse.next();
+  }
+
   // unauthenticated user
-  if (isAuth && !isValidToken) {
+  if (isAuth && !isValidToken && !refreshToken) {
     return NextResponse.next();
   }
 
@@ -105,15 +110,12 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // public routes
-  if (routeOwner === null) {
-    return NextResponse.next();
-  }
+  
 
   // free user catch
 
   if (user?.plan === "FREE" && proUserRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL("/upgrade-plan", request.url));
+    return NextResponse.redirect(new URL("/pricing", request.url));
   }
 
   // admin route
