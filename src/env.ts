@@ -10,6 +10,7 @@ export const envVars = createEnv({
     FRONTEND_URL: z.string(),
     BETTER_AUTH_SECRET: z.string(),
     JWT_SECRET_KEY :  z.string(),
+     STRIPE_SECRET_KEY : z.string()
   },
   runtimeEnv: {
     API_URL: process.env.API_URL,
@@ -18,5 +19,6 @@ export const envVars = createEnv({
     FRONTEND_URL: process.env.FRONTEND_URL,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     JWT_SECRET_KEY : process.env.JWT_SECRET_KEY,
+     STRIPE_SECRET_KEY : process.env.STRIPE_SECRET_KEY
   },
 });

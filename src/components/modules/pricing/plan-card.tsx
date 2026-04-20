@@ -1,5 +1,6 @@
 'use client';
 
+import StripeCheckoutButton from '@/components/shared/stripe-checkout-button';
 import { Button } from '@/components/ui/button';
 import { Check, ArrowRight } from 'lucide-react';
 
@@ -43,10 +44,11 @@ export function PlanCard() {
         </div>
 
         {/* CTA Button */}
-        <Button className="w-full py-6 px-6 rounded-lg bg-gradient-to-r from-indigo-400 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-lg flex items-center justify-center gap-3 transition-all">
+        {/* <Button className="w-full py-6 px-6 rounded-lg bg-gradient-to-r from-indigo-400 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-lg flex items-center justify-center gap-3 transition-all">
           <span>Pay with Stripe</span>
           <ArrowRight className="w-5 h-5" />
-        </Button>
+        </Button> */}
+        <StripeCheckoutButton />
 
         {/* Security Info */}
         <p className="mt-6 text-center text-xs text-outline font-medium tracking-wide uppercase">
