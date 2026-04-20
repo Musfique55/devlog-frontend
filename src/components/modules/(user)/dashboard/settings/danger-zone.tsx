@@ -1,14 +1,19 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { deleteAccount, logout } from '@/services/auth.services';
 import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function DangerZone() {
   const [isConfirming, setIsConfirming] = useState(false);
 
-  const handleDelete = () => {
-    console.log('[v0] Deleting workspace account');
+  const handleDelete = async () => {
+    const res = await deleteAccount();
+    if(!res.success) return toast.error(res.message);
+    toast.success(res.message);
+    await logout();
     setIsConfirming(false);
   };
 

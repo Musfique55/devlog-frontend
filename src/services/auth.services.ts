@@ -113,3 +113,43 @@ export const logout = async () => {
     };
   }
 };
+
+export const deleteAccount = async () => {
+    try {
+        const res = await fetchWithAuthServer(`${envVars.AUTH_URL}/delete-account`,{
+            method : "DELETE"
+        })
+
+
+        if(!res.ok){
+            return {
+                success : false,
+                message : res.statusText
+            }
+        }
+
+        const result = await res.json();
+
+        console.log(result);
+
+        if(!result.success){
+            return {
+                success : false,
+                message : result.message
+            }
+        }
+
+        return {
+            success : true,
+            message : result.message
+        }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error : any) {
+        console.log(error);
+        return {
+            success : false,
+            message : error.message
+        }
+    
+    }
+}

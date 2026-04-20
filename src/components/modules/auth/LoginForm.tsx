@@ -1,5 +1,5 @@
 "use client";
-import { login } from "@/app/(commonLayout)/(auth)/_actions/action";
+import { login } from "@/app/(auth)/_actions/action";
 import AppFields from "@/components/shared/form/AppFields";
 import { AppSubmitButton } from "@/components/shared/form/AppSubmitButton";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,8 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import Link from "next/link";
 
-export function LoginForm() {
+
+export default function LoginForm() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -28,19 +29,21 @@ export function LoginForm() {
       setServerError(null);
       try {
         const result = await mutateAsync(value);
+        console.log(result);
         if (result!.success === false) {
           setServerError(result!.error as string);
           return;
         }
-        toast.success("Logged in Successfully");
         form.reset();
+        toast.success("Logged in Successfully");
         setServerError(null);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         setServerError(error.message!);
       }
-    },
+    }
   });
+
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden  selection:bg-primary-container/30">

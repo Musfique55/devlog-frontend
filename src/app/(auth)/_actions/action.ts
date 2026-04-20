@@ -1,6 +1,6 @@
 "use server";
 
-import { envVars } from "../../../../env";
+import { envVars } from "../../../env";
 import { authValidator } from "@/zod/authValidator";
 import { redirect } from "next/navigation";
 import { setTokenInCookie } from "@/lib/tokenUtils";

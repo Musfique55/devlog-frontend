@@ -1,3 +1,4 @@
+"use client"
 import { getUserInfo } from "@/services/auth.services";
 import { useQuery } from "@tanstack/react-query";
 import { Workspace } from "./useWorkspace";
@@ -41,5 +42,6 @@ export const useAuth = () => {
     retryOnMount : false,
     refetchOnWindowFocus : false,
     retry: false,
+    throwOnError : false
   });
 };

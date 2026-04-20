@@ -7,72 +7,43 @@ import {
   isAuthRoute,
   proUserRoutes,
 } from "./lib/authUtils";
-// import { getNewRefreshToken } from "./services/auth.services";
-// import { isTokenExpiringSoon } from "./lib/tokenUtils";
 
 type UserRole = "SUPER_ADMIN" | "USER";
 
-// async function refreshTokenMiddleware(): Promise<boolean> {
-//   try {
-//     const refresh = await getNewRefreshToken();
-//     console.log(refresh);
-//     if (!refresh) {
-//       return false;
-//     }
-
-//     return true;
-//   } catch (error) {
-//     return false;
-//   }
-// }
-
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
-  const isValidToken = accessToken
-    ? jwtUtils.verifyToken(accessToken, envVars.JWT_SECRET_KEY).success
-    : false;
-  const decodedToken = accessToken ? jwtUtils.decodedToken(accessToken) : null;
+  
   let user = null;
-  if (decodedToken) {
-    user = decodedToken;
+  let isValidToken = false;
+
+  try {
+    if (accessToken) {
+      const verify = jwtUtils.verifyToken(accessToken, envVars.JWT_SECRET_KEY);
+      isValidToken = verify.success;
+      user = jwtUtils.decodedToken(accessToken);
+    }
+    if (!isValidToken && refreshToken) {
+      user = jwtUtils.decodedToken(refreshToken);
+    }
+  } catch (error) {
+    isValidToken = false;
   }
+
   const isAuth = isAuthRoute(pathname);
   const routeOwner = getRoutesOwner(pathname);
-
-  // proactively refresh token if refresh token exists and access token expired or about to expire
-  // const refreshedToken = request.headers.get("x-token-refreshed") === "1";
-  // if (
-  //   (!refreshedToken && refreshToken && !isValidToken) ||
-  //   (accessToken && (await isTokenExpiringSoon(accessToken as string)))
-  // ) {
-  //   const requestHeaders = new Headers(request.headers);
-
-  //   try {
-  //     const refreshed = await refreshTokenMiddleware();
-  //     if (refreshed) {
-  //       requestHeaders.set("x-token-refreshed", "1");
-  //     }
-
-  //     return NextResponse.next({
-  //       request: {
-  //         headers: requestHeaders,
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.log("error in refreshing token", error);
-  //   }
-
-  //   return NextResponse.next();
-  // }
+  
 
   // authenticated user trying to access auth routes
-
-  if (isAuth && isValidToken) {
-    return NextResponse.redirect(
-      new URL(getDefaultDashboardRoute(user!.role as UserRole), request.url),
-    );
+  if (isAuth) {
+    if (isValidToken && user) {
+      return NextResponse.redirect(
+        new URL(getDefaultDashboardRoute(user!.role as UserRole), request.url),
+      );
+    }
+    return NextResponse.next();
   }
 
   // public routes
@@ -80,61 +51,56 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // unauthenticated user
-  if (isAuth && !isValidToken && !refreshToken) {
-    return NextResponse.next();
-  }
-
   // protected routes
-  if (!isValidToken && !refreshToken) {
+  if (!isValidToken && !refreshToken && routeOwner !== null) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // for users with not verified email
-  if (pathname.startsWith("/verify-email")) {
-    if (isValidToken) {
-      if (!user?.emailVerified) {
-        return NextResponse.next();
+  if (user) {
+    if (pathname.startsWith("/verify-email")) {
+      if (isValidToken) {
+        if (!user?.emailVerified) {
+          return NextResponse.next();
+        } else {
+          return NextResponse.redirect(
+            new URL(
+              getDefaultDashboardRoute(user?.role as UserRole),
+              request.url,
+            ),
+          );
+        }
       } else {
-        return NextResponse.redirect(
-          new URL(
-            getDefaultDashboardRoute(user?.role as UserRole),
-            request.url,
-          ),
-        );
+        return NextResponse.redirect(new URL("/login", request.url));
       }
-    } else {
-      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    // free user catch
+    if (user?.plan === "FREE" && proUserRoutes.includes(pathname)) {
+      return NextResponse.redirect(new URL("/pricing", request.url));
+    }
+
+    // admin route
+    if (routeOwner === "SUPER_ADMIN" && user?.role !== "SUPER_ADMIN") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+
+    // prevent admin to access users route
+    if (routeOwner === "USER" && user?.role === "SUPER_ADMIN") {
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    }
+
+    if (routeOwner === "WORKSPACE" && user?.role === "SUPER_ADMIN") {
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    }
+
+    if (routeOwner === "COMMON") {
+      return NextResponse.next();
     }
   }
 
-  
-
-  // free user catch
-
-  if (user?.plan === "FREE" && proUserRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL("/pricing", request.url));
-  }
-
-  // admin route
-  if (routeOwner === "SUPER_ADMIN" && user?.role !== "SUPER_ADMIN") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
-  // prevent admin to access users route
-  if (routeOwner === "USER" && user?.role === "SUPER_ADMIN") {
-    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
-  }
-
-  if (routeOwner === "WORKSPACE" && user?.role === "SUPER_ADMIN") {
-    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
-  }
-
-  if (routeOwner === "COMMON") {
-    return NextResponse.next();
-  }
+  // for users with not verified email
 
   return NextResponse.next();
 }

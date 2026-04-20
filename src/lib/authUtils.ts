@@ -25,18 +25,18 @@ const commonPrivateRoute: RoutesConfig = {
 };
 
 const adminRoutes: RoutesConfig = {
-  pattern: [/^\/admin\/dashboard/],
+  pattern: [/^\/admin/],
   exact: [],
 };
 
 const workSpaceRoutes: RoutesConfig = {
-  pattern: [/^\/workspace\/*/],
-  exact: [],
+  pattern: [/^\/workspace\//],
+  exact: ['/workspace'],
 };
 
 const soloUserRoutes: RoutesConfig = {
-  pattern: [/^\/dashboard\/*/],
-  exact: ["/payment/success", "/payment/failed"],
+  exact: ["/dashboard", "/payment/success", "/payment/failed"],
+  pattern: [/^\/logs/, /^\/calendar/], 
 };
 
 export const isAuthRoute = (pathname: string) : boolean => {

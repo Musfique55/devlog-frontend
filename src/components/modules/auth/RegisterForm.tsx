@@ -1,5 +1,5 @@
 "use client";
-import { createAccount } from "@/app/(commonLayout)/(auth)/_actions/action";
+import { createAccount } from "@/app/(auth)/_actions/action";
 import AppFields from "@/components/shared/form/AppFields";
 import { AppSubmitButton } from "@/components/shared/form/AppSubmitButton";
 import { Button } from "@/components/ui/button";
