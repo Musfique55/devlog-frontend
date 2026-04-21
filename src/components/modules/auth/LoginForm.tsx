@@ -29,7 +29,6 @@ export default function LoginForm() {
       setServerError(null);
       try {
         const result = await mutateAsync(value);
-        console.log(result);
         if (result!.success === false) {
           setServerError(result!.error as string);
           return;

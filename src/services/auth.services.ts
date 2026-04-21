@@ -15,11 +15,11 @@ export const getNewRefreshToken = async () : Promise<boolean> => {
       },
     });
 
-    if (!res.ok) {
+    if (res && !res.ok) {
       return false;
     }
 
-    const result = await res.json();
+    const result = await res!.json();
 
     if (!result.success) {
       return false;
@@ -52,7 +52,12 @@ export const getNewRefreshToken = async () : Promise<boolean> => {
 
 export const getUserInfo = async () => {
   try {
-    const res = await fetchWithAuthServer(`${envVars.AUTH_URL}/me`);
+    const res = await fetch(`${envVars.AUTH_URL}/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!res.ok) {
       return {
@@ -121,14 +126,14 @@ export const deleteAccount = async () => {
         })
 
 
-        if(!res.ok){
+        if(res && !res.ok){
             return {
                 success : false,
                 message : res.statusText
             }
         }
 
-        const result = await res.json();
+        const result = await res!.json();
 
         console.log(result);
 

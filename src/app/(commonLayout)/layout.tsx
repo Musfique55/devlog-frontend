@@ -1,4 +1,5 @@
-import { Navigation } from "@/components/modules/navbar/navbar";
+
+import Navigation from "@/components/modules/navbar/navbar";
 import { Footer } from "@/components/ui/footer";
 
 export default function CommonLayout({

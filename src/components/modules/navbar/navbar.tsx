@@ -6,12 +6,11 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-export function Navigation() {
+ function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   const {data : user} = useAuth();
-
-  console.log(user);
+ 
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-transparent border-b border-border">
@@ -47,7 +46,7 @@ export function Navigation() {
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            {user && user.emailVerified ? (
+            {user && user.data ? (
             <Link
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               href="/dashboard"
@@ -70,7 +69,7 @@ export function Navigation() {
 
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-4">
-          {user && user.emailVerified && !user.isBlocked && !user.isDeleted? (
+          {user && user.data ? (
             <Link
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               href="/dashboard"
@@ -128,3 +127,5 @@ export function Navigation() {
     </nav>
   );
 }
+
+export default Navigation;

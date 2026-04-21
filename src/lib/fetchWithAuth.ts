@@ -13,7 +13,7 @@ const getCookieHeader = async () => {
   return cookieHeader;
 };
 
-const fetchWithAuthServer = async (url: string, options: RequestInit = {}) => {
+const fetchWithAuthServer = async (url: string, options: RequestInit = {},required : boolean = true) => {
   const cookieHeader = await getCookieHeader();
   let res = await fetch(url, {
     ...options,
@@ -23,13 +23,18 @@ const fetchWithAuthServer = async (url: string, options: RequestInit = {}) => {
     },
   });
 
+  if(!cookieHeader && !required){
+    return null;
+  }
+
   if (res.status === 401) {
     const refreshRes = await getNewRefreshToken();
     if (!refreshRes) {
       (await cookies()).delete("accessToken");
       (await cookies()).delete("refreshToken");
       (await cookies()).delete("better-auth.session_token");
-      redirect("/login");
+      // redirect("/login");
+      throw new Error("Unauthorized");
     }
 
     const updatedCookie = await getCookieHeader();

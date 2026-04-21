@@ -1,9 +1,13 @@
-"use client"
+
 import { getUserInfo } from "@/services/auth.services";
 import { useQuery } from "@tanstack/react-query";
 import { Workspace } from "./useWorkspace";
 
-
+interface UserResponse {
+  success: boolean;
+  message: string;
+  data: User | null;
+}
 export interface User {
   id: string;
   name: string;
@@ -26,17 +30,9 @@ export interface User {
 }
 
 export const useAuth = () => {
-  return useQuery<User>({
+  return useQuery<UserResponse>({
     queryKey: ["user"],
-    queryFn: async () => {
-      try {
-        const res = await getUserInfo();
-        return res.data;
-      } catch (error) {
-        console.log(error);
-        throw null;
-      }
-    },
+    queryFn:  getUserInfo,
     staleTime: Infinity,
     gcTime :Infinity,
     retryOnMount : false,
