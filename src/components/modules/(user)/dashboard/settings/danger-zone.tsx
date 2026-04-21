@@ -3,17 +3,19 @@
 import { Button } from '@/components/ui/button';
 import { deleteAccount, logout } from '@/services/auth.services';
 import { Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function DangerZone() {
   const [isConfirming, setIsConfirming] = useState(false);
-
+  const router= useRouter();
   const handleDelete = async () => {
     const res = await deleteAccount();
     if(!res.success) return toast.error(res.message);
     toast.success(res.message);
     await logout();
+    router.push('/login');
     setIsConfirming(false);
   };
 

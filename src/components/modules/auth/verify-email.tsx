@@ -9,6 +9,7 @@ import { authClient } from "@/lib/bauth/authClient";
 import { useRouter } from "next/navigation";
 import { logout } from "@/services/auth.services";
 
+
 const BouncingDots = () => {
   return (
     <div className="flex justify-center items-center gap-1 py-4">
@@ -35,17 +36,17 @@ export default function VerifyEmail({ token }: { token: string }) {
   const { isError, isLoading, isSuccess } = useQuery({
     queryKey: ["verify-email"],
     queryFn: async () => {
-        const res = await authClient.verifyEmail({
-          query: { token },
-        });
+      const res = await authClient.verifyEmail({
+        query: { token },
+      });
 
-        if (!res.data?.status) {
-          throw new Error(res.error?.message);
-        }
+      if (!res.data?.status) {
+        throw new Error(res.error?.message);
+      }
 
-        await logout();
-        router.push("/login");
-        return res.data;
+      await logout();
+      router.push("/login");
+      return res.data;
     },
     retry: false,
   });
@@ -119,7 +120,6 @@ export default function VerifyEmail({ token }: { token: string }) {
                 </p>
               </div>
               <div className="space-y-3 pt-4">
-                
                 <Link href="/login">
                   <Button
                     variant="outline"

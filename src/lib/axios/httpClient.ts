@@ -41,6 +41,7 @@ const axiosInstance = async () => {
 
   const instance = axios.create({
     baseURL: envVars.API_URL,
+    timeout : 30000,
     headers: {
       "Content-Type": "application/json",
       Cookie: cookieHeader,
@@ -55,7 +56,7 @@ export interface ApiRequestOptions {
   headers?: Record<string, string>;
 }
 
-const httpGet = async (endpoint: string, options?: ApiRequestOptions) => {
+export const httpGet = async (endpoint: string, options?: ApiRequestOptions) => {
   try {
     const instance = await axiosInstance();
     const response = await instance.get(endpoint, {
@@ -70,7 +71,7 @@ const httpGet = async (endpoint: string, options?: ApiRequestOptions) => {
   }
 };
 
-const httpPost = async (
+export const httpPost = async (
   endpoint: string,
   data: unknown,
   options?: ApiRequestOptions,
@@ -88,7 +89,7 @@ const httpPost = async (
   }
 };
 
-const httpPut = async (
+export const httpPut = async (
   endpoint: string,
   data: unknown,
   options?: ApiRequestOptions,
@@ -106,7 +107,7 @@ const httpPut = async (
   }
 };
 
-const httpPatch = async (
+export const httpPatch = async (
   endpoint: string,
   data: unknown,
   options?: ApiRequestOptions,
@@ -124,7 +125,7 @@ const httpPatch = async (
   }
 };
 
-const httpDelete = async (endpoint: string, options?: ApiRequestOptions) => {
+export const httpDelete = async (endpoint: string, options?: ApiRequestOptions) => {
   try {
     const instance = await axiosInstance();
     const response = await instance.post(endpoint, {
@@ -138,10 +139,4 @@ const httpDelete = async (endpoint: string, options?: ApiRequestOptions) => {
   }
 };
 
-export const httpClient = {
-  get: httpGet,
-  post: httpPost,
-  put: httpPut,
-  patch: httpPatch,
-  delete: httpDelete,
-};
+

@@ -13,7 +13,7 @@ const WorkspaceCreationForm = ({
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { data: user } = useAuth();
+  const  {data : user}  = useAuth();
   const queryClient = useQueryClient();
 
   const { mutateAsync, error, isPending } = useMutation({

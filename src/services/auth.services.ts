@@ -6,7 +6,7 @@ import fetchWithAuthServer from "@/lib/fetchWithAuth";
 import { setTokenInCookie } from "@/lib/tokenUtils";
 
 
-export const getNewRefreshToken = async () : Promise<boolean> => {
+export const getNewRefreshToken = async () : Promise<{message : string,success:boolean,data : null | {accessToken : string,refreshToken : string,sessionToken : string}}> => {
   try {
     const res = await fetchWithAuthServer(`${envVars.AUTH_URL}/refresh-token`, {
       method: "POST",
@@ -15,14 +15,22 @@ export const getNewRefreshToken = async () : Promise<boolean> => {
       },
     });
 
-    if (res && !res.ok) {
-      return false;
+    if (!res.ok) {
+      return {
+        success : false,
+        data : null,
+        message : res.statusText
+      };
     }
 
     const result = await res!.json();
 
     if (!result.success) {
-      return false;
+      return {
+        success : false,
+        data : null,
+        message : result.message
+      }
     }
 
     const { accessToken, refreshToken: newRefreshToken, sessionToken } = result.data;
@@ -43,16 +51,26 @@ export const getNewRefreshToken = async () : Promise<boolean> => {
       ); //7 day
     }
 
-    return true;
-  } catch (error) {
+    return {
+      success : true,
+      data : result.data,
+      message : result.message
+    };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error : any) {
     console.log(error);
-    return false;
+    return {
+      success : false,
+      message : error.message,
+      data : null
+    };
   }
 };
 
 export const getUserInfo = async () => {
+
   try {
-    const res = await fetch(`${envVars.AUTH_URL}/me`, {
+    const res = await fetchWithAuthServer(`${envVars.AUTH_URL}/me`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -69,6 +87,7 @@ export const getUserInfo = async () => {
 
     const result = await res.json();
 
+
     if (!result.success) {
       return {
         success: false,
@@ -76,6 +95,8 @@ export const getUserInfo = async () => {
         data: null,
       };
     }
+
+    console.log(result);
 
     return {
       success: true,
@@ -125,7 +146,6 @@ export const deleteAccount = async () => {
             method : "DELETE"
         })
 
-
         if(res && !res.ok){
             return {
                 success : false,
@@ -134,9 +154,6 @@ export const deleteAccount = async () => {
         }
 
         const result = await res!.json();
-
-        console.log(result);
-
         if(!result.success){
             return {
                 success : false,

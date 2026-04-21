@@ -1,13 +1,9 @@
-
-import { getUserInfo } from "@/services/auth.services";
-import { useQuery } from "@tanstack/react-query";
+"use client"
+import { getCookie } from "cookies-next/client";
 import { Workspace } from "./useWorkspace";
+import { useQuery } from "@tanstack/react-query";
+import { getUserInfo } from "@/services/auth.services";
 
-interface UserResponse {
-  success: boolean;
-  message: string;
-  data: User | null;
-}
 export interface User {
   id: string;
   name: string;
@@ -29,15 +25,18 @@ export interface User {
   workspaces: Workspace[];
 }
 
+
+
 export const useAuth = () => {
-  return useQuery<UserResponse>({
+  const hasCookie = getCookie("refreshToken");
+  return useQuery<User>({
     queryKey: ["user"],
-    queryFn:  getUserInfo,
+    queryFn:  async() => {
+      const res = await getUserInfo();
+      return res.data;
+    },
     staleTime: Infinity,
-    gcTime :Infinity,
-    retryOnMount : false,
-    refetchOnWindowFocus : false,
     retry: false,
-    throwOnError : false
-  });
+    // enabled : !!hasCookie
+  })
 };

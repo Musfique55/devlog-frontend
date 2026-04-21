@@ -12,7 +12,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 export default function ProfileSection() {
-  const { data: user } = useAuth();
+  const {data : user}  = useAuth();
   const imageRef = useRef<HTMLInputElement | null>(null);
   const [profileImage, setProfileImage] = useState<File | null>(null);
 

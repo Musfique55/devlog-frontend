@@ -36,7 +36,7 @@ const workSpaceRoutes: RoutesConfig = {
 
 const soloUserRoutes: RoutesConfig = {
   exact: ["/dashboard", "/payment/success", "/payment/failed"],
-  pattern: [/^\/logs/, /^\/calendar/], 
+  pattern: [/^\/logs/, /^\/calendar/,/^\/dashboard\//] 
 };
 
 export const isAuthRoute = (pathname: string) : boolean => {

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { MemberTable } from "./member-overview";
 
-import { AlertTriangle, Calendar, LoaderCircle, Subscript } from "lucide-react";
+import { AlertTriangle, Calendar, LoaderCircle } from "lucide-react";
 import { WorkspaceAdminStatCard } from "./stat-card";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getWorkspaceStats, inviteUserToWorkspace } from "@/services/workspace.services";
@@ -13,7 +13,6 @@ import TeamHealthHeatmap from "./team-health-heat-map";
 import { useState } from "react";
 import Modal from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
-import Upgrade from "@/components/ui/upgrade";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import SubscriptionAlert from "@/components/ui/subscription-alert";

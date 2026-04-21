@@ -4,6 +4,7 @@ import { getNewRefreshToken } from "@/services/auth.services";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+
 const getCookieHeader = async () => {
   const cookieStore = await cookies();
   const cookieHeader = cookieStore
@@ -13,7 +14,7 @@ const getCookieHeader = async () => {
   return cookieHeader;
 };
 
-const fetchWithAuthServer = async (url: string, options: RequestInit = {},required : boolean = true) => {
+const fetchWithAuthServer = async (url: string, options: RequestInit = {}) => {
   const cookieHeader = await getCookieHeader();
   let res = await fetch(url, {
     ...options,
@@ -23,19 +24,15 @@ const fetchWithAuthServer = async (url: string, options: RequestInit = {},requir
     },
   });
 
-  if(!cookieHeader && !required){
-    return null;
-  }
-
   if (res.status === 401) {
-    const refreshRes = await getNewRefreshToken();
-    if (!refreshRes) {
-      (await cookies()).delete("accessToken");
-      (await cookies()).delete("refreshToken");
-      (await cookies()).delete("better-auth.session_token");
-      // redirect("/login");
-      throw new Error("Unauthorized");
+    const refreshToken = (await cookies()).get("refreshToken");
+    if (!refreshToken) {
+        (await cookies()).delete("accessToken");
+        (await cookies()).delete("refreshToken");
+        (await cookies()).delete("better-auth.session_token");
+        redirect("/login");
     }
+    await getNewRefreshToken();
 
     const updatedCookie = await getCookieHeader();
 

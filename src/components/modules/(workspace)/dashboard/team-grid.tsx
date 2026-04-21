@@ -18,7 +18,7 @@ interface Team {
 
 export function TeamGrid({ teams }: { teams: Team[] }) {
   const [open, setOpen] = useState(false);
-  const { data: user } = useAuth();
+  const {data :user}  = useAuth();
 
   return (
     <section>

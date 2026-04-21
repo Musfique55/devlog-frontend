@@ -14,7 +14,7 @@ import { toast } from "sonner";
 
 const TeamFallback = () => {
   const [open, setOpen] = useState(false);
-  const { data: user } = useAuth();
+  const {data : user}  = useAuth();
 
   const queryClient = useQueryClient();
 

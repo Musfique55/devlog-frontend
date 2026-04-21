@@ -26,6 +26,8 @@ const ActivityWrapper = ({ id }: { id: string }) => {
     }
   })
 
+  console.log(members);
+
 
   return (
     <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">

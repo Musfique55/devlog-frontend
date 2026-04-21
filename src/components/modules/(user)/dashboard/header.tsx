@@ -10,7 +10,8 @@ interface HeaderProps {
 }
 
 export function Header({ title = "Dashboard", onSearch }: HeaderProps) {
-  const { data } = useAuth();
+  const {data : user} = useAuth();
+
   return (
     <header className="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800/20 flex justify-between items-center px-8 z-40">
       {/* Left Section */}
@@ -41,10 +42,10 @@ export function Header({ title = "Dashboard", onSearch }: HeaderProps) {
         </button>
 
         {/* User Profile */}
-        {data && data.image ? (
+        {user && user?.image ? (
           <div className="h-8 w-8 rounded-full overflow-hidden ring-2 ring-indigo-500/20">
             <Image
-              src={data.image}
+              src={user.image}
               alt="User profile"
               width={32}
               height={32}
@@ -53,7 +54,7 @@ export function Header({ title = "Dashboard", onSearch }: HeaderProps) {
           </div>
         ) : (
           <div className="w-8 h-8 rounded-xl object-cover hover:grayscale-0 transition-all duration-300 bg-amber-800 flex items-center justify-center text-white font-bold text-2xl">
-            <p>{data?.name[0]}</p>
+            <p>{user?.name[0]}</p>
           </div>
         )}
       </div>

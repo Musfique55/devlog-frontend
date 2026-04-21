@@ -10,14 +10,20 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 
 export default function LoginForm() {
+  const searchParams = useSearchParams();
+  const intendedUrl = searchParams.get("redirect");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: login,
+    mutationFn: async (value : {email: string, password: string}) => {
+     const res = await login(value,intendedUrl);
+     return res;
+    },
   });
 
   const form = useForm({

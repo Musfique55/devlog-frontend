@@ -7,15 +7,18 @@ import {
   isAuthRoute,
   proUserRoutes,
 } from "./lib/authUtils";
+import { getNewRefreshToken } from "./services/auth.services";
+import { isTokenExpiringSoon } from "./lib/tokenUtils";
 
 type UserRole = "SUPER_ADMIN" | "USER";
 
+
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  
+
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
-  
+
   let user = null;
   let isValidToken = false;
 
@@ -32,9 +35,53 @@ export async function proxy(request: NextRequest) {
     isValidToken = false;
   }
 
+
   const isAuth = isAuthRoute(pathname);
   const routeOwner = getRoutesOwner(pathname);
+
+  // proactive refresh token for those who have refresh token
+  if (
+    (!isValidToken && refreshToken) ||
+    (accessToken && (await isTokenExpiringSoon(accessToken)))
+  ) {
+    try {
+      const refreshed = await getNewRefreshToken();
   
+      if (refreshed.success) {
+        const response = NextResponse.next();
+
+        response.headers.set("x-token-refreshed","1");
+        response.cookies.set({
+          name: "accessToken",
+          value: refreshed.data!.accessToken,
+          httpOnly: true,
+          path: "/",
+          sameSite: "lax",
+          maxAge: 15 * 60,
+        })
+        response.cookies.set({
+          name: "refreshToken",
+          value: refreshed.data!.refreshToken,
+          httpOnly: true,
+          path: "/",
+          sameSite: "lax",
+          maxAge: 24 * 60 * 60 * 7,
+        })
+        response.cookies.set({
+          name: "better-auth.session_token",
+          value: refreshed.data!.sessionToken,
+          httpOnly: true,
+          path: "/",
+          sameSite: "lax",
+          maxAge: 24 * 60 * 60 * 7,
+        })
+
+        return response;
+      }
+    } catch (error) {
+      console.log("error on refreshing token", error);
+    }
+  }
 
   // authenticated user trying to access auth routes
   if (isAuth) {

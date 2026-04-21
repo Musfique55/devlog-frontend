@@ -25,13 +25,19 @@ export interface Log {
   updatedAt: Date;
 }
 
+interface LogPayload {
+  todayWork : string
+  tomorrowWork : string
+  blocker? : string
+  projectTags : string[]
+}
 
 
-export const createLog = async (payload: Partial<StandupData>) => {
+export const createLog = async (payload: LogPayload) => {
 
   const data = Object.fromEntries(
     Object.entries(payload).filter(([_, value]) => value !== ""),
-  ) as Partial<StandupData>;
+  );
 
   try {
     const res = await fetchWithAuthServer(`${envVars.API_URL}/logs`, {
@@ -42,6 +48,7 @@ export const createLog = async (payload: Partial<StandupData>) => {
       body: JSON.stringify(data),
     });
 
+
     if (!res.ok) {
       return {
         success: false,
@@ -50,7 +57,7 @@ export const createLog = async (payload: Partial<StandupData>) => {
       };
     }
 
-    const result = await res.json();
+    const result = await res!.json();
 
     if (!result.success) {
       return {
@@ -85,7 +92,7 @@ export const getMyLogs = async (
 
     const res = await fetchWithAuthServer(`${url}`);
 
-    if (!res.ok) {
+    if (res && !res.ok) {
       return {
         success: false,
         message: res.statusText,
@@ -93,7 +100,7 @@ export const getMyLogs = async (
       };
     }
 
-    const result = await res.json();
+    const result = await res!.json();
 
     if (!result.success) {
       return {
@@ -128,14 +135,14 @@ export const deleteLog = async (id: string) => {
       },
     });
 
-    if (!res.ok) {
+    if (res && !res.ok) {
       return {
         success: false,
         message: res.statusText,
       };
     }
 
-    const result = await res.json();
+    const result = await res!.json();
 
     if (!result.success) {
       return {
@@ -168,7 +175,7 @@ export const updateLog = async (id: string, payload: Partial<StandupData>) => {
       body: JSON.stringify(payload),
     });
 
-    if (!res.ok) {
+    if (res && !res.ok) {
       return {
         success: false,
         message: res.statusText,
@@ -176,7 +183,7 @@ export const updateLog = async (id: string, payload: Partial<StandupData>) => {
       };
     }
 
-    const result = await res.json();
+    const result = await res!.json();
 
     if (!result.success) {
       return {
@@ -207,14 +214,14 @@ export const getWorkspaceLogs = async (workspaceId: string) : Promise<WorkspaceL
     const url = new URL(`${envVars.API_URL}/logs/workspace/${workspaceId}`);
     const res = await fetchWithAuthServer(`${url}`);
 
-    if (!res.ok) {
+    if (res && !res.ok) {
       return {
         success: false,
         message: res.statusText,
         data: null,
       };
     }
-    const result = await res.json();
+    const result = await res!.json();
 
     if (!result.success) {
       return {

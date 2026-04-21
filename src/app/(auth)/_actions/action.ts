@@ -55,7 +55,7 @@ export const createAccount = async (payload: {
   }
 };
 
-export const login = async (payload: { email: string; password: string }) => {
+export const login = async (payload: { email: string; password: string },intendedRedirect? : string | null) => {
   const parsedPayload = authValidator.login.safeParse(payload);
 
   if (!parsedPayload.success) {
@@ -90,6 +90,9 @@ export const login = async (payload: { email: string; password: string }) => {
     await setTokenInCookie("refreshToken", result.data.refreshToken,24 * 60 * 60 * 7);
     await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60 * 7); //7 days
 
+    if(intendedRedirect){
+      redirect(intendedRedirect);
+    }
     if(result.data.user.role === "SUPER_ADMIN"){
      return redirect("/admin/dashboard");
     }

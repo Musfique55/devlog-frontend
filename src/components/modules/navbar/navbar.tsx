@@ -9,8 +9,7 @@ import { useState } from "react";
  function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const {data : user} = useAuth();
- 
+  const  {data : user} = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-transparent border-b border-border">
@@ -46,7 +45,7 @@ import { useState } from "react";
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            {user && user.data ? (
+            {user? (
             <Link
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               href="/dashboard"
@@ -69,7 +68,7 @@ import { useState } from "react";
 
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-4">
-          {user && user.data ? (
+          {user  ? (
             <Link
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               href="/dashboard"

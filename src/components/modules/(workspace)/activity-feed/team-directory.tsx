@@ -11,7 +11,6 @@ import { inviteUserToWorkspace } from "@/services/workspace.services";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { Member } from "@/hooks/useWorkspace";
-import Upgrade from "@/components/ui/upgrade";
 import SubscriptionAlert from "@/components/ui/subscription-alert";
 
 
@@ -23,7 +22,7 @@ interface TeamDirectoryProps {
 
 export function TeamDirectory({ members, workspaceId,isAdmin }: TeamDirectoryProps) {
   const [open, setOpen] = useState(false);
-  const { data: user } = useAuth();
+  const  {data : user}  = useAuth();
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (payload: {
