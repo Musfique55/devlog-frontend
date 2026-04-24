@@ -25,7 +25,7 @@ const commonPrivateRoute: RoutesConfig = {
 };
 
 const adminRoutes: RoutesConfig = {
-  pattern: [/^\/admin/],
+  pattern: [/^\/admin\//],
   exact: [],
 };
 

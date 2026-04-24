@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/sonner";
 import Providers from "@/providers/QueryProvider";
 
 
+
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -26,6 +28,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
+  
   return (
     <html
       data-scroll-behavior="smooth"
@@ -36,18 +39,18 @@ export default async function RootLayout({
         suppressHydrationWarning={true}
         className="min-h-full flex flex-col bg-background text-foreground"
       >
-            <Providers>
-              <Toaster
-                richColors
-                toastOptions={{
-                  classNames: {
-                    actionButton: "action-button",
-                    cancelButton: "cancel-button",
-                  },
-                }}
-              />
-              {children}
-            </Providers>
+          <Providers>
+            <Toaster
+              richColors
+              toastOptions={{
+                classNames: {
+                  actionButton: "action-button",
+                  cancelButton: "cancel-button",
+                },
+              }}
+            />
+            {children}
+          </Providers>
       </body>
     </html>
   );

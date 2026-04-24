@@ -1,7 +1,9 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
-import { Search, Bell, HelpCircle } from "lucide-react";
+import UserProfilePopover from "@/components/shared/user-profile-popover";
+import { getUserInfo } from "@/services/auth.services";
+import { useQuery } from "@tanstack/react-query";
+import { Bell, HelpCircle } from "lucide-react";
 import Image from "next/image";
 
 interface HeaderProps {
@@ -9,8 +11,14 @@ interface HeaderProps {
   onSearch?: (value: string) => void;
 }
 
-export function Header({ title = "Dashboard", onSearch }: HeaderProps) {
-  const {data : user} = useAuth();
+export function Header({ title = "Dashboard" }: HeaderProps) {
+  const { data: user } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const res = await getUserInfo();
+      return res.data;
+    },
+  });
 
   return (
     <header className="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800/20 flex justify-between items-center px-8 z-40">
@@ -21,7 +29,7 @@ export function Header({ title = "Dashboard", onSearch }: HeaderProps) {
         </h2>
 
         {/* Search Bar */}
-        <div className="ml-8 relative w-64">
+        {/* <div className="ml-8 relative w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <input
             type="text"
@@ -29,7 +37,7 @@ export function Header({ title = "Dashboard", onSearch }: HeaderProps) {
             onChange={(e) => onSearch?.(e.target.value)}
             className="w-full bg-zinc-950 border border-zinc-800 ring-1 ring-white/5 rounded-full py-1.5 pl-10 pr-4 text-sm focus:ring-2 focus:ring-indigo-500 transition-all text-zinc-100 placeholder:text-zinc-600"
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Right Section */}
@@ -43,19 +51,25 @@ export function Header({ title = "Dashboard", onSearch }: HeaderProps) {
 
         {/* User Profile */}
         {user && user?.image ? (
-          <div className="h-8 w-8 rounded-full overflow-hidden ring-2 ring-indigo-500/20">
-            <Image
-              src={user.image}
-              alt="User profile"
-              width={32}
-              height={32}
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <UserProfilePopover>
+            <div className="h-8 w-8 rounded-full overflow-hidden ring-2 ring-indigo-500/20">
+              <Image
+                src={user.image}
+                alt="User profile"
+                width={32}
+                height={32}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </UserProfilePopover>
         ) : (
-          <div className="w-8 h-8 rounded-xl object-cover hover:grayscale-0 transition-all duration-300 bg-amber-800 flex items-center justify-center text-white font-bold text-2xl">
-            <p>{user?.name[0]}</p>
-          </div>
+          <UserProfilePopover>
+            (
+            <div className="w-8 h-8 rounded-xl object-cover hover:grayscale-0 transition-all duration-300 bg-amber-800 flex items-center justify-center text-white font-bold text-2xl">
+              <p>{user?.name[0]}</p>
+            </div>
+            )
+          </UserProfilePopover>
         )}
       </div>
     </header>

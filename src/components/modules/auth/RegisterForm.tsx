@@ -80,7 +80,7 @@ export function RegisterForm() {
                       size="icon-xs"
                       className="bg-transparent"
                     >
-                      <UserIcon />
+                      <UserIcon className="text-zinc-400"/>
                     </Button>
                   }
                   className="w-full  border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-primary text-body-md py-3 px-4 transition-all duration-200 placeholder:text-outline/40 rounded-lg outline-none"
@@ -105,7 +105,7 @@ export function RegisterForm() {
                       size="icon-xs"
                       className="bg-transparent"
                     >
-                      <MailIcon />
+                      <MailIcon className="text-zinc-400"/>
                     </Button>
                   }
                   className="w-full bg-surface-container-lowest border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-primary text-body-md py-3 px-4 transition-all duration-200 placeholder:text-outline/40 rounded-lg outline-none"
@@ -131,7 +131,7 @@ export function RegisterForm() {
                       className="bg-transparent cursor-pointer"
                       onClick={() => setShowPassword((prev) => !prev)}
                     >
-                      {showPassword ? <EyeClosed /> : <EyeIcon />}
+                      {showPassword ? <EyeClosed className="text-zinc-400"/> : <EyeIcon className="text-zinc-400"/>}
                     </Button>
                   }
                   prepend={
@@ -140,7 +140,7 @@ export function RegisterForm() {
                       size="icon-xs"
                       className="bg-transparent"
                     >
-                      <LockIcon />
+                      <LockIcon className="text-zinc-400"/>
                     </Button>
                   }
                   className="w-full  border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-primary text-body-md py-3 px-4 transition-all duration-200 placeholder:text-outline/40 rounded-lg outline-none"

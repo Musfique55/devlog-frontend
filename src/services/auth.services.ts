@@ -96,8 +96,6 @@ export const getUserInfo = async () => {
       };
     }
 
-    console.log(result);
-
     return {
       success: true,
       data: result.data,

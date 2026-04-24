@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, FileText, Users, Settings } from "lucide-react";
+import { logout } from "@/services/auth.services";
+import { LayoutDashboard, FileText, Users, Settings, LogOut } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export function Sidebar() {
   const navItems = [
@@ -29,8 +30,23 @@ export function Sidebar() {
   ];
 
   const pathname = usePathname();
+  const router = useRouter();
 
   const activeItem = navItems.find((item) => item.href === pathname)?.id;
+
+  const handleLogout = async () => {
+    try {
+      const response = await logout();
+
+      if (response.success) {
+        router.push("/");
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  }
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-zinc-900/50 backdrop-blur-xl flex flex-col py-8 px-4 z-50 border-r border-zinc-800/20">
@@ -65,6 +81,7 @@ export function Sidebar() {
             </Link>
           );
         })}
+        <Button  className={`w-full justify-start bg-transparent flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200  text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 cursor-pointer`} onClick={() => handleLogout()}><LogOut /> Logout</Button>
       </nav>
 
       {/* Create Log Button */}

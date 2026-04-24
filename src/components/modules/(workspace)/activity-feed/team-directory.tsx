@@ -55,7 +55,7 @@ export function TeamDirectory({ members, workspaceId,isAdmin }: TeamDirectoryPro
 
 
   return (
-    <aside className="w-full lg:w-72 bg-zinc-900/60 min-h-screen max-h-full flex flex-col p-4 sm:p-6 overflow-y-auto border-l border-white/5">
+    <aside className="w-full fixed bg-zinc-900/60 h-screen flex flex-col p-4 sm:p-6 overflow-y-auto border-l border-white/50">
       <div className="mb-6 sm:mb-8">
         <h2 className="text-[10px] sm:text-xs font-black uppercase tracking-[0.25em] text-zinc-500 mb-4 sm:mb-6">
           Team Directory
@@ -94,7 +94,7 @@ export function TeamDirectory({ members, workspaceId,isAdmin }: TeamDirectoryPro
         </div>
       ) : null}
 
-      {open && user?.role === "PRO" ? (
+      {open && user?.plan === "PRO" ? (
         <Modal open={open} setOpen={setOpen} title="Invite Member">
           <form onSubmit={handleSubmit} className="space-y-3">
             <Input type="email" name="email" placeholder="enter an email" required />

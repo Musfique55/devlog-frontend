@@ -26,11 +26,8 @@ const ActivityWrapper = ({ id }: { id: string }) => {
     }
   })
 
-  console.log(members);
-
-
   return (
-    <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
+    <div className="flex flex-col lg:flex-row lg:justify-between flex-1 overflow-hidden">
       {/* Central Feed */}
       <section className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 lg:p-12 space-y-6 sm:space-y-8 lg:space-y-12">
         <div className="max-w-3xl mx-auto space-y-6 sm:space-y-8">
@@ -54,14 +51,14 @@ const ActivityWrapper = ({ id }: { id: string }) => {
               ? activityLogs.data.map((log) => (
                   <ActivityCard key={log.id} log={log} />
                 ))
-              : null}
+              : "No feed items found."}
 
           </div>
         </div>
       </section>
 
       {/* Team Directory Sidebar - Hidden on mobile/tablet, visible on large screens */}
-      <div className="hidden lg:block lg:w-80 lg:border-l lg:border-border">
+      <div className="hidden lg:block lg:w-80">
         {members?.data && members.data.length && <TeamDirectory workspaceId={id} members={members.data} isAdmin={workspace!.userRole}/>}
       </div>
     </div>

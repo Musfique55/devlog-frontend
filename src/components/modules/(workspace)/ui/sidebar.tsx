@@ -12,7 +12,7 @@ import { StandupForm } from "../../(user)/dashboard/standup-form";
 import { useQuery } from "@tanstack/react-query";
 import { getWorkspace } from "@/services/workspace.services";
 
-interface WorkspaceResponse {
+export interface WorkspaceResponse {
   data: Workspace;
   message: string;
   success: boolean;
@@ -25,8 +25,8 @@ export function WorkspaceSidebar() {
   const { data: workspace, isLoading } = useQuery<WorkspaceResponse>({
     queryKey: ["workspace", id],
     queryFn:  () =>  getWorkspace(id as string),
-    staleTime: Infinity,
-    retry: false,
+    retry : false,
+    staleTime : Infinity
   });
 
   if (isLoading) {
@@ -34,7 +34,7 @@ export function WorkspaceSidebar() {
   }
 
   const navItems = [
-    ...(workspace?.data?.userRole
+    ...(workspace?.data?.userRole === "ADMIN"
       ? [
           {
             icon: Grid,

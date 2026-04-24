@@ -89,6 +89,7 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
     (log) => log.blocker && log.blockerStatus === "OPEN",
   );
 
+
   return (
     <div className="flex h-screen bg-background">
       {/* Main Content */}
@@ -157,15 +158,15 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
             <div className="col-span-2">
               <TeamHealthHeatmap />
             </div>
-            {blockedLogs && blockedLogs.length && (
+            {blockedLogs && blockedLogs.length ? (
               <TeamAlerts alerts={blockedLogs} />
-            )}
+            ) : "No Alerts Found"}
           </div>
 
           {/* Member Table */}
           {<MemberTable id={id} />}
 
-          {open && user?.role === "PRO" ? (
+          {open && user?.plan === "PRO" ? (
         <Modal open={open} setOpen={setOpen} title="Invite Member">
           <form onSubmit={handleSubmit} className="space-y-3">
             <Input type="email" name="email" placeholder="enter an email" required />
