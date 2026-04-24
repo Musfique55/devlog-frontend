@@ -39,7 +39,7 @@ const UserProfilePopover = ({
       </PopoverTrigger>
       <PopoverContent className="w-40">
         <div className="flex flex-col justify-start items-start">
-          <Link href="/dashboard/settings#profile">
+          <Link href="/settings#profile">
             <Button className="flex items-center gap-3 bg-transparent text-zinc-400 cursor-pointer">
             <User /> Update Profile
           </Button>

@@ -1,6 +1,6 @@
-import ProfileSection from '../../../../../components/modules/(user)/dashboard/settings/profile-section';
-import BillingSection from '../../../../../components/modules/(user)/dashboard/settings/billing-section';
-import DangerZone from '../../../../../components/modules/(user)/dashboard/settings/danger-zone';
+import ProfileSection from '../../../../components/modules/(user)/dashboard/settings/profile-section';
+import BillingSection from '../../../../components/modules/(user)/dashboard/settings/billing-section';
+import DangerZone from '../../../../components/modules/(user)/dashboard/settings/danger-zone';
 
 
 export default function SettingsPage() {
