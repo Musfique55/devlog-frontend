@@ -5,7 +5,7 @@ export const setCookie  = async (key: string, value: string,maxAgeInSeconds ?: n
     const cookieStore = await cookies();
     cookieStore.set(key, value,{
         maxAge : maxAgeInSeconds,
-        sameSite : "lax",
+        sameSite : "none",
         secure : true,
         httpOnly : true,
         path : "/"

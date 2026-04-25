@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { logout } from "@/services/auth.services";
+import { useQueryClient } from "@tanstack/react-query";
 import { LayoutDashboard, FileText, Users, Settings, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -31,6 +32,7 @@ export function Sidebar() {
 
   const pathname = usePathname();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const activeItem = navItems.find((item) => item.href === pathname)?.id;
 
@@ -40,6 +42,9 @@ export function Sidebar() {
 
       if (response.success) {
         router.push("/");
+        await queryClient.invalidateQueries({
+          queryKey: ["user"],
+        })
       } else {
         console.error("Logout failed");
       }

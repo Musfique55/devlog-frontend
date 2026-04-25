@@ -56,7 +56,7 @@ export async function proxy(request: NextRequest) {
           value: refreshed.data!.accessToken,
           httpOnly: true,
           path: "/",
-          sameSite: "lax",
+          sameSite: "none",
           maxAge: 15 * 60,
         })
         response.cookies.set({
@@ -64,7 +64,7 @@ export async function proxy(request: NextRequest) {
           value: refreshed.data!.refreshToken,
           httpOnly: true,
           path: "/",
-          sameSite: "lax",
+          sameSite: "none",
           maxAge: 24 * 60 * 60 * 7,
         })
         response.cookies.set({
@@ -72,7 +72,7 @@ export async function proxy(request: NextRequest) {
           value: refreshed.data!.sessionToken,
           httpOnly: true,
           path: "/",
-          sameSite: "lax",
+          sameSite: "none",
           maxAge: 24 * 60 * 60 * 7,
         })
 
@@ -106,7 +106,7 @@ export async function proxy(request: NextRequest) {
   }
 
   if (user) {
-    if (pathname.startsWith("/verify-email")) {
+    if (pathname.startsWith("/auth/verify-email")) {
       if (isValidToken) {
         if (!user?.emailVerified) {
           return NextResponse.next();

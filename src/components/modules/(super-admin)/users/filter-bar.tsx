@@ -1,6 +1,4 @@
 "use client"
-import { Button } from '@/components/ui/button';
-import { Filter } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export function FilterBar() {

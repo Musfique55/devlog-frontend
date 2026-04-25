@@ -11,6 +11,7 @@ import { LogOut, User } from "lucide-react";
 import { logout } from "@/services/auth.services";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 const UserProfilePopover = ({
   children,
@@ -19,12 +20,16 @@ const UserProfilePopover = ({
 }) => {
 
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     const handleLogout = async () => {
         try {
             const res = await logout();
             if(!res.success) return toast.error(res.message);
             toast.success(res.message);
+            await queryClient.invalidateQueries({
+                queryKey: ["user"],
+            });
             router.push('/auth/login');
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error : any) {

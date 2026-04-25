@@ -10,12 +10,11 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 
-export default function LoginForm() {
-  const searchParams = useSearchParams();
-  const intendedUrl = searchParams.get("redirect");
+
+export default function LoginForm({intendedUrl}: {intendedUrl?: string}) {
+  
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -147,7 +146,7 @@ export default function LoginForm() {
           </form>
 
           {/* Divider */}
-          <div className="relative my-8">
+          {/* <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-outline-variant/10" />
             </div>
@@ -156,10 +155,10 @@ export default function LoginForm() {
                 or continue with
               </span>
             </div>
-          </div>
+          </div> */}
 
           {/* Google OAuth */}
-          <button
+          {/* <button
             type="button"
             className="w-full flex items-center justify-center gap-3 py-3 bg-[#161616] cursor-pointer ring-1 ring-outline-variant/20 hover:bg-surface-bright transition-colors rounded-lg group"
           >
@@ -184,7 +183,7 @@ export default function LoginForm() {
             <span className="text-sm font-semibold text-gray-300">
               Sign up with Google
             </span>
-          </button>
+          </button> */}
         </div>
 
         {/* Footer Link */}

@@ -1,6 +1,7 @@
 import WorkspaceStatCard from "@/components/modules/(super-admin)/workspace/stat-card";
 import WorkspaceTable from "@/components/modules/(super-admin)/workspace/workspace-table";
-import { Download, Plus, Shield, TrendingUp, Zap, House} from "lucide-react";
+import { Shield, TrendingUp, Zap, House} from "lucide-react";
+import { Suspense } from "react";
 
 
 const WorkspacesPage = () => {
@@ -54,7 +55,9 @@ const WorkspacesPage = () => {
           />
         </section>
       </section>
-      <WorkspaceTable />
+      <Suspense>
+        <WorkspaceTable />
+      </Suspense>
     </div>
   );
 };

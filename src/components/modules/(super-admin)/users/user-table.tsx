@@ -11,6 +11,7 @@ import { FilterBar } from "./filter-bar";
 import UsersSkeleton from "../ui/users-skeleton";
 import UsersFallback from "../ui/users-fallback";
 import Pagination from "@/components/shared/pagination";
+import { Suspense } from "react";
 
 interface UserTableResponse {
   success: boolean;
@@ -128,7 +129,9 @@ export function UsersTable({
 
   return (
     <div>
-      <FilterBar />
+      <Suspense>
+        <FilterBar />
+      </Suspense>
       {/* User Table */}
       <div className="bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800">
         <table className="hidden lg:block w-full text-left border-collapse">
@@ -310,7 +313,6 @@ export function UsersTable({
                     <p className="text-base font-bold text-zinc-100">
                       {user.name}
                     </p>
-                    
                   </div>
                 </div>
 
@@ -390,12 +392,14 @@ export function UsersTable({
       </div>
       {/* Pagination Controls */}
       {users && users?.meta && (
-        <Pagination
-          limit={3}
-          itemsName="users"
-          currentPage={currentPage}
-          meta={users?.meta}
-        />
+        <Suspense>
+          <Pagination
+            limit={3}
+            itemsName="users"
+            currentPage={currentPage}
+            meta={users?.meta}
+          />
+        </Suspense>
       )}
     </div>
   );

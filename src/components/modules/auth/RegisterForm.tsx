@@ -38,7 +38,7 @@ export function RegisterForm() {
         toast.success("Account Created Successfully");
         form.reset();
         setServerError(null);
-        router.push(`/verify-email-notice?email=${value.email}`)
+        router.push(`/auth/verify-email-notice?email=${value.email}`)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         setServerError(error.message!);
@@ -167,7 +167,7 @@ export function RegisterForm() {
           </form>
 
           {/* Divider */}
-          <div className="relative my-8">
+          {/* <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-outline-variant/10" />
             </div>
@@ -176,10 +176,10 @@ export function RegisterForm() {
                 or continue with
               </span>
             </div>
-          </div>
+          </div> */}
 
           {/* Google OAuth */}
-          <button
+          {/* <button
             type="button"
             className="w-full flex items-center justify-center gap-3 py-3 bg-[#161616] cursor-pointer ring-1 ring-outline-variant/20 hover:bg-surface-bright transition-colors rounded-lg group"
           >
@@ -204,7 +204,7 @@ export function RegisterForm() {
             <span className="text-sm font-semibold text-gray-300">
               Sign up with Google
             </span>
-          </button>
+          </button> */}
         </div>
 
         {/* Footer Link */}

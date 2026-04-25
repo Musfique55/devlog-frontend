@@ -3,9 +3,10 @@ import LoginForm from "@/components/modules/auth/LoginForm";
 
 
 
-const LoginPage = () => {
+const LoginPage = async ({searchParams} : {searchParams: Promise<{redirect?: string}>}) => {
+  const {redirect} = await searchParams;
   return (
-    <LoginForm />
+    <LoginForm intendedUrl={redirect} />
   )
 };
 

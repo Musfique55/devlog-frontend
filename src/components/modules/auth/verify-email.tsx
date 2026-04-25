@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { authClient } from "@/lib/bauth/authClient";
 import { useRouter } from "next/navigation";
 import { logout } from "@/services/auth.services";
@@ -31,7 +31,7 @@ const BouncingDots = () => {
 
 export default function VerifyEmail({ token }: { token: string }) {
   const router = useRouter();
-
+  const queryClient = useQueryClient();
 
   const { isError, isLoading, isSuccess } = useQuery({
     queryKey: ["verify-email"],
@@ -45,6 +45,9 @@ export default function VerifyEmail({ token }: { token: string }) {
       }
 
       await logout();
+      await queryClient.invalidateQueries({
+        queryKey: ["user"],
+      });
       router.push("/auth/login");
       return res.data;
     },
