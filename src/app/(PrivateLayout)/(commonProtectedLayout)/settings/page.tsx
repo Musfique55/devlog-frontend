@@ -5,7 +5,7 @@ import DangerZone from '../../../../components/modules/(user)/dashboard/settings
 
 export default function SettingsPage() {
   return (
-    <main className="ml-64 pt-24 pb-20 px-12 min-h-screen bg-background">
+    <main className=" pt-24 pb-20 px-12 min-h-screen bg-background">
       <div className="max-w-4xl mx-auto">
         {/* Header Section */}
         <header className="mb-16">
@@ -18,7 +18,7 @@ export default function SettingsPage() {
         {/* Settings Sections */}
         <div className="space-y-20">
           <ProfileSection />
-          <BillingSection />
+          {/* <BillingSection /> */}
           <DangerZone />
         </div>
       </div>

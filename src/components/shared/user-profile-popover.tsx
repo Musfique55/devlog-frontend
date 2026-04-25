@@ -25,7 +25,7 @@ const UserProfilePopover = ({
             const res = await logout();
             if(!res.success) return toast.error(res.message);
             toast.success(res.message);
-            router.push('/login');
+            router.push('/auth/login');
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error : any) {
             toast.error(error.message);

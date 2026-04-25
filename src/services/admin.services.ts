@@ -2,6 +2,7 @@
 
 import { envVars } from "@/env";
 import fetchWithAuthServer from "@/lib/fetchWithAuth";
+import { meta } from "zod/v4/core";
 
 export const getStats = async () => {
   try {
@@ -116,7 +117,7 @@ export const getUserGrowthStats = async () => {
   }
 };
 
-export const getUsers = async (query :  {[key : string] : string}) => {
+export const getUsers = async (query: { [key: string]: string }) => {
   try {
     const url = new URL(`${envVars.API_URL}/admin/users`);
     Object.keys(query).forEach((key) =>
@@ -144,7 +145,7 @@ export const getUsers = async (query :  {[key : string] : string}) => {
       success: true,
       message: result.message,
       data: result.data,
-      meta : result.meta
+      meta: result.meta,
     };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -202,6 +203,44 @@ export const updateUserStatus = async (
         success: false,
         message: error.message,
       },
+    };
+  }
+};
+
+export const getWorkspaces = async (filter?: string) => {
+  try {
+    const res = await fetchWithAuthServer(
+      `${envVars.API_URL}/admin/workspaces/${filter ? `?${filter}` : ""}`,
+    );
+    console.log(`${envVars.API_URL}/admin/workspaces/${filter ? `?${filter}` : ""}`);
+    if (!res.ok) {
+      return {
+        success: false,
+        message: res.statusText,
+        data: null,
+      };
+    }
+
+    const result = await res.json();
+    if (!result.success) {
+      return {
+        success: false,
+        message: result.message,
+        data: null,
+      };
+    }
+    return {
+      success: true,
+      message: result.message,
+      data: result.data,
+      meta  : result.meta,
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+      data: null,
     };
   }
 };

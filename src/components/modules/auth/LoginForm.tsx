@@ -192,7 +192,7 @@ export default function LoginForm() {
           <p className="text-sm text-gray-400">
             Don&apos;t have an account?
             <Link
-              href="/register"
+              href="/auth/register"
               className="text-inherit font-bold hover:underline ml-1"
             >
               Register

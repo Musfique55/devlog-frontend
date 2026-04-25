@@ -51,14 +51,14 @@ export function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-zinc-900/50 backdrop-blur-xl flex flex-col py-8 px-4 z-50 border-r border-zinc-800/20">
       {/* Logo */}
-      <div className="mb-10 px-4">
+      <Link href={"/"}className="mb-10 px-4">
         <h1 className="text-xl font-bold tracking-tighter text-indigo-400">
           DevLog
         </h1>
         <p className="text-sm font-medium text-zinc-500 tracking-tight">
           Developer Workspace
         </p>
-      </div>
+      </Link>
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1">

@@ -15,7 +15,7 @@ export default function DangerZone() {
     if(!res.success) return toast.error(res.message);
     toast.success(res.message);
     await logout();
-    router.push('/login');
+    router.push('/auth/login');
     setIsConfirming(false);
   };
 

@@ -7,7 +7,7 @@ interface RoutesConfig {
   pattern: RegExp[];
 }
 
-export const authRoutes = [ "/login", "/register", "/forgot-password", "/reset-password",];
+export const authRoutes = [ "/auth/login", "/auth/register", "/forgot-password", "/reset-password",];
 
 export const proUserRoutes = ["/workspace/:id/create-workspace","/workspace/:id/invite-member","/workspace/:id/weekly-report"];
 

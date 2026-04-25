@@ -4,12 +4,22 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
  function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   const  {data : user} = useAuth();
+  const router = useRouter();
+
+  const handleGetStarted = () => {
+    if (user) {
+      router.push("/dashboard");
+    } else {
+      router.push("/auth/login");
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-transparent border-b border-border">
@@ -55,12 +65,13 @@ import { useState } from "react";
           ) : (
             <Link
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              href="/login"
+              href="/auth/login"
             >
               Login
             </Link>
           )}
-            <Button className="bg-gradient-to-r from-primary to-primary/80 hover:opacity-90">
+          
+            <Button className="bg-gradient-to-r from-primary to-primary/80 hover:opacity-90" onClick={handleGetStarted}>
               Get Started Free
             </Button>
           </div>
@@ -78,7 +89,7 @@ import { useState } from "react";
           ) : (
             <Link
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              href="/login"
+              href="/auth/login"
             >
               Login
             </Link>
@@ -117,7 +128,7 @@ import { useState } from "react";
             >
               About
             </a>
-            <Button className="w-full bg-gradient-to-r from-primary to-primary/80 hover:opacity-90">
+            <Button className="w-full bg-gradient-to-r from-primary to-primary/80 hover:opacity-90" onClick={handleGetStarted}>
               Get Started Free
             </Button>
           </div>

@@ -73,7 +73,7 @@ export default function VerifyEmailNotice({
             className="w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800 h-11"
             asChild
           >
-            <Link href="/login">Back to Login</Link>
+            <Link href="/auth/login">Back to Login</Link>
           </Button>
         </div>
 

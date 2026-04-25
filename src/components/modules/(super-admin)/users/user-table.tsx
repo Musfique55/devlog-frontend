@@ -4,22 +4,13 @@ import { Button } from "@/components/ui/button";
 import { User } from "@/hooks/useAuth";
 import { getUsers, updateUserStatus } from "@/services/admin.services";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Edit2,
-  Ban,
-  Trash2,
-  ArchiveRestore,
-  Unlock,
-  ChevronRight,
-  ChevronLeft,
-} from "lucide-react";
+import { Ban, Trash2, ArchiveRestore, Unlock } from "lucide-react";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-
 import { toast } from "sonner";
 import { FilterBar } from "./filter-bar";
 import UsersSkeleton from "../ui/users-skeleton";
 import UsersFallback from "../ui/users-fallback";
+import Pagination from "@/components/shared/pagination";
 
 interface UserTableResponse {
   success: boolean;
@@ -46,12 +37,16 @@ function getStatusColor(status: string) {
   }
 }
 
-export function UsersTable({currentPage, currentFilter}: {currentPage : number, currentFilter : string}) {
+export function UsersTable({
+  currentPage,
+  currentFilter,
+}: {
+  currentPage: number;
+  currentFilter: string;
+}) {
   const queryClient = useQueryClient();
-  const searchParams = useSearchParams();
-  const router = useRouter();
 
-  const { data: users,isLoading } = useQuery<UserTableResponse>({
+  const { data: users, isLoading } = useQuery<UserTableResponse>({
     queryKey: ["admin-users", currentPage, currentFilter],
     queryFn: async () => {
       const res = await getUsers({
@@ -59,7 +54,7 @@ export function UsersTable({currentPage, currentFilter}: {currentPage : number, 
         limit: "3",
         ...(currentFilter === "active" && { isDeleted: "false" }),
         ...(currentFilter === "banned" && { isDeleted: "true" }),
-        ...(currentFilter === "inactive" && { isBlocked: "true" })
+        ...(currentFilter === "inactive" && { isBlocked: "true" }),
       });
       return res;
     },
@@ -117,39 +112,17 @@ export function UsersTable({currentPage, currentFilter}: {currentPage : number, 
     });
   };
 
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      const url = new URLSearchParams(searchParams);
-      url.set("page", (currentPage - 1).toString());
-      router.push(`?${url.toString()}`);
-    }
-  };
-
-  const handleNext = () => {
-    if (users && users.meta && currentPage < users.meta.totalPages) {
-      const url = new URLSearchParams(searchParams);
-      url.set("page", (currentPage + 1).toString());
-      router.push(`?${url.toString()}`);
-    }
-  };
-
-    const handlePageSelect = (page: number) => {
-    const url = new URLSearchParams(searchParams);
-    url.set("page", page.toString());
-    router.push(`?${url.toString()}`);
-  };
-
-
   if (isLoading) {
-    return (
-      <UsersSkeleton />
-    );
+    return <UsersSkeleton />;
   }
 
   // Empty state
-  if (users  &&  users.data?.length === 0) {
+  if (users && users.data?.length === 0) {
     return (
-      <UsersFallback  />
+      <>
+        <FilterBar />
+        <UsersFallback />
+      </>
     );
   }
 
@@ -158,7 +131,7 @@ export function UsersTable({currentPage, currentFilter}: {currentPage : number, 
       <FilterBar />
       {/* User Table */}
       <div className="bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800">
-        <table className="w-full text-left border-collapse">
+        <table className="hidden lg:block w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-zinc-800/50">
               <th className="py-5 px-6 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
@@ -252,7 +225,6 @@ export function UsersTable({currentPage, currentFilter}: {currentPage : number, 
                   </td>
                   <td className="py-4 px-6 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      
                       {user.isBlocked ? (
                         <Button
                           onClick={() =>
@@ -306,76 +278,125 @@ export function UsersTable({currentPage, currentFilter}: {currentPage : number, 
               ))}
           </tbody>
         </table>
+
+        {/* --- MOBILE/TABLET VIEW (Hidden on LG) --- */}
+        <div className="grid grid-cols-1 gap-4 lg:hidden">
+          {users?.data?.map((user) => (
+            <div
+              key={user.id}
+              className="bg-zinc-900/50 border border-zinc-800/50 rounded-xl p-5 hover:border-zinc-700 transition-all"
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    {user.image ? (
+                      <Image
+                        alt={user.name}
+                        className="w-12 h-12 rounded-full object-cover border border-zinc-700"
+                        src={user.image}
+                        width={48}
+                        height={48}
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-sm text-zinc-400 font-medium">
+                        {user.name.charAt(0)}
+                      </div>
+                    )}
+                    <div
+                      className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 ${getStatusColor(`isBlocked : ${user.isBlocked}, isDeleted : ${user.isDeleted}`)} border-2 border-zinc-900 rounded-full`}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-base font-bold text-zinc-100">
+                      {user.name}
+                    </p>
+                    
+                  </div>
+                </div>
+
+                {/* Actions are always visible on mobile for better UX */}
+                <div className="flex items-center gap-1">
+                  {user.isBlocked ? (
+                    <Button
+                      onClick={() => handleUserStatusChange(user.id, "unblock")}
+                      variant="ghost"
+                      size="sm"
+                      className="text-zinc-500 hover:text-purple-400"
+                    >
+                      <Unlock className="w-4 h-4" />
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleUserStatusChange(user.id, "block")}
+                      variant="ghost"
+                      size="sm"
+                      className="text-zinc-500 hover:text-red-400"
+                    >
+                      <Ban className="w-4 h-4" />
+                    </Button>
+                  )}
+                  <Button
+                    onClick={() =>
+                      handleUserStatusChange(
+                        user.id,
+                        user.isDeleted ? "restore" : "delete",
+                      )
+                    }
+                    variant="ghost"
+                    size="sm"
+                    className="text-zinc-500"
+                  >
+                    {user.isDeleted ? (
+                      <ArchiveRestore className="w-4 h-4" />
+                    ) : (
+                      <Trash2 className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-3 pt-3 border-t border-zinc-800/50">
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">
+                    Email
+                  </span>
+                  <span className="text-sm text-zinc-300">{user.email}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">
+                    Tier & Role
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`px-2 py-0.5 ${user?.plan === "PRO" ? "bg-purple-500/10 text-purple-300" : "bg-zinc-500/10 text-zinc-400"} text-[10px] font-bold uppercase rounded border border-white/5`}
+                    >
+                      {user.plan}
+                    </span>
+                    <span className="text-xs text-zinc-500">{user.role}</span>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">
+                    Enrolled
+                  </span>
+                  <span className="text-xs text-zinc-400">
+                    {new Date(user.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       {/* Pagination Controls */}
-      <div className="mt-5 flex items-center justify-between bg-zinc-900 rounded-xl border border-zinc-800 px-6 py-4">
-        <div className="text-xs text-zinc-500 font-medium">
-          Showing{" "}
-          <span className="text-zinc-300 font-semibold">
-            {(currentPage - 1) * 3 + 1}
-          </span>{" "}
-          to{" "}
-          <span className="text-zinc-300 font-semibold">
-            {Math.min(currentPage * 3, users?.meta?.total || 0)}
-          </span>{" "}
-          of{" "}
-          <span className="text-zinc-300 font-semibold">
-            {users?.meta?.total || 0}
-          </span>{" "}
-          users
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePrevious}
-            disabled={currentPage === 1}
-            className="border-zinc-700 text-zinc-400 hover:text-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Previous
-          </Button>
-
-          <div className="flex items-center gap-1">
-            {users?.meta && users.meta.totalPages > 1 ? (
-              [...Array(users.meta.totalPages)].map((_, index) => {
-               return <Button
-                  key={index}
-                  variant={currentPage === index + 1 ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => handlePageSelect(index + 1)}
-                  className={
-                    currentPage === index + 1
-                      ? "bg-purple-500 hover:bg-purple-600 text-white"
-                      : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800"
-                  }
-                >
-                  {index + 1}
-                </Button>
-})
-            ) : (
-              <Button
-                variant="ghost"
-                className="w-8 h-8 bg-purple-500 hover:bg-purple-600 text-white cursor-pointer text-xs font-bold"
-              >
-                1
-              </Button>
-            )}
-          </div>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleNext}
-            disabled={currentPage === users?.meta?.totalPages}
-            className="border-zinc-700 text-zinc-400 hover:text-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Next
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
+      {users && users?.meta && (
+        <Pagination
+          limit={3}
+          itemsName="users"
+          currentPage={currentPage}
+          meta={users?.meta}
+        />
+      )}
     </div>
   );
 }

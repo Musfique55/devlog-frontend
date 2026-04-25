@@ -51,11 +51,11 @@ export function WorkspaceSidebar() {
   return (
     <aside className="h-screen w-64 fixed left-0 top-0 bg-surface-container-low dark:bg-surface-container-low flex flex-col py-4 sm:py-6 px-3 sm:px-4 z-50 transition-all duration-200 border-r border-white/5">
       {/* Logo */}
-      <div className="mb-6 sm:mb-10 px-2">
+      <Link href={"/"} className="mb-6 sm:mb-10 px-2">
         <h1 className="text-base sm:text-lg font-bold tracking-tighter text-primary">
           DevLog
         </h1>
-      </div>
+      </Link>
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1">

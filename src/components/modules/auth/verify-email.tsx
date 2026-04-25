@@ -45,7 +45,7 @@ export default function VerifyEmail({ token }: { token: string }) {
       }
 
       await logout();
-      router.push("/login");
+      router.push("/auth/login");
       return res.data;
     },
     retry: false,
@@ -120,7 +120,7 @@ export default function VerifyEmail({ token }: { token: string }) {
                 </p>
               </div>
               <div className="space-y-3 pt-4">
-                <Link href="/login">
+                <Link href="/auth/login">
                   <Button
                     variant="outline"
                     className="w-full border-zinc-800 text-white hover:bg-zinc-800"

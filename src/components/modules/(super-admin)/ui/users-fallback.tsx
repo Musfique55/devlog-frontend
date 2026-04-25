@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
+
 import { Users } from "lucide-react";
-import React from "react";
+
 
 const UsersFallback = () => {
   return (
@@ -16,9 +16,6 @@ const UsersFallback = () => {
             users to get started.
           </p>
         </div>
-        <Button className="mt-4 bg-purple-500 hover:bg-purple-600 text-white font-semibold">
-          Add New User
-        </Button>
       </div>
     </div>
   );

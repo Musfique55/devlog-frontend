@@ -21,7 +21,9 @@ export function SuperAdminSidebar() {
     <>
       {/* Mobile Menu Button */}
       <div className="lg:hidden fixed top-0 left-0 z-50 bg-zinc-900 border-b border-zinc-800 w-full p-4 flex justify-between items-center h-16">
-        <h1 className="text-lg font-bold text-zinc-100">Analytics</h1>
+        <Link href={'/'} className="flex items-center gap-2">
+        <h1 className="text-lg font-bold text-zinc-100">DevLog</h1>
+        </Link>
         <Button
           variant="ghost"
           size="icon"
@@ -39,14 +41,11 @@ export function SuperAdminSidebar() {
         }`}
       >
         {/* Logo - Hidden on mobile */}
-        <div className="hidden lg:block mb-10 px-2">
+        <Link href={'/'} className="hidden lg:block mb-10 px-2">
           <h1 className="text-lg font-bold tracking-tighter text-zinc-100">
-            Analytics Pro
+            DevLog 
           </h1>
-          <p className="text-[10px] font-medium tracking-widest text-zinc-500 uppercase">
-            v1.0
-          </p>
-        </div>
+        </Link>
 
         {/* Navigation */}
         <nav className="flex-1 space-y-2">

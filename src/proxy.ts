@@ -100,7 +100,7 @@ export async function proxy(request: NextRequest) {
 
   // protected routes
   if (!isValidToken && !refreshToken && routeOwner !== null) {
-    const loginUrl = new URL("/login", request.url);
+    const loginUrl = new URL("/auth/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
@@ -119,7 +119,7 @@ export async function proxy(request: NextRequest) {
           );
         }
       } else {
-        return NextResponse.redirect(new URL("/login", request.url));
+        return NextResponse.redirect(new URL("/auth/login", request.url));
       }
     }
 

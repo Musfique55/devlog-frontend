@@ -212,7 +212,7 @@ export function RegisterForm() {
           <p className="text-sm text-gray-400">
             Already have an account?
             <Link
-              href="/login"
+              href="/auth/login"
               className="text-inherit font-bold hover:underline ml-1"
             >
               Login

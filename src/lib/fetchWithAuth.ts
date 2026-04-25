@@ -30,7 +30,7 @@ const fetchWithAuthServer = async (url: string, options: RequestInit = {}) => {
         (await cookies()).delete("accessToken");
         (await cookies()).delete("refreshToken");
         (await cookies()).delete("better-auth.session_token");
-        redirect("/login");
+        redirect("/auth/login");
     }
     await getNewRefreshToken();
 

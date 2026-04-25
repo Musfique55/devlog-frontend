@@ -30,7 +30,7 @@ const SuperAdminLayout = async ({
         <div>
           <SuperAdminSidebar />
         </div>
-        <div className="flex-1 lg:ml-64">
+        <div className="flex-1 lg:ml-64 overflow-x-hidden">
           <SuperAdminHeader />
           <div className="m-5">{children}</div>
         </div>
