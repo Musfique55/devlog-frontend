@@ -91,7 +91,7 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
 
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className=" h-screen bg-background">
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Content */}

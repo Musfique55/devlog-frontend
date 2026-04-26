@@ -212,7 +212,6 @@ export const getWorkspaces = async (filter?: string) => {
     const res = await fetchWithAuthServer(
       `${envVars.API_URL}/admin/workspaces/${filter ? `?${filter}` : ""}`,
     );
-    console.log(`${envVars.API_URL}/admin/workspaces/${filter ? `?${filter}` : ""}`);
     if (!res.ok) {
       return {
         success: false,

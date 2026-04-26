@@ -28,7 +28,7 @@ export default function TeamHealthHeatmap() {
         </span>
       </h3>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex gap-2 overflow-x-auto">
         <div className="grid grid-rows-7 grid-flow-col gap-1.5 h-32" ref={gridRef} />
       </div>
 

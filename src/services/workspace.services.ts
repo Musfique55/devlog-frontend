@@ -90,7 +90,6 @@ export const getWorkspaceMembers = async (
       url.search = new URLSearchParams(query).toString();
     }
     const res = await fetchWithAuthServer(`${url}`);
-    console.log(res);
     if (!res.ok) {
       return {
         success: false,

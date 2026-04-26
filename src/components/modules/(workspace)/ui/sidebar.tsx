@@ -43,8 +43,7 @@ export function WorkspaceSidebar() {
         ]
       : []),
     { icon: TrendingUp, label: "Activity", href: `/workspace/${id}/activity` },
-    { icon: Briefcase, label: "Workspaces", href: "/dashboard/team" },
-    { icon: Settings, label: "Settings", href: `/workspace/${id}/settings` },
+    { icon: Briefcase, label: "Workspaces", href: "/dashboard/team" }
   ];
 
   return (

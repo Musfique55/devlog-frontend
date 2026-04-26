@@ -18,7 +18,6 @@ export const handleProfileUpdate = async (formData: FormData) => {
       },
     });
 
-    console.log(res);
     if (!res.ok) {
       return {
         success: false,
