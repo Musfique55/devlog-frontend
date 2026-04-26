@@ -64,11 +64,11 @@ export function Header({ title = "Dashboard" }: HeaderProps) {
           </UserProfilePopover>
         ) : (
           <UserProfilePopover>
-            (
+            
             <div className="w-8 h-8 rounded-xl object-cover hover:grayscale-0 transition-all duration-300 bg-amber-800 flex items-center justify-center text-white font-bold text-2xl">
               <p>{user?.name[0]}</p>
             </div>
-            )
+            
           </UserProfilePopover>
         )}
       </div>
