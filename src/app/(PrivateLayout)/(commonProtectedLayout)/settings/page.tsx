@@ -1,11 +1,11 @@
 import ProfileSection from '../../../../components/modules/(user)/dashboard/settings/profile-section';
-import BillingSection from '../../../../components/modules/(user)/dashboard/settings/billing-section';
+// import BillingSection from '../../../../components/modules/(user)/dashboard/settings/billing-section';
 import DangerZone from '../../../../components/modules/(user)/dashboard/settings/danger-zone';
 
 
 export default function SettingsPage() {
   return (
-    <main className=" pt-24 pb-20 px-12 min-h-screen bg-background">
+    <main className=" lg:pt-24 lg:pb-20 px-12 min-h-screen bg-background">
       <div className="max-w-4xl mx-auto">
         {/* Header Section */}
         <header className="mb-16">

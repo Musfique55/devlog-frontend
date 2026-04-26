@@ -17,7 +17,7 @@ const TeamWrapper = () => {
 
 
   return (
-    <main className="pl-64 pt-16 min-h-screen">
+    <main className="lg:ml-64 pt-16 min-h-screen">
       <div className="p-10 max-w-[1400px] mx-auto">
         {teams && teams.length ? (
           <>

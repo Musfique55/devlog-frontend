@@ -1,4 +1,4 @@
-import { WorkspaceHeader } from "@/components/modules/(workspace)/ui/header";
+import { Header } from "@/components/modules/(user)/dashboard/header";
 import { WorkspaceSidebar } from "@/components/modules/(workspace)/ui/sidebar";
 import { getWorkspace } from "@/services/workspace.services";
 import {
@@ -26,13 +26,11 @@ const WorkspaceLayout = async ({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <section className="flex flex-col lg:flex-row">
-        {/* Sidebar - Hidden on mobile, visible on desktop */}
-        <div className="hidden lg:block">
-          <WorkspaceSidebar />
-        </div>
+        <WorkspaceSidebar />
+
         <div className="flex flex-col flex-1 lg:ml-64">
-          <WorkspaceHeader />
-          {children}
+          <Header />
+          <div className="mt-20">{children}</div>
         </div>
       </section>
     </HydrationBoundary>

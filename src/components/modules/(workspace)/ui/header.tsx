@@ -2,9 +2,8 @@
 
 import UserProfilePopover from "@/components/shared/user-profile-popover";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
-import { Search, Bell, HelpCircle } from "lucide-react";
+import {  Bell, HelpCircle } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 
@@ -19,14 +18,6 @@ export function WorkspaceHeader() {
         <span className="text-lg sm:text-xl font-black text-on-background tracking-tight whitespace-nowrap">
           {workspace?.name}
         </span>
-        <div className="relative w-full sm:w-auto hidden lg:block">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4" />
-          <Input
-            className="bg-surface-container-lowest border-none ring-1 ring-white/5 rounded-lg pl-10 pr-4 py-1.5 text-xs w-full sm:w-64 focus:ring-primary focus:ring-2 transition-all"
-            placeholder="Search logs..."
-            type="text"
-          />
-        </div>
       </div>
 
       <div className="flex items-center gap-3 sm:gap-6 w-full sm:w-auto justify-between sm:justify-end">
@@ -57,11 +48,10 @@ export function WorkspaceHeader() {
             </UserProfilePopover>
           ) : (
             <UserProfilePopover>
-              (
               <div className="w-8 h-8 rounded-xl object-cover hover:grayscale-0 transition-all duration-300 bg-amber-800 flex items-center justify-center text-white font-bold text-2xl">
                 <p>{user?.name[0]}</p>
               </div>
-              )
+  
             </UserProfilePopover>
           )}
 

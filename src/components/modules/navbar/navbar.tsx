@@ -43,7 +43,7 @@ import { useState } from "react";
             </Link>
             <Link
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              href="/#pricing"
+              href="/pricing"
             >
               Pricing
             </Link>

@@ -12,7 +12,6 @@ const WorkspaceRedirectWrapper = ({id} : {id : string}) => {
         queryFn : () => getWorkspace(id)
     })
 
-    console.log(workspace);
 
     if(isLoading){
         return "loading....";

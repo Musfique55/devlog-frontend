@@ -21,56 +21,50 @@ export function Header({ title = "Dashboard" }: HeaderProps) {
   });
 
   return (
-    <header className="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800/20 flex justify-between items-center px-8 z-40">
+    <header className="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] h-16 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800/20 flex justify-between items-center px-4 md:px-8 z-40 transition-all duration-300">
       {/* Left Section */}
       <div className="flex items-center gap-4 flex-1">
-        <h2 className="text-lg font-bold text-zinc-100 tracking-tight">
+        {/* Spacer for the mobile menu button (which is fixed at left-4) */}
+        <div className="w-10 lg:hidden" /> 
+        
+        <h2 className="text-base md:text-lg font-bold text-zinc-100 tracking-tight truncate">
           {title}
         </h2>
-
-        {/* Search Bar */}
-        {/* <div className="ml-8 relative w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-          <input
-            type="text"
-            placeholder="Search logs..."
-            onChange={(e) => onSearch?.(e.target.value)}
-            className="w-full bg-zinc-950 border border-zinc-800 ring-1 ring-white/5 rounded-full py-1.5 pl-10 pr-4 text-sm focus:ring-2 focus:ring-indigo-500 transition-all text-zinc-100 placeholder:text-zinc-600"
-          />
-        </div> */}
       </div>
 
       {/* Right Section */}
-      <div className="flex items-center gap-6">
-        <button className="text-zinc-400 hover:text-zinc-100 transition-colors">
-          <Bell className="w-5 h-5" />
-        </button>
-        <button className="text-zinc-400 hover:text-zinc-100 transition-colors">
+      <div className="flex items-center gap-3 md:gap-6">
+        <button className="text-zinc-400 hover:text-zinc-100 transition-colors hidden sm:block">
           <HelpCircle className="w-5 h-5" />
+        </button>
+        <button className="relative text-zinc-400 hover:text-zinc-100 transition-colors">
+          <Bell className="w-5 h-5" />
+          {/* Optional: Small notification dot */}
+          <span className="absolute top-0 right-0 w-2 h-2 bg-indigo-500 rounded-full border-2 border-zinc-950"></span>
         </button>
 
         {/* User Profile */}
-        {user && user?.image ? (
-          <UserProfilePopover>
-            <div className="h-8 w-8 rounded-full overflow-hidden ring-2 ring-indigo-500/20">
-              <Image
-                src={user.image}
-                alt="User profile"
-                width={32}
-                height={32}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </UserProfilePopover>
-        ) : (
-          <UserProfilePopover>
-            
-            <div className="w-8 h-8 rounded-xl object-cover hover:grayscale-0 transition-all duration-300 bg-amber-800 flex items-center justify-center text-white font-bold text-2xl">
-              <p>{user?.name[0]}</p>
-            </div>
-            
-          </UserProfilePopover>
-        )}
+        <div className="ml-1 md:ml-0">
+          {user && user?.image ? (
+            <UserProfilePopover>
+              <div className="h-8 w-8 rounded-full overflow-hidden ring-2 ring-indigo-500/20 cursor-pointer">
+                <Image
+                  src={user.image}
+                  alt="User profile"
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </UserProfilePopover>
+          ) : (
+            <UserProfilePopover>
+              <div className="w-8 h-8 rounded-full bg-amber-800 flex items-center justify-center text-white font-bold text-sm cursor-pointer hover:bg-amber-700 transition-colors">
+                <p>{user?.name?.[0] || "U"}</p>
+              </div>
+            </UserProfilePopover>
+          )}
+        </div>
       </div>
     </header>
   );

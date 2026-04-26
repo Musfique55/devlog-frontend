@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export function MyLogsSkeleton() {
   return (
-    <main className="ml-64 pt-24 pb-12 px-12 min-h-screen bg-background">
+    <main className="lg:ml-64 pt-24 pb-12 px-12 min-h-screen bg-background">
       {/* Header & Breadcrumbs */}
       <div className="mb-10">
         <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-zinc-500 mb-2 font-semibold">

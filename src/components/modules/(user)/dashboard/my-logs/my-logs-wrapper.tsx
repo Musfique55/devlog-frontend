@@ -148,7 +148,7 @@ export default function MyLogsWrapper() {
   }
 
   return (
-    <main className="ml-64 pt-24 pb-12 px-12 min-h-screen bg-background">
+    <main className="lg:ml-64 pt-24 pb-12 px-12 min-h-screen bg-background">
       {/* Header & Breadcrumbs */}
       
       <div className="mb-10">

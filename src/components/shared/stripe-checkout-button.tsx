@@ -17,7 +17,7 @@ const StripeCheckoutButton = () => {
     }
   };
   
-  return <Button onClick={handleCheckout}>Pay With Stripe</Button>;
+  return <Button className="w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-base h-12 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-primary/25 flex items-center justify-center gap-2 mb-6" onClick={handleCheckout}>Pay With Stripe</Button>;
 };
 
 export default StripeCheckoutButton;

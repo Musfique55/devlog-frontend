@@ -95,7 +95,7 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Content */}
-        <main className="flex-1 p-8 max-w-7xl mx-auto w-full space-y-12">
+        <main className="flex-1 p-8  mx-auto w-full space-y-12">
           {/* Page Header */}
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
             <div>
