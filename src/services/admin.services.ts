@@ -2,12 +2,11 @@
 
 import { envVars } from "@/env";
 import fetchWithAuthServer from "@/lib/fetchWithAuth";
-import { meta } from "zod/v4/core";
 
 export const getStats = async () => {
   try {
     const res = await fetchWithAuthServer(
-      `${envVars.API_URL}/dashboard/super-admin`,
+      `${envVars.API_URL}/admin/dashboard`,
     );
     if (!res.ok) {
       return {
@@ -46,7 +45,7 @@ export const getStats = async () => {
 export const getProfitStats = async () => {
   try {
     const res = await fetchWithAuthServer(
-      `${envVars.API_URL}/dashboard/yearly-profit`,
+      `${envVars.API_URL}/admin/dashboard/yearly-profit`,
     );
     if (!res.ok) {
       return {
@@ -83,7 +82,7 @@ export const getProfitStats = async () => {
 export const getUserGrowthStats = async () => {
   try {
     const res = await fetchWithAuthServer(
-      `${envVars.API_URL}/dashboard/user-growth`,
+      `${envVars.API_URL}/admin/dashboard/user-growth`,
     );
     if (!res.ok) {
       return {

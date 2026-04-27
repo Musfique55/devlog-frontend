@@ -6,7 +6,6 @@ import fetchWithAuthServer from "@/lib/fetchWithAuth"
 
 
 export const getMyInfo = async () => {
-
     try {
         const res = await fetchWithAuthServer(`${envVars.API_URL}/dashboard/me`)
         if(!res.ok) {

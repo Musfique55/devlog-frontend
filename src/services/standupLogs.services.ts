@@ -211,7 +211,7 @@ export const updateLog = async (id: string, payload: Partial<StandupData>) => {
 
 export const getWorkspaceLogs = async (workspaceId: string) : Promise<WorkspaceLogResponse<Log>> => {
   try {
-    const url = new URL(`${envVars.API_URL}/logs/workspace/${workspaceId}`);
+    const url = new URL(`${envVars.API_URL}/logs/workspaces/${workspaceId}`);
     const res = await fetchWithAuthServer(`${url}`);
 
     if (res && !res.ok) {

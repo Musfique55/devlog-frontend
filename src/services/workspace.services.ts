@@ -5,7 +5,7 @@ import fetchWithAuthServer from "@/lib/fetchWithAuth";
 
 export const getWorkspace = async (workspaceId: string) => {
   try {
-    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspace/${workspaceId}`);
+    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspaces/${workspaceId}`);
 
     if (!res.ok) {
       return {
@@ -43,7 +43,7 @@ export const getWorkspace = async (workspaceId: string) => {
 
 export const getWorkspacesByUser = async () => {
   try {
-    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspace/me`);
+    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspaces/me`);
 
     if (!res.ok) {
       return {
@@ -85,7 +85,7 @@ export const getWorkspaceMembers = async (
 ) => {
 
   try {
-    const url = new URL(`${envVars.API_URL}/workspace/${workspaceId}/members`);
+    const url = new URL(`${envVars.API_URL}/workspaces/${workspaceId}/members`);
     if (query) {
       url.search = new URLSearchParams(query).toString();
     }
@@ -126,7 +126,7 @@ export const getWorkspaceMembers = async (
 
 export const getUsersOverallWorkspaceStats = async () => {
   try {
-    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspace/me/stats`);
+    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspaces/me/stats`);
 
     if (!res.ok) {
       return {
@@ -163,7 +163,7 @@ export const getUsersOverallWorkspaceStats = async () => {
 
 export const getWorkspaceStats = async (id: string) => {
   try {
-    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspace/${id}/stats`);
+    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspaces/${id}/stats`);
     if (!res.ok) {
       return {
         success: false,
@@ -202,7 +202,7 @@ export const createWorkspace = async (payload: {
   adminId: string;
 }) => {
   try {
-    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspace/create-workspace`, {
+    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspaces`, {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {
@@ -250,7 +250,7 @@ export const inviteUserToWorkspace = async (payload: {
 }) => {
   try {
     const res = await fetchWithAuthServer(
-      `${envVars.API_URL}/workspace/${payload.workspaceId}/invite`,
+      `${envVars.API_URL}/workspaces/${payload.workspaceId}/invite`,
       {
         method: "POST",
         body: JSON.stringify({ email: payload.email }),
@@ -291,7 +291,7 @@ export const inviteUserToWorkspace = async (payload: {
 export const verifyTeamLink = async (link: string) => {
   try {
     const token = link.split("?token=")[1];
-    const res = await fetchWithAuthServer(`${envVars.API_URL}/invite/accept/${token}`);
+    const res = await fetchWithAuthServer(`${envVars.API_URL}/invites/accept/${token}`);
     if (!res.ok) {
       return {
         success: false,
@@ -316,7 +316,7 @@ export const verifyTeamLink = async (link: string) => {
 
 export const removeMemberFromWorkspace = async (workspaceId : string,memberId : string) => {
   try{
-    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspace/${workspaceId}/remove-member`,{
+    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspaces/${workspaceId}/remove-member`,{
       method : "DELETE",
       body : JSON.stringify({memberId}),
       headers : {

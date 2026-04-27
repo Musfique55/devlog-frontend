@@ -68,9 +68,8 @@ export const getNewRefreshToken = async () : Promise<{message : string,success:b
 };
 
 export const getUserInfo = async () => {
-
   try {
-    const res = await fetchWithAuthServer(`${envVars.AUTH_URL}/me`, {
+    const res = await fetchWithAuthServer(`${envVars.AUTH_URL}/users/me`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -140,7 +139,7 @@ export const logout = async () => {
 
 export const deleteAccount = async () => {
     try {
-        const res = await fetchWithAuthServer(`${envVars.AUTH_URL}/delete-account`,{
+        const res = await fetchWithAuthServer(`${envVars.AUTH_URL}/users/delete-account`,{
             method : "DELETE"
         })
 
