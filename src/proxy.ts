@@ -12,7 +12,6 @@ import { isTokenExpiringSoon } from "./lib/tokenUtils";
 
 type UserRole = "SUPER_ADMIN" | "USER";
 
-
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
@@ -35,7 +34,6 @@ export async function proxy(request: NextRequest) {
     isValidToken = false;
   }
 
-
   const isAuth = isAuthRoute(pathname);
   const routeOwner = getRoutesOwner(pathname);
 
@@ -46,11 +44,11 @@ export async function proxy(request: NextRequest) {
   ) {
     try {
       const refreshed = await getNewRefreshToken();
-  
+
       if (refreshed.success) {
         const response = NextResponse.next();
 
-        response.headers.set("x-token-refreshed","1");
+        response.headers.set("x-token-refreshed", "1");
         response.cookies.set({
           name: "accessToken",
           value: refreshed.data!.accessToken,
@@ -58,7 +56,7 @@ export async function proxy(request: NextRequest) {
           path: "/",
           sameSite: "none",
           maxAge: 15 * 60,
-        })
+        });
         response.cookies.set({
           name: "refreshToken",
           value: refreshed.data!.refreshToken,
@@ -66,7 +64,7 @@ export async function proxy(request: NextRequest) {
           path: "/",
           sameSite: "none",
           maxAge: 24 * 60 * 60 * 7,
-        })
+        });
         response.cookies.set({
           name: "better-auth.session_token",
           value: refreshed.data!.sessionToken,
@@ -74,7 +72,7 @@ export async function proxy(request: NextRequest) {
           path: "/",
           sameSite: "none",
           maxAge: 24 * 60 * 60 * 7,
-        })
+        });
 
         return response;
       }
@@ -130,16 +128,22 @@ export async function proxy(request: NextRequest) {
 
     // admin route
     if (routeOwner === "SUPER_ADMIN" && user?.role !== "SUPER_ADMIN") {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      return NextResponse.redirect(
+        new URL(getDefaultDashboardRoute(user.role), request.url),
+      );
     }
 
     // prevent admin to access users route
     if (routeOwner === "USER" && user?.role === "SUPER_ADMIN") {
-      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+      return NextResponse.redirect(
+        new URL(getDefaultDashboardRoute(user.role), request.url),
+      );
     }
 
     if (routeOwner === "WORKSPACE" && user?.role === "SUPER_ADMIN") {
-      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+      return NextResponse.redirect(
+        new URL(getDefaultDashboardRoute(user.role), request.url),
+      );
     }
 
     if (routeOwner === "COMMON") {

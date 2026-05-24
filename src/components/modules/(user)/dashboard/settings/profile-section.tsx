@@ -12,7 +12,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 export default function ProfileSection() {
-  const {data : user}  = useAuth();
+  const { data: user } = useAuth();
   const imageRef = useRef<HTMLInputElement | null>(null);
   const [profileImage, setProfileImage] = useState<File | null>(null);
 
@@ -35,7 +35,7 @@ export default function ProfileSection() {
     e.preventDefault();
     const form = e.currentTarget;
     const name = (form.elements.namedItem("name") as HTMLInputElement).value;
-    
+
     const formData = new FormData();
     formData.append("file", profileImage as Blob);
     formData.append("data", JSON.stringify({ name }) as string);

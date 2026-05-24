@@ -38,9 +38,17 @@ export const createAccount = async (payload: {
       };
     }
 
-    await setTokenInCookie("accessToken", result.data.accessToken,15 * 60);
-    await setTokenInCookie("refreshToken", result.data.refreshToken,24 * 60 * 60 * 7);
-    await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60 * 7); //7 days
+    await setTokenInCookie("accessToken", result.data.accessToken, 15 * 60);
+    await setTokenInCookie(
+      "refreshToken",
+      result.data.refreshToken,
+      24 * 60 * 60 * 7,
+    );
+    await setTokenInCookie(
+      "better-auth.session_token",
+      result.data.token,
+      24 * 60 * 60 * 7,
+    ); //7 days
 
     return {
       success: true,
@@ -55,7 +63,10 @@ export const createAccount = async (payload: {
   }
 };
 
-export const login = async (payload: { email: string; password: string },intendedRedirect? : string | null) => {
+export const login = async (
+  payload: { email: string; password: string },
+  intendedRedirect?: string | null,
+) => {
   const parsedPayload = authValidator.login.safeParse(payload);
 
   if (!parsedPayload.success) {
@@ -66,6 +77,8 @@ export const login = async (payload: { email: string; password: string },intende
     };
   }
 
+  let role;
+
   try {
     const res = await fetch(`${envVars.AUTH_URL}/login`, {
       method: "POST",
@@ -74,7 +87,6 @@ export const login = async (payload: { email: string; password: string },intende
       },
       body: JSON.stringify(payload),
     });
-
 
     const result = await res.json();
 
@@ -85,30 +97,35 @@ export const login = async (payload: { email: string; password: string },intende
       };
     }
 
+    role = result.data.user.role;
 
-    await setTokenInCookie("accessToken", result.data.accessToken,15 * 60);
-    await setTokenInCookie("refreshToken", result.data.refreshToken,24 * 60 * 60 * 7);
-    await setTokenInCookie("better-auth.session_token", result.data.token,24 * 60 * 60 * 7); //7 days
+    await setTokenInCookie("accessToken", result.data.accessToken, 15 * 60);
+    await setTokenInCookie(
+      "refreshToken",
+      result.data.refreshToken,
+      24 * 60 * 60 * 7,
+    );
+    await setTokenInCookie(
+      "better-auth.session_token",
+      result.data.token,
+      24 * 60 * 60 * 7,
+    ); //7 days
 
-    if(intendedRedirect){
-      redirect(intendedRedirect);
-    }
-    if(result.data.user.role === "SUPER_ADMIN"){
-     return redirect("/admin/dashboard");
-    }
-    redirect("/dashboard");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error : any) {
-    if(error && typeof error === "object" && "digest" in error && typeof error.digest === "string" && error.digest.startsWith("NEXT_REDIRECT")){
-      throw error;
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     return {
       success: false,
       error: error.message,
     };
   }
+
+  if (intendedRedirect) {
+    redirect(intendedRedirect);
+  }
+
+  if (role === "SUPER_ADMIN") {
+    return redirect("/admin/dashboard");
+  }
+
+  redirect("/dashboard");
 };
-
-
-
-

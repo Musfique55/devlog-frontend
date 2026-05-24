@@ -4,18 +4,18 @@ import { getNewRefreshToken } from "@/services/auth.services";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-
-const getCookieHeader = async () => {
+export const getCookieHeader = async () => {
   const cookieStore = await cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`)
-    .join("; ");
+  const accessToken = cookieStore.get("accessToken")?.value;
+  const sessionToken = cookieStore.get("better-auth.session_token")?.value;
+  const refreshToken = cookieStore.get("refreshToken")?.value;
+  const cookieHeader = `accessToken=${accessToken}; better-auth.session_token=${sessionToken}; refreshToken=${refreshToken}`;
+
   return cookieHeader;
 };
-
 const fetchWithAuthServer = async (url: string, options: RequestInit = {}) => {
   const cookieHeader = await getCookieHeader();
+
   let res = await fetch(url, {
     ...options,
     headers: {
@@ -27,10 +27,10 @@ const fetchWithAuthServer = async (url: string, options: RequestInit = {}) => {
   if (res.status === 401) {
     const refreshToken = (await cookies()).get("refreshToken");
     if (!refreshToken) {
-        (await cookies()).delete("accessToken");
-        (await cookies()).delete("refreshToken");
-        (await cookies()).delete("better-auth.session_token");
-        redirect("/auth/login");
+      (await cookies()).delete("accessToken");
+      (await cookies()).delete("refreshToken");
+      (await cookies()).delete("better-auth.session_token");
+      redirect("/auth/login");
     }
     await getNewRefreshToken();
 
