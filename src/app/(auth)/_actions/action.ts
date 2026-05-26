@@ -2,7 +2,6 @@
 
 import { envVars } from "../../../env";
 import { authValidator } from "@/zod/authValidator";
-import { redirect } from "next/navigation";
 import { setTokenInCookie } from "@/lib/tokenUtils";
 
 export const createAccount = async (payload: {
@@ -119,13 +118,15 @@ export const login = async (
     };
   }
 
+  let redirectUrl = "/dashboard";
   if (intendedRedirect) {
-    redirect(intendedRedirect);
+    redirectUrl = intendedRedirect;
+  } else if (role === "SUPER_ADMIN") {
+    redirectUrl = "/admin/dashboard";
   }
 
-  if (role === "SUPER_ADMIN") {
-    return redirect("/admin/dashboard");
-  }
-
-  redirect("/dashboard");
+  return {
+    success: true,
+    redirectUrl,
+  };
 };

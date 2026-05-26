@@ -2,6 +2,28 @@
 import { Workspace } from "./useWorkspace";
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "@/services/auth.services";
+// [
+//     // {
+//     //     "cancelAtPeriodEnd": true,
+//     //     "status": "ACTIVE",
+//     //     "cancelAt": null,
+//     //     "currentPeriodEnd": "2026-08-24T09:38:33.000Z"
+//     // }
+// ]
+
+interface Subscription {
+  cancelAtPeriodEnd: boolean;
+  status:
+    | "ACTIVE"
+    | "CANCELED"
+    | "INCOMPLETE"
+    | "INCOMPLETE_EXPIRED"
+    | "PAST_DUE"
+    | "TRIALING"
+    | "UNPAID";
+  cancelAt: string | null;
+  currentPeriodEnd: string;
+}
 
 export interface User {
   id: string;
@@ -22,6 +44,7 @@ export interface User {
   blockedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  subscriptions: Subscription[];
   workspaces: Workspace[];
 }
 

@@ -7,23 +7,24 @@ import { authValidator } from "@/zod/authValidator";
 import { useForm } from "@tanstack/react-form";
 import { EyeClosed, EyeIcon, LockIcon, MailIcon } from "lucide-react";
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-
-
-export default function LoginForm({intendedUrl}: {intendedUrl?: string}) {
-  
+export default function LoginForm({ intendedUrl }: { intendedUrl?: string }) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const router = useRouter();
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: async (value : {email: string, password: string}) => {
-     const res = await login(value,intendedUrl);
-     return res;
+    mutationFn: async (value: { email: string; password: string }) => {
+      const res = await login(value, intendedUrl);
+      return res;
     },
   });
+
+  const queryClient = useQueryClient();
 
   const form = useForm({
     defaultValues: {
@@ -40,18 +41,18 @@ export default function LoginForm({intendedUrl}: {intendedUrl?: string}) {
         }
         form.reset();
         toast.success("Logged in Successfully");
+        await queryClient.invalidateQueries({ queryKey: ["user"] });
         setServerError(null);
+        router.push(result.redirectUrl!);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         setServerError(error.message!);
       }
-    }
+    },
   });
-
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden  selection:bg-primary-container/30">
-      
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-sky-600/20 rounded-full blur-[120px]" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-sky-700/20 rounded-full blur-[100px]" />
 
@@ -66,7 +67,6 @@ export default function LoginForm({intendedUrl}: {intendedUrl?: string}) {
             }}
             className="space-y-5"
           >
-
             {/* Work Email */}
             <form.Field
               name="email"
@@ -84,7 +84,7 @@ export default function LoginForm({intendedUrl}: {intendedUrl?: string}) {
                       size="icon-xs"
                       className="bg-transparent"
                     >
-                      <MailIcon className="text-zinc-400"/>
+                      <MailIcon className="text-zinc-400" />
                     </Button>
                   }
                   className="w-full bg-surface-container-lowest border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-primary text-body-md py-3 px-4 transition-all duration-200 placeholder:text-outline/40 rounded-lg outline-none"
@@ -110,7 +110,11 @@ export default function LoginForm({intendedUrl}: {intendedUrl?: string}) {
                       className="bg-transparent cursor-pointer"
                       onClick={() => setShowPassword((prev) => !prev)}
                     >
-                      {showPassword ? <EyeClosed className="text-zinc-400"/> : <EyeIcon className="text-zinc-400"/>}
+                      {showPassword ? (
+                        <EyeClosed className="text-zinc-400" />
+                      ) : (
+                        <EyeIcon className="text-zinc-400" />
+                      )}
                     </Button>
                   }
                   prepend={
@@ -119,7 +123,7 @@ export default function LoginForm({intendedUrl}: {intendedUrl?: string}) {
                       size="icon-xs"
                       className="bg-transparent"
                     >
-                      <LockIcon className="text-zinc-400"/>
+                      <LockIcon className="text-zinc-400" />
                     </Button>
                   }
                   className="w-full  border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-primary text-body-md py-3 px-4 transition-all duration-200 placeholder:text-outline/40 rounded-lg outline-none"
