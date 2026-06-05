@@ -42,13 +42,16 @@ export function Sidebar() {
 
   const handleLogout = async () => {
     try {
-      const response = await logout();
-      if (!response.success) return toast.error(response.message);
-
-      router.push("/");
-      await queryClient.invalidateQueries({ queryKey: ["user"] });
-    } catch (error) {
-      console.error("Error during logout:", error);
+      const res = await logout();
+      if (!res.success) return toast.error(res.message);
+      toast.success(res.message);
+      await queryClient.invalidateQueries({
+        queryKey: ["user"],
+      });
+      router.push("/auth/login");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
