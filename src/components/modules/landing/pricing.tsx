@@ -59,7 +59,8 @@ export function PricingSection() {
             Plans for every team
           </h2>
           <p className="text-lg sm:text-xl text-muted-foreground font-light max-w-2xl">
-            Choose the plan that fits your needs. No hidden fees, cancel anytime. Start free, upgrade when you scale.
+            Choose the plan that fits your needs. No hidden fees, cancel
+            anytime. Start free, upgrade when you scale.
           </p>
         </div>
 
@@ -80,7 +81,7 @@ export function PricingSection() {
               )}
 
               {/* Card background */}
-              <div 
+              <div
                 className={`flex flex-col gap-8 p-8 h-full relative z-10 ${
                   plan.highlighted
                     ? "bg-gradient-to-br from-primary/15 via-primary/8 to-primary/5 border-primary/40"
@@ -93,7 +94,9 @@ export function PricingSection() {
                     <Badge className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground text-xs font-bold px-3 py-1 rounded-full">
                       MOST POPULAR
                     </Badge>
-                    <span className="text-xs text-primary font-semibold">Save 20% on annual</span>
+                    <span className="text-xs text-primary font-semibold">
+                      Save 20% on annual
+                    </span>
                   </div>
                 )}
 
@@ -117,7 +120,9 @@ export function PricingSection() {
                       {plan.period}
                     </span>
                   </div>
-                  <p className="text-xs text-muted-foreground">Billed monthly</p>
+                  <p className="text-xs text-muted-foreground">
+                    Billed monthly
+                  </p>
                 </div>
 
                 {/* CTA Button */}
@@ -136,10 +141,7 @@ export function PricingSection() {
                 {/* Features list */}
                 <div className="space-y-4 flex-1 pt-4 border-t border-border/20">
                   {plan.features.map((feature, featureIndex) => (
-                    <div
-                      key={featureIndex}
-                      className="flex items-start gap-3"
-                    >
+                    <div key={featureIndex} className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5 font-bold" />
                       <span className="text-sm text-foreground font-light leading-relaxed">
                         {feature}
@@ -154,16 +156,17 @@ export function PricingSection() {
 
         {/* Footer note */}
         <div className="text-center mt-16 sm:mt-24">
-          <p className="text-sm text-muted-foreground font-light">
-            All plans include 7-day free trial. No credit card required.
-          </p>
           <div className="flex items-center justify-center gap-4 mt-8 flex-wrap">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">✓</div>
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                ✓
+              </div>
               <span>Money-back guarantee</span>
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">✓</div>
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                ✓
+              </div>
               <span>Cancel anytime</span>
             </div>
           </div>
