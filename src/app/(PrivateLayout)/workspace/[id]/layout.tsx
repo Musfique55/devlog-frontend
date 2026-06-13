@@ -1,5 +1,6 @@
 import { Header } from "@/components/modules/(user)/dashboard/header";
 import { WorkspaceSidebar } from "@/components/modules/(workspace)/ui/sidebar";
+import { WorkspaceSocketHandler } from "@/components/modules/(workspace)/ui/workspace-socket-handler";
 import { getWorkspace } from "@/services/workspace.services";
 import {
   dehydrate,
@@ -26,6 +27,7 @@ const WorkspaceLayout = async ({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <section className="flex flex-col lg:flex-row">
+        <WorkspaceSocketHandler id={id} />
         <WorkspaceSidebar />
 
         <div className="flex flex-col flex-1 lg:ml-64">

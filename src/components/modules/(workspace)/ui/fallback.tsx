@@ -14,16 +14,17 @@ import { toast } from "sonner";
 
 const TeamFallback = () => {
   const [open, setOpen] = useState(false);
-  const {data : user}  = useAuth();
+  const { data: user } = useAuth();
 
   const queryClient = useQueryClient();
-
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (link: string) => {
       const response = await verifyTeamLink(link);
       if (response.success) {
-        queryClient.invalidateQueries({ queryKey: ["user-workspaces","workspace-members"] });
+        queryClient.invalidateQueries({
+          queryKey: ["user-workspaces", "workspace-members"],
+        });
       }
       return response;
     },
@@ -100,13 +101,16 @@ const TeamFallback = () => {
 
         {/* Join Workspace Card */}
         <div className="bg-zinc-900/60 p-4 rounded-lg flex flex-col items-start text-start gap-3">
-            <h3>Join Workspace</h3>
-            <p>Entering an existing team? Paste your secure invite link below to join team.</p>
+          <h3>Join Workspace</h3>
+          <p>
+            Entering an existing team? Paste your secure invite link below to
+            join team.
+          </p>
           <form onSubmit={handleTeamJoin} className="w-full space-y-3">
             <div className="relative">
               <Input
                 name="invite-link"
-                placeholder="Invite Code (e.g. DX-992-K)"
+                placeholder="Invite Link"
                 className="w-full bg-zinc-900/50 border-zinc-700 ring-1  rounded-lg py-3 px-4 text-sm text-zinc-100 placeholder:text-zinc-600"
               />
             </div>

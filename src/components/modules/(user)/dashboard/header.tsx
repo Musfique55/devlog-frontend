@@ -5,6 +5,12 @@ import { getUserInfo } from "@/services/auth.services";
 import { useQuery } from "@tanstack/react-query";
 import { Bell, HelpCircle } from "lucide-react";
 import Image from "next/image";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { useSocket } from "@/providers/SocketProvider";
 
 interface HeaderProps {
   title?: string;
@@ -20,13 +26,16 @@ export function Header({ title = "Dashboard" }: HeaderProps) {
     },
   });
 
+  const { notifications, unreadCount, markAllAsRead, clearNotifications } =
+    useSocket();
+
   return (
     <header className="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] h-16 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800/20 flex justify-between items-center px-4 md:px-8 z-40 transition-all duration-300">
       {/* Left Section */}
       <div className="flex items-center gap-4 flex-1">
         {/* Spacer for the mobile menu button (which is fixed at left-4) */}
-        <div className="w-10 lg:hidden" /> 
-        
+        <div className="w-10 lg:hidden" />
+
         <h2 className="text-base md:text-lg font-bold text-zinc-100 tracking-tight truncate">
           {title}
         </h2>
@@ -37,11 +46,56 @@ export function Header({ title = "Dashboard" }: HeaderProps) {
         <button className="text-zinc-400 hover:text-zinc-100 transition-colors hidden sm:block">
           <HelpCircle className="w-5 h-5" />
         </button>
-        <button className="relative text-zinc-400 hover:text-zinc-100 transition-colors">
-          <Bell className="w-5 h-5" />
-          {/* Optional: Small notification dot */}
-          <span className="absolute top-0 right-0 w-2 h-2 bg-indigo-500 rounded-full border-2 border-zinc-950"></span>
-        </button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              onClick={markAllAsRead}
+              className="relative text-zinc-400 hover:text-zinc-100 transition-colors cursor-pointer"
+            >
+              <Bell className="w-5 h-5" />
+              {unreadCount > 0 && (
+                <span className="absolute top-0 right-0 w-2 h-2 bg-indigo-500 rounded-full border-2 border-zinc-950 animate-pulse"></span>
+              )}
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80 bg-zinc-900 border-zinc-800 text-zinc-100 p-4 rounded-xl shadow-2xl z-50">
+            <div className="flex justify-between items-center pb-2 border-b border-zinc-800/50 mb-3">
+              <h4 className="font-semibold text-sm">Notifications</h4>
+              {notifications.length > 0 && (
+                <button
+                  onClick={clearNotifications}
+                  className="text-xs text-indigo-400 hover:text-indigo-300 font-semibold cursor-pointer"
+                >
+                  Clear All
+                </button>
+              )}
+            </div>
+            <div className="max-h-64 overflow-y-auto space-y-2.5 pr-1">
+              {notifications.length === 0 ? (
+                <p className="text-zinc-500 text-xs text-center py-6">
+                  No new notifications
+                </p>
+              ) : (
+                notifications.map((n) => (
+                  <div
+                    key={n.id}
+                    className="p-2.5 rounded-lg bg-zinc-950/40 border border-zinc-850 hover:border-zinc-800 transition-all flex flex-col gap-1"
+                  >
+                    <p className="text-xs font-medium text-zinc-200 leading-normal">
+                      {n.message}
+                    </p>
+                    <span className="text-[10px] text-zinc-500 font-semibold self-end">
+                      {new Date(n.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </PopoverContent>
+        </Popover>
 
         {/* User Profile */}
         <div className="ml-1 md:ml-0">

@@ -54,7 +54,7 @@ export function ActivityCard({ log }: { log: Log }) {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0"></span>
                 Todays Work
               </p>
-              <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+              <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed wrap-break-word">
                 {log.todayWork}
               </p>
             </div>
@@ -65,7 +65,7 @@ export function ActivityCard({ log }: { log: Log }) {
                 <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
                 Tomorrows Work
               </p>
-              <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+              <p className="text-xs sm:text-sm text-on-surface-variant wrap-break-word">
                 {log.tomorrowWork}
               </p>
             </div>

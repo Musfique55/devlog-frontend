@@ -195,7 +195,7 @@ export default function LoginForm({ intendedUrl }: { intendedUrl?: string }) {
           <p className="text-sm text-gray-400">
             Don&apos;t have an account?
             <Link
-              href="/auth/register"
+              href={intendedUrl ? `/auth/register?redirect=${encodeURIComponent(intendedUrl)}` : "/auth/register"}
               className="text-inherit font-bold hover:underline ml-1"
             >
               Register

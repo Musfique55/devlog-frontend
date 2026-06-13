@@ -7,18 +7,19 @@ import Modal from "@/components/ui/modal";
 import { useAuth } from "@/hooks/useAuth";
 import WorkspaceCreationForm from "@/components/shared/form/workspace-creation-form";
 import SubscriptionAlert from "@/components/ui/subscription-alert";
+import { Member } from "@/hooks/useWorkspace";
 
 interface Team {
   id: string;
   name: string;
   isActive: boolean;
-  members: string[];
+  members: Member[];
   logs: string[];
 }
 
 export function TeamGrid({ teams }: { teams: Team[] }) {
   const [open, setOpen] = useState(false);
-  const {data :user}  = useAuth();
+  const { data: user } = useAuth();
 
   return (
     <section>
@@ -49,7 +50,7 @@ export function TeamGrid({ teams }: { teams: Team[] }) {
               name={team.name}
               status={team.isActive}
               statusColor={"emerald-500"}
-              members={team.members.length}
+              members={team.members}
               logsThisWeek={team.logs.length}
             />
           ))}
@@ -73,12 +74,10 @@ export function TeamGrid({ teams }: { teams: Team[] }) {
 
       {user?.plan === "PRO" && open ? (
         <Modal title="Create Workspace" setOpen={setOpen} open={open}>
-          <WorkspaceCreationForm setOpen={setOpen}/>
+          <WorkspaceCreationForm setOpen={setOpen} />
         </Modal>
       ) : (
-        open && (
-          <SubscriptionAlert open={open} setOpen={setOpen}/>
-        )
+        open && <SubscriptionAlert open={open} setOpen={setOpen} />
       )}
     </section>
   );

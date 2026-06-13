@@ -23,10 +23,14 @@ export interface StandupData {
   workspaceId?: string;
 }
 
-export function StandupForm({ workspaceId = undefined }: { workspaceId?: string }) {
+export function StandupForm({
+  workspaceId = undefined,
+}: {
+  workspaceId?: string;
+}) {
   const [serverError, setServerError] = useState<string | null>(null);
   const [tags, setTags] = useState("");
-  const {data : user}  = useAuth();
+  const { data: user } = useAuth();
 
   const queryClient = useQueryClient();
 
@@ -34,7 +38,7 @@ export function StandupForm({ workspaceId = undefined }: { workspaceId?: string 
     mutationFn: createLog,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["my-dashboard-info"],
+        queryKey: ["my-dashboard-info", "activityLogs"],
       });
     },
   });
@@ -51,7 +55,7 @@ export function StandupForm({ workspaceId = undefined }: { workspaceId?: string 
       try {
         const result = await mutateAsync({
           ...value,
-          ...(workspaceId && { workspaceId })
+          ...(workspaceId && { workspaceId }),
         });
 
         if (result.success === false) {

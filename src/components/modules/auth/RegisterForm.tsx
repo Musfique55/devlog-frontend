@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export function RegisterForm() {
+export function RegisterForm({ inviteToken }: { inviteToken?: string }) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const router = useRouter();
@@ -26,6 +26,7 @@ export function RegisterForm() {
       name: "",
       email: "",
       password: "",
+      inviteToken: inviteToken || "",
     },
     onSubmit: async ({ value }) => {
       setServerError(null);
@@ -212,7 +213,7 @@ export function RegisterForm() {
           <p className="text-sm text-gray-400">
             Already have an account?
             <Link
-              href="/auth/login"
+              href={inviteToken ? `/auth/login?redirect=${encodeURIComponent(`/invite/accept?token=${inviteToken}`)}` : "/auth/login"}
               className="text-inherit font-bold hover:underline ml-1"
             >
               Login

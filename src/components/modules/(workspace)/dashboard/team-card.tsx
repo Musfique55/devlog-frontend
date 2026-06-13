@@ -1,6 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { Member } from "@/hooks/useWorkspace";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -10,13 +12,13 @@ interface TeamCardProps {
   name: string;
   status: boolean;
   statusColor: string;
-  members: number;
+  members: Member[];
   logsThisWeek: number;
-  id : string;
+  id: string;
 }
 
 export function TeamCard({
-    id,
+  id,
   icon,
   name,
   status,
@@ -24,6 +26,9 @@ export function TeamCard({
   members,
   logsThisWeek,
 }: TeamCardProps) {
+  const { data: user } = useAuth();
+  const isAdmin =
+    members.find((member) => member.userId === user?.id)?.role === "ADMIN";
   return (
     <div className="group bg-zinc-900/60 p-6 rounded-xl transition-all duration-300 hover:bg-zinc-900/80 hover:translate-y-[-4px] cursor-pointer">
       {/* Header */}
@@ -49,7 +54,7 @@ export function TeamCard({
         <div className="flex justify-between items-center py-2 border-b border-outline-variant/5">
           <span className="text-xs text-on-surface-variant">Members</span>
           <span className="text-xs font-semibold text-on-surface">
-            {members} Developers
+            {members.length} Developers
           </span>
         </div>
         <div className="flex justify-between items-center py-2 border-b border-outline-variant/5">
@@ -63,7 +68,13 @@ export function TeamCard({
       </div>
 
       {/* Button */}
-      <Link href={`/workspace/${id}`}>
+      <Link
+        href={
+          isAdmin
+            ? `/workspace/${id}/admin-dashboard`
+            : `/workspace/${id}/activity`
+        }
+      >
         <Button className="w-full bg-surface-container-highest text-on-surface text-xs font-bold group-hover:bg-primary group-hover:text-on-primary transition-all gap-2 cursor-pointer">
           Switch to Workspace
           <ArrowRight className="w-4 h-4" />

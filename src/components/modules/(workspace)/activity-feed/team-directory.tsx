@@ -13,27 +13,26 @@ import { useMutation } from "@tanstack/react-query";
 import { Member } from "@/hooks/useWorkspace";
 import SubscriptionAlert from "@/components/ui/subscription-alert";
 
-
 interface TeamDirectoryProps {
   members: Member[];
   workspaceId: string;
-  isAdmin : "ADMIN" | "MEMBER";
+  isAdmin: "ADMIN" | "MEMBER";
 }
 
-export function TeamDirectory({ members, workspaceId,isAdmin }: TeamDirectoryProps) {
+export function TeamDirectory({
+  members,
+  workspaceId,
+  isAdmin,
+}: TeamDirectoryProps) {
   const [open, setOpen] = useState(false);
-  const  {data : user}  = useAuth();
+  const { data: user } = useAuth();
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: async (payload: {
-      email: string;
-      workspaceId: string;
-    }) => {
+    mutationFn: async (payload: { email: string; workspaceId: string }) => {
       const result = await inviteUserToWorkspace(payload);
       return result;
     },
   });
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,13 +45,13 @@ export function TeamDirectory({ members, workspaceId,isAdmin }: TeamDirectoryPro
     try {
       const res = await mutateAsync(payload);
       setOpen(false);
+      console.log("ssdds", res);
       toast.success(res.message);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message);
     }
   };
-
 
   return (
     <aside className="w-full fixed bg-zinc-900/60 h-screen flex flex-col p-4 sm:p-6 overflow-y-auto border-l border-white/50">
@@ -97,20 +96,31 @@ export function TeamDirectory({ members, workspaceId,isAdmin }: TeamDirectoryPro
       {open && user?.plan === "PRO" ? (
         <Modal open={open} setOpen={setOpen} title="Invite Member">
           <form onSubmit={handleSubmit} className="space-y-3">
-            <Input type="email" name="email" placeholder="enter an email" required />
+            <Input
+              type="email"
+              name="email"
+              placeholder="enter an email"
+              required
+            />
             <Button
               disabled={isPending}
               type="submit"
               className="text-white/80 cursor-pointer"
             >
-              {
-                isPending ? <span className="flex gap-2 items-center"><LoaderCircle className="animate-spin transition-all"/>Sending Invite</span> : "Invite"
-              }
-              
+              {isPending ? (
+                <span className="flex gap-2 items-center">
+                  <LoaderCircle className="animate-spin transition-all" />
+                  Sending Invite
+                </span>
+              ) : (
+                "Invite"
+              )}
             </Button>
           </form>
         </Modal>
-      ) : <SubscriptionAlert open={open} setOpen={setOpen}/>}
+      ) : (
+        <SubscriptionAlert open={open} setOpen={setOpen} />
+      )}
     </aside>
   );
 }

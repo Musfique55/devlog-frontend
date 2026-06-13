@@ -6,7 +6,10 @@ import { MemberTable } from "./member-overview";
 import { AlertTriangle, Calendar, LoaderCircle } from "lucide-react";
 import { WorkspaceAdminStatCard } from "./stat-card";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getWorkspaceStats, inviteUserToWorkspace } from "@/services/workspace.services";
+import {
+  getWorkspaceStats,
+  inviteUserToWorkspace,
+} from "@/services/workspace.services";
 import { getWorkspaceLogs, Log } from "@/services/standupLogs.services";
 import { TeamAlerts } from "./team-alert";
 import TeamHealthHeatmap from "./team-health-heat-map";
@@ -22,16 +25,16 @@ interface WorkspaceResponse {
   success: boolean;
   message: string;
 }
-export interface WorkspaceLogResponse <T>{
+export interface WorkspaceLogResponse<T> {
   data: T[] | null;
   success: boolean;
   message: string;
-  meta? : {
-    totalPages : number
-    total: number
-    page : number
-    limit : number
-  }
+  meta?: {
+    totalPages: number;
+    total: number;
+    page: number;
+    limit: number;
+  };
 }
 
 interface WorkspaceStats {
@@ -41,31 +44,26 @@ interface WorkspaceStats {
 }
 
 const AdminDashboardWrapper = ({ id }: { id: string }) => {
-  const [open,setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  const {data : user} = useAuth();
+  const { data: user } = useAuth();
 
   const { data: workspaceStats } = useQuery<WorkspaceResponse>({
     queryKey: ["workspace-stats", id],
-    queryFn:  () => getWorkspaceStats(id)
-    ,
+    queryFn: () => getWorkspaceStats(id),
   });
 
   const { data: workspaceLogs } = useQuery<WorkspaceLogResponse<Log>>({
     queryKey: ["workspace-logs", id],
-    queryFn:  () =>  getWorkspaceLogs(id)
+    queryFn: () => getWorkspaceLogs(id),
   });
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: async (payload: {
-      email: string;
-      workspaceId: string;
-    }) => {
+    mutationFn: async (payload: { email: string; workspaceId: string }) => {
       const result = await inviteUserToWorkspace(payload);
       return result;
     },
   });
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -73,12 +71,16 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
     const email = form.get("email") as string;
     const payload = {
       email,
-      workspaceId : id,
+      workspaceId: id,
     };
     try {
       const res = await mutateAsync(payload);
       setOpen(false);
-      toast.success(res.message);
+      if (res.success) {
+        toast.success(res.message);
+      } else {
+        toast.error(res.message);
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message);
@@ -88,7 +90,6 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
   const blockedLogs = workspaceLogs?.data?.filter(
     (log) => log.blocker && log.blockerStatus === "OPEN",
   );
-
 
   return (
     <div className=" h-screen bg-background">
@@ -160,29 +161,42 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
             </div>
             {blockedLogs && blockedLogs.length ? (
               <TeamAlerts alerts={blockedLogs} />
-            ) : "No Alerts Found"}
+            ) : (
+              "No Alerts Found"
+            )}
           </div>
 
           {/* Member Table */}
           {<MemberTable id={id} />}
 
           {open && user?.plan === "PRO" ? (
-        <Modal open={open} setOpen={setOpen} title="Invite Member">
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <Input type="email" name="email" placeholder="enter an email" required />
-            <Button
-              disabled={isPending}
-              type="submit"
-              className="text-white/80 cursor-pointer"
-            >
-              {
-                isPending ? <span className="flex gap-2 items-center"><LoaderCircle className="animate-spin transition-all"/>Sending Invite</span> : "Invite"
-              }
-              
-            </Button>
-          </form>
-        </Modal>
-      ) : <SubscriptionAlert open={open} setOpen={setOpen}/>}
+            <Modal open={open} setOpen={setOpen} title="Invite Member">
+              <form onSubmit={handleSubmit} className="space-y-3">
+                <Input
+                  type="email"
+                  name="email"
+                  placeholder="enter an email"
+                  required
+                />
+                <Button
+                  disabled={isPending}
+                  type="submit"
+                  className="text-white/80 cursor-pointer"
+                >
+                  {isPending ? (
+                    <span className="flex gap-2 items-center">
+                      <LoaderCircle className="animate-spin transition-all" />
+                      Sending Invite
+                    </span>
+                  ) : (
+                    "Invite"
+                  )}
+                </Button>
+              </form>
+            </Modal>
+          ) : (
+            <SubscriptionAlert open={open} setOpen={setOpen} />
+          )}
         </main>
       </div>
     </div>

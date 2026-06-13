@@ -5,7 +5,9 @@ import fetchWithAuthServer from "@/lib/fetchWithAuth";
 
 export const getWorkspace = async (workspaceId: string) => {
   try {
-    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspaces/${workspaceId}`);
+    const res = await fetchWithAuthServer(
+      `${envVars.API_URL}/workspaces/${workspaceId}`,
+    );
 
     if (!res.ok) {
       return {
@@ -83,7 +85,6 @@ export const getWorkspaceMembers = async (
   workspaceId: string,
   query?: Record<string, string>,
 ) => {
-
   try {
     const url = new URL(`${envVars.API_URL}/workspaces/${workspaceId}/members`);
     if (query) {
@@ -126,7 +127,9 @@ export const getWorkspaceMembers = async (
 
 export const getUsersOverallWorkspaceStats = async () => {
   try {
-    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspaces/me/stats`);
+    const res = await fetchWithAuthServer(
+      `${envVars.API_URL}/workspaces/me/stats`,
+    );
 
     if (!res.ok) {
       return {
@@ -163,7 +166,9 @@ export const getUsersOverallWorkspaceStats = async () => {
 
 export const getWorkspaceStats = async (id: string) => {
   try {
-    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspaces/${id}/stats`);
+    const res = await fetchWithAuthServer(
+      `${envVars.API_URL}/workspaces/${id}/stats`,
+    );
     if (!res.ok) {
       return {
         success: false,
@@ -186,14 +191,14 @@ export const getWorkspaceStats = async (id: string) => {
       success: true,
       message: result.message,
       data: result.data,
-    }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error : any) {
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     return {
       success: false,
       message: error.message,
       data: null,
-    }
+    };
   }
 };
 
@@ -260,13 +265,8 @@ export const inviteUserToWorkspace = async (payload: {
       },
     );
 
-    if (!res.ok) {
-      return {
-        success: false,
-        message: res.statusText,
-      };
-    }
     const result = await res.json();
+
     if (!result.success) {
       return {
         success: false,
@@ -289,73 +289,71 @@ export const inviteUserToWorkspace = async (payload: {
 };
 
 export const verifyTeamLink = async (link: string) => {
+  const token = link.split("?token=")[1];
+  const res = await fetchWithAuthServer(
+    `${envVars.API_URL}/invites/accept/${token}`,
+  );
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => null);
+    throw new Error(
+      errorData?.message || res.statusText || "Failed to accept invitation",
+    );
+  }
+  const result = await res.json();
+  return {
+    success: result.success,
+    message: result.message,
+  };
+};
+
+export const removeMemberFromWorkspace = async (
+  workspaceId: string,
+  memberId: string,
+) => {
   try {
-    const token = link.split("?token=")[1];
-    const res = await fetchWithAuthServer(`${envVars.API_URL}/invites/accept/${token}`);
+    const res = await fetchWithAuthServer(
+      `${envVars.API_URL}/workspaces/${workspaceId}/remove-member`,
+      {
+        method: "DELETE",
+        body: JSON.stringify({ memberId }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
     if (!res.ok) {
-      return {
-        success: false,
-        message: res.statusText,
-      };
+      if (res.status === 404) {
+        return {
+          success: false,
+          message: "Member not found",
+        };
+      } else if (res.status === 400) {
+        return {
+          success: false,
+          message: "Admin cannot remove himself",
+        };
+      }
     }
 
     const result = await res.json();
+
+    if (!result.success) {
+      return {
+        success: false,
+        message: result.message,
+      };
+    }
+
     return {
       success: true,
       message: result.message,
     };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    console.log(error);
     return {
       success: false,
       message: error.message,
     };
   }
 };
-
-export const removeMemberFromWorkspace = async (workspaceId : string,memberId : string) => {
-  try{
-    const res = await fetchWithAuthServer(`${envVars.API_URL}/workspaces/${workspaceId}/remove-member`,{
-      method : "DELETE",
-      body : JSON.stringify({memberId}),
-      headers : {
-        "Content-Type" : "application/json"
-      }
-    });
-
-    if(!res.ok){
-      if(res.status === 404){
-        return {
-          success : false,
-          message : "Member not found"
-        }
-      }else if(res.status === 400){
-        return {
-          success : false,
-          message : "Admin cannot remove himself"
-        }
-      }
-    }
-
-    const result = await res.json();
-
-    if(!result.success){
-      return {
-        success : false,
-        message : result.message
-      }
-    }
-
-    return {
-      success : true,
-      message : result.message
-    }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  }catch(error : any){
-    return {
-      success : false,
-      message : error.message
-    }
-  }
-}

@@ -8,6 +8,7 @@ export const createAccount = async (payload: {
   name: string;
   email: string;
   password: string;
+  inviteToken?: string;
 }) => {
   const parsedPayload = authValidator.register.safeParse(payload);
 

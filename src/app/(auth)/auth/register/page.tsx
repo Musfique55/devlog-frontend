@@ -1,12 +1,22 @@
-import { RegisterForm } from "@/components/modules/auth/RegisterForm"
+import { RegisterForm } from "@/components/modules/auth/RegisterForm";
 
+const RegisterPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ redirect?: string; token?: string; inviteToken?: string }>;
+}) => {
+  const params = await searchParams;
+  let inviteToken = params.inviteToken || params.token;
 
+  if (params.redirect) {
+    const decodedRedirect = decodeURIComponent(params.redirect);
+    const urlMatch = decodedRedirect.match(/[?&]token=([^&]+)/);
+    if (urlMatch) {
+      inviteToken = urlMatch[1];
+    }
+  }
 
-const RegisterPage = () => {
-  return (
-    <RegisterForm />
-    // <div>reg</div>
-  )
-}
+  return <RegisterForm inviteToken={inviteToken} />;
+};
 
-export default RegisterPage
+export default RegisterPage;
