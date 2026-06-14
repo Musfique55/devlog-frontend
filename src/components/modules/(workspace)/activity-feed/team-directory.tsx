@@ -44,6 +44,10 @@ export function TeamDirectory({
     };
     try {
       const res = await mutateAsync(payload);
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
       setOpen(false);
       toast.success(res.message);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -2,7 +2,7 @@
 
 import { TeamCard } from "./team-card";
 import { Code, Plus } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Modal from "@/components/ui/modal";
 import { useAuth } from "@/hooks/useAuth";
 import WorkspaceCreationForm from "@/components/shared/form/workspace-creation-form";
@@ -21,6 +21,22 @@ export function TeamGrid({ teams }: { teams: Team[] }) {
   const [open, setOpen] = useState(false);
   const { data: user } = useAuth();
 
+  const [sortType, setSortType] = useState<"alphabetical" | "memberCount">(
+    "alphabetical",
+  );
+
+  const filteredTeams = useMemo(() => {
+    const sortedTeams = [...teams];
+    switch (sortType) {
+      case "alphabetical":
+        return sortedTeams.sort((a, b) => a.name.localeCompare(b.name));
+      case "memberCount":
+        return sortedTeams.sort((a, b) => b.members.length - a.members.length);
+      default:
+        return sortedTeams;
+    }
+  }, [teams, sortType]);
+
   return (
     <section>
       {/* Header */}
@@ -30,19 +46,24 @@ export function TeamGrid({ teams }: { teams: Team[] }) {
         </h3>
         <div className="flex items-center gap-4 text-sm font-medium text-on-surface-variant">
           <span>Sort by:</span>
-          <select className="bg-transparent border-none text-primary font-semibold py-0 focus:ring-0 cursor-pointer">
-            <option>Recent Activity</option>
-            <option>Alphabetical</option>
-            <option>Member Count</option>
+          <select
+            value={sortType}
+            onChange={(e) =>
+              setSortType(e.target.value as "alphabetical" | "memberCount")
+            }
+            className="bg-transparent border-none text-primary font-semibold py-0 focus:ring-0 cursor-pointer"
+          >
+            <option value="alphabetical">Alphabetical</option>
+            <option value="memberCount">Member Count</option>
           </select>
         </div>
       </div>
 
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-        {teams &&
-          teams.length &&
-          teams.map((team: Team) => (
+        {filteredTeams &&
+          filteredTeams.length &&
+          filteredTeams.map((team: Team) => (
             <TeamCard
               key={team.id}
               id={team.id}

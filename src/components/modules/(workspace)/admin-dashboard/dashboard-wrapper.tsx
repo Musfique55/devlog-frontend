@@ -108,12 +108,12 @@ const AdminDashboardWrapper = ({ id }: { id: string }) => {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              <Button
+              {/* <Button
                 variant="outline"
                 className="border-outline-variant/15 bg-surface-container-highest hover:bg-surface-variant"
               >
                 Export Reports
-              </Button>
+              </Button> */}
               <Button
                 onClick={() => setOpen(!open)}
                 className=" text-[9px] sm:text-xs py-1.5 sm:py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg font-bold transition-colors cursor-pointer"

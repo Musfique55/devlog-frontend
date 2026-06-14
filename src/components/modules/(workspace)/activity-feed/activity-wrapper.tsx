@@ -9,22 +9,22 @@ import useWorkspace from "@/hooks/useWorkspace";
 
 const ActivityWrapper = ({ id }: { id: string }) => {
   const { data: activityLogs } = useQuery({
-    queryKey: ["activityLogs",id],
+    queryKey: ["activityLogs", id],
     queryFn: async (): Promise<LogPromise<Log>> => {
       const response = await getWorkspaceLogs(id);
       return response;
     },
-    staleTime : 60 * 5 * 1000,
-    refetchOnWindowFocus : false
+    staleTime: 60 * 5 * 1000,
+    refetchOnWindowFocus: false,
   });
-  const {data : workspace} = useWorkspace(id);
-  const {data : members} = useQuery({
-    queryKey : ['workspace-members'],
-    queryFn : async () => {
+  const { data: workspace } = useWorkspace(id);
+  const { data: members } = useQuery({
+    queryKey: ["workspace-members", id],
+    queryFn: async () => {
       const response = await getWorkspaceMembers(id);
       return response;
-    }
-  })
+    },
+  });
 
   return (
     <div className="flex flex-col lg:flex-row lg:justify-between flex-1 overflow-hidden">
@@ -52,14 +52,19 @@ const ActivityWrapper = ({ id }: { id: string }) => {
                   <ActivityCard key={log.id} log={log} />
                 ))
               : "No feed items found."}
-
           </div>
         </div>
       </section>
 
       {/* Team Directory Sidebar - Hidden on mobile/tablet, visible on large screens */}
       <div className="hidden lg:block lg:w-80">
-        {members?.data && members.data.length && <TeamDirectory workspaceId={id} members={members.data} isAdmin={workspace!.userRole}/>}
+        {members?.data && members.data.length && (
+          <TeamDirectory
+            workspaceId={id}
+            members={members.data}
+            isAdmin={workspace!.userRole}
+          />
+        )}
       </div>
     </div>
   );
