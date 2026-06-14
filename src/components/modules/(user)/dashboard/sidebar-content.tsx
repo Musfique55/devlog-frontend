@@ -13,7 +13,7 @@ const SidebarContent = ({ activeItem, navItems, setOpen, handleLogout }: Sidebar
     <div className="flex flex-col h-full py-8 px-2 md:px-4">
       {/* Logo */}
       <Link href={"/"} className="mb-10 px-4" onClick={() => setOpen(false)}>
-        <h1 className="text-xl font-bold tracking-tighter text-indigo-400">DevLog</h1>
+        <h1 className="text-xl font-bold tracking-tighter text-primary">DevLog</h1>
         <p className="text-sm font-medium text-zinc-500 tracking-tight">Developer Workspace</p>
       </Link>
 
@@ -29,7 +29,7 @@ const SidebarContent = ({ activeItem, navItems, setOpen, handleLogout }: Sidebar
               onClick={() => setOpen(false)}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                 isActive
-                  ? "text-indigo-400 font-semibold bg-indigo-500/10 border-r-2 border-indigo-400"
+                  ? "text-primary font-semibold bg-primary/10 border-r-2 border-primary"
                   : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50"
               }`}
             >
@@ -50,7 +50,7 @@ const SidebarContent = ({ activeItem, navItems, setOpen, handleLogout }: Sidebar
       {/* Create Log Button */}
       <div className="mt-auto px-4">
         <Link href={"/dashboard#create-log"} onClick={() => setOpen(false)}>
-          <Button className="w-full bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-bold py-3 rounded-lg shadow-lg shadow-indigo-500/20">
+          <Button className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-white font-bold py-3 rounded-lg shadow-lg shadow-primary/20">
             Create Log
           </Button>
         </Link>

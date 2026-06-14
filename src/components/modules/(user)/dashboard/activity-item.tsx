@@ -15,7 +15,7 @@ interface ActivityItemProps {
 
 export function ActivityItem({
   standupLog,
-  borderColor = "border-l-indigo-500",
+  borderColor = "border-l-primary",
 }: ActivityItemProps) {
   return (
     <div

@@ -33,7 +33,7 @@ export function MyLogsSkeleton() {
         {Array.from({ length: 3 }).map((_, index) => (
           <article
             key={index}
-            className="bg-zinc-900/60 rounded-xl p-8 border border-l-4 border-l-indigo-500 border-zinc-800/50"
+            className="bg-zinc-900/60 rounded-xl p-8 border border-l-4 border-l-primary border-zinc-800/50"
           >
             {/* Header with date and actions */}
             <div className="flex justify-between items-start mb-6">

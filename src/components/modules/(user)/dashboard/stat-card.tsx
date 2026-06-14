@@ -12,7 +12,7 @@ export function StatCard({ label, value, unit, accent = 'default' }: StatCardPro
       <div className="flex items-baseline gap-2">
         <h3 className="text-3xl font-bold text-zinc-100">{value}</h3>
         {unit && (
-          <span className={accent === 'primary' ? 'text-indigo-400 text-sm font-semibold' : 'text-zinc-500 text-sm'}>
+          <span className={accent === 'primary' ? 'text-primary text-sm font-semibold' : 'text-zinc-500 text-sm'}>
             {unit}
           </span>
         )}

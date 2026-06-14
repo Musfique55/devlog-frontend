@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getNewRefreshToken } from "@/services/auth.services";
 
 export function RegisterForm({ inviteToken }: { inviteToken?: string }) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -36,10 +37,11 @@ export function RegisterForm({ inviteToken }: { inviteToken?: string }) {
           setServerError(result.error as string);
           return;
         }
+        await getNewRefreshToken();
         toast.success("Account Created Successfully");
         form.reset();
         setServerError(null);
-        router.push(`/auth/verify-email-notice?email=${value.email}`)
+        // router.push(`/auth/verify-email-notice?email=${value.email}`)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         setServerError(error.message!);
@@ -49,7 +51,6 @@ export function RegisterForm({ inviteToken }: { inviteToken?: string }) {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center pt-20 pb-8 px-6 relative overflow-hidden  selection:bg-primary-container/30">
-    
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-gray-400/20 rounded-full blur-[120px]" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-gray-400/20 rounded-full blur-[100px]" />
 
@@ -81,7 +82,7 @@ export function RegisterForm({ inviteToken }: { inviteToken?: string }) {
                       size="icon-xs"
                       className="bg-transparent"
                     >
-                      <UserIcon className="text-zinc-400"/>
+                      <UserIcon className="text-zinc-400" />
                     </Button>
                   }
                   className="w-full  border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-primary text-body-md py-3 px-4 transition-all duration-200 placeholder:text-outline/40 rounded-lg outline-none"
@@ -106,7 +107,7 @@ export function RegisterForm({ inviteToken }: { inviteToken?: string }) {
                       size="icon-xs"
                       className="bg-transparent"
                     >
-                      <MailIcon className="text-zinc-400"/>
+                      <MailIcon className="text-zinc-400" />
                     </Button>
                   }
                   className="w-full bg-surface-container-lowest border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-primary text-body-md py-3 px-4 transition-all duration-200 placeholder:text-outline/40 rounded-lg outline-none"
@@ -132,7 +133,11 @@ export function RegisterForm({ inviteToken }: { inviteToken?: string }) {
                       className="bg-transparent cursor-pointer"
                       onClick={() => setShowPassword((prev) => !prev)}
                     >
-                      {showPassword ? <EyeClosed className="text-zinc-400"/> : <EyeIcon className="text-zinc-400"/>}
+                      {showPassword ? (
+                        <EyeClosed className="text-zinc-400" />
+                      ) : (
+                        <EyeIcon className="text-zinc-400" />
+                      )}
                     </Button>
                   }
                   prepend={
@@ -141,7 +146,7 @@ export function RegisterForm({ inviteToken }: { inviteToken?: string }) {
                       size="icon-xs"
                       className="bg-transparent"
                     >
-                      <LockIcon className="text-zinc-400"/>
+                      <LockIcon className="text-zinc-400" />
                     </Button>
                   }
                   className="w-full  border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-primary text-body-md py-3 px-4 transition-all duration-200 placeholder:text-outline/40 rounded-lg outline-none"
@@ -213,7 +218,11 @@ export function RegisterForm({ inviteToken }: { inviteToken?: string }) {
           <p className="text-sm text-gray-400">
             Already have an account?
             <Link
-              href={inviteToken ? `/auth/login?redirect=${encodeURIComponent(`/invite/accept?token=${inviteToken}`)}` : "/auth/login"}
+              href={
+                inviteToken
+                  ? `/auth/login?redirect=${encodeURIComponent(`/invite/accept?token=${inviteToken}`)}`
+                  : "/auth/login"
+              }
               className="text-inherit font-bold hover:underline ml-1"
             >
               Login

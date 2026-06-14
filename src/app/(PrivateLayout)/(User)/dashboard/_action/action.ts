@@ -41,11 +41,10 @@ export const handleProfileUpdate = async (formData: FormData) => {
       message: result.message,
       data: result.data,
     };
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
     return {
       success: false,
-      message: "Something went wrong",
+      message: error.message || "Failed to update profile!",
       data: null,
     };
   }

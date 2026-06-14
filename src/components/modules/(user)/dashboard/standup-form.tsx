@@ -111,7 +111,7 @@ export function StandupForm({
       className="bg-zinc-900/60 p-8 rounded-xl border border-zinc-800/50 relative overflow-hidden focus:bg-zinc-700/80  transition-colors"
     >
       {/* Decorative blur */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 blur-3xl rounded-full"></div>
+      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl rounded-full"></div>
 
       <h2 className="text-xl font-bold text-zinc-100 mb-8">
         Today&apos;s Standup
@@ -191,7 +191,7 @@ export function StandupForm({
           <Button
             type="button"
             onClick={handleTags}
-            className="bg-indigo-600  text-white px-4 py-2 rounded-lg transition-all font-medium"
+            className="bg-primary/90  text-white px-4 py-2 rounded-lg transition-all font-medium"
           >
             Add
           </Button>
@@ -202,14 +202,14 @@ export function StandupForm({
               {(projectTags as string[])?.map((tag) => (
                 <div
                   key={tag}
-                  className="inline-flex items-center gap-2 bg-indigo-500/20 text-indigo-300 px-3 py-1 rounded-lg text-sm font-medium border border-indigo-500/30"
+                  className="inline-flex items-center gap-2 bg-primary/20 text-primary/80 px-3 py-1 rounded-lg text-sm font-medium border border-primary/30"
                 >
                   {tag}
                   <Button
                     type="button"
                     size={"icon"}
                     onClick={() => handleRemoveTag(tag)}
-                    className="hover:text-indigo-100 transition-colors"
+                    className="hover:text-primary/20 transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </Button>

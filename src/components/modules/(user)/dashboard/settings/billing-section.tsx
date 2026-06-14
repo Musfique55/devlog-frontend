@@ -59,11 +59,11 @@ export default function BillingSection({
         </div>
         <div className="w-full md:w-2/3 space-y-6">
           {/* Plan Card */}
-          <div className="bg-zinc-900/40 rounded-xl p-8 border border-l-4 border-l-indigo-500 border-zinc-800/50">
+          <div className="bg-zinc-900/40 rounded-xl p-8 border border-l-4 border-l-primary border-zinc-800/50">
             <div className="flex justify-between items-start mb-6">
               <div>
                 <div className="flex items-center gap-3 mb-1">
-                  <span className="text-[10px] font-bold tracking-widest uppercase bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/30">
+                  <span className="text-[10px] font-bold tracking-widest uppercase bg-primary/20 text-primary px-2 py-0.5 rounded border border-primary/30">
                     Current Plan
                   </span>
                   <h4 className="font-bold text-2xl text-zinc-100">
@@ -76,7 +76,7 @@ export default function BillingSection({
               </div>
               {user?.plan === "FREE" ? (
                 <Link href={"/pricing"}>
-                  <Button className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold">
+                  <Button className="bg-primary hover:bg-primary/90 text-white font-bold">
                     Upgrade Plan
                   </Button>
                 </Link>
@@ -86,7 +86,7 @@ export default function BillingSection({
             </div>
             <div className="bg-zinc-950/40 rounded-lg p-4 flex items-center justify-between border border-zinc-800/30">
               <div className="flex items-center gap-3">
-                <span className="text-indigo-400">ℹ️</span>
+                <span className="text-primary">ℹ️</span>
                 <span className="text-xs text-zinc-400">
                   Next billing cycle starts on{" "}
                   <span className="text-zinc-200 font-medium">
@@ -177,7 +177,7 @@ export default function BillingSection({
                             href={invoice.invoiceUrl}
                             className="flex justify-center"
                           >
-                            <Download className="w-4 h-4 text-indigo-400 hover:text-indigo-300" />
+                            <Download className="w-4 h-4 text-primary hover:text-primary/80" />
                           </Link>
                         </td>
                       </tr>

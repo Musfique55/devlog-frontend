@@ -45,7 +45,6 @@ export function TeamDirectory({
     try {
       const res = await mutateAsync(payload);
       setOpen(false);
-      console.log("ssdds", res);
       toast.success(res.message);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

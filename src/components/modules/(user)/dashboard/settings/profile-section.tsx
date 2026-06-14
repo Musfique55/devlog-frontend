@@ -103,7 +103,7 @@ export default function ProfileSection() {
           {/* Form Fields */}
           <div className="grid grid-cols-1 gap-6">
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest font-bold text-indigo-400">
+              <label className="text-[10px] uppercase tracking-widest font-bold text-primary">
                 Full Name
               </label>
               <Input
@@ -114,7 +114,7 @@ export default function ProfileSection() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest font-bold text-indigo-400">
+              <label className="text-[10px] uppercase tracking-widest font-bold text-primary">
                 Email Address
               </label>
               <Input
@@ -128,7 +128,7 @@ export default function ProfileSection() {
               <Button
                 type="submit"
                 disabled={isPending}
-                className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold"
+                className="bg-primary hover:bg-primary/90 text-white font-semibold"
               >
                 {isPending ? (
                   <span className="flex items-center gap-2">

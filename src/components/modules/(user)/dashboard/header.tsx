@@ -54,7 +54,7 @@ export function Header({ title = "Dashboard" }: HeaderProps) {
             >
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute top-0 right-0 w-2 h-2 bg-indigo-500 rounded-full border-2 border-zinc-950 animate-pulse"></span>
+                <span className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full border-2 border-zinc-950 animate-pulse"></span>
               )}
             </button>
           </PopoverTrigger>
@@ -64,7 +64,7 @@ export function Header({ title = "Dashboard" }: HeaderProps) {
               {notifications.length > 0 && (
                 <button
                   onClick={clearNotifications}
-                  className="text-xs text-indigo-400 hover:text-indigo-300 font-semibold cursor-pointer"
+                  className="text-xs text-primary hover:text-primary/80 font-semibold cursor-pointer"
                 >
                   Clear All
                 </button>
@@ -101,7 +101,7 @@ export function Header({ title = "Dashboard" }: HeaderProps) {
         <div className="ml-1 md:ml-0">
           {user && user?.image ? (
             <UserProfilePopover>
-              <div className="h-8 w-8 rounded-full overflow-hidden ring-2 ring-indigo-500/20 cursor-pointer">
+              <div className="h-8 w-8 rounded-full overflow-hidden ring-2 ring-primary/20 cursor-pointer">
                 <Image
                   src={user.image}
                   alt="User profile"

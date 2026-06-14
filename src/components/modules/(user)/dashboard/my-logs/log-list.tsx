@@ -38,7 +38,7 @@ const LogList = ({ editingLog, editingLogId, setEditingLog, setEditingLogId, log
             return (
               <article
                 key={log.id}
-                className="bg-zinc-900/60 rounded-xl p-8 border border-l-4 border-l-indigo-500 border-zinc-800/50 hover:bg-zinc-900/80 transition-all group relative"
+                className="bg-zinc-900/60 rounded-xl p-8 border border-l-4 border-l-primary border-zinc-800/50 hover:bg-zinc-900/80 transition-all group relative"
               >
                 {/* Header with date and actions */}
                 <div className="flex justify-between items-start mb-6">
@@ -47,7 +47,7 @@ const LogList = ({ editingLog, editingLogId, setEditingLog, setEditingLogId, log
                       {log.projectTags.map((tag) => (
                         <span
                           key={tag}
-                          className="bg-indigo-500/20 text-indigo-300 text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider border border-indigo-500/30"
+                          className="bg-primary/20 text-primary/80 text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider border border-primary/30"
                         >
                           {tag}
                         </span>
@@ -110,7 +110,7 @@ const LogList = ({ editingLog, editingLogId, setEditingLog, setEditingLogId, log
                             setEditingLogId(null);
                             setEditingLog(null);
                           }}
-                          className="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-bold"
+                          className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-white font-bold"
                         >
                           {isUpdating ? (
                             <LoaderCircle className="w-5 h-5 animate-spin text-white transition-all" />
@@ -139,7 +139,7 @@ const LogList = ({ editingLog, editingLogId, setEditingLog, setEditingLogId, log
                           })
                         }
                         rows={4}
-                        className="w-full bg-zinc-950 border border-zinc-800 ring-1 ring-white/5 rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 transition-all text-zinc-100 placeholder:text-zinc-600"
+                        className="w-full bg-zinc-950 border border-zinc-800 ring-1 ring-white/5 rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary transition-all text-zinc-100 placeholder:text-zinc-600"
                       />
                     ) : (
                       <p className="text-sm text-zinc-300 leading-relaxed">
@@ -161,7 +161,7 @@ const LogList = ({ editingLog, editingLogId, setEditingLog, setEditingLogId, log
                           })
                         }
                         rows={4}
-                        className="w-full bg-zinc-950 border border-zinc-800 ring-1 ring-white/5 rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 transition-all text-zinc-100 placeholder:text-zinc-600"
+                        className="w-full bg-zinc-950 border border-zinc-800 ring-1 ring-white/5 rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary transition-all text-zinc-100 placeholder:text-zinc-600"
                       />
                     ) : (
                       <p className="text-sm text-zinc-300 leading-relaxed">
@@ -200,7 +200,7 @@ const LogList = ({ editingLog, editingLogId, setEditingLog, setEditingLogId, log
                           })
                         }
                         rows={3}
-                        className="w-full bg-zinc-950 border border-zinc-800 ring-1 ring-white/5 rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 transition-all text-zinc-100 placeholder:text-zinc-600"
+                        className="w-full bg-zinc-950 border border-zinc-800 ring-1 ring-white/5 rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary transition-all text-zinc-100 placeholder:text-zinc-600"
                       />
                     ) : (
                       <p

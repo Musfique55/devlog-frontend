@@ -47,7 +47,7 @@ const DashboardWrapper = () => {
               <h3 className="text-3xl font-bold text-zinc-100">
                 {myDashboardInfo?.data?.thisWeekLogs || 0}
               </h3>
-              <span className="text-indigo-400 text-sm font-semibold flex items-center gap-0.5">
+              <span className="text-primary text-sm font-semibold flex items-center gap-0.5">
                 <ArrowUpRight className="w-4 h-4" />
               </span>
             </div>
@@ -74,7 +74,7 @@ const DashboardWrapper = () => {
               </h2>
               <Link
                 href="/dashboard/my-logs"
-                className="text-xs font-semibold text-indigo-400 uppercase tracking-widest hover:text-indigo-300 transition-colors"
+                className="text-xs font-semibold text-primary uppercase tracking-widest hover:text-primary/80 transition-colors"
               >
                 View All Logs
               </Link>
@@ -87,7 +87,7 @@ const DashboardWrapper = () => {
                 <ActivityItem
                   key={index}
                   standupLog={activity}
-                  borderColor={index === 0 ? "border-l-indigo-500" : ""}
+                  borderColor={index === 0 ? "border-l-primary" : ""}
                 />
               ))}
             </div>
@@ -97,7 +97,7 @@ const DashboardWrapper = () => {
 
       {/* Background Decoration */}
       <div className="fixed bottom-8 right-8 pointer-events-none opacity-10">
-        <div className="text-9xl font-bold text-indigo-500">{"}"}</div>
+        <div className="text-9xl font-bold text-primary">{"}"}</div>
       </div>
     </div>
   );

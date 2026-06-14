@@ -45,8 +45,6 @@ export default function SocketProvider({
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const { data: user } = useAuth();
 
-  console.log(user);
-
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   const clearNotifications = () => setNotifications([]);
@@ -72,9 +70,7 @@ export default function SocketProvider({
       transports: ["websocket", "polling"],
     });
 
-    socketInstance.on("connect", () => {
-      console.log("Global socket connected:", socketInstance.id);
-    });
+    socketInstance.on("connect", () => {});
 
     socketInstance.on("connect_error", (error) => {
       console.error("Socket connection error:", error.message);
@@ -90,7 +86,6 @@ export default function SocketProvider({
         userId: string;
       }) => {
         if (data.userId !== userRef.current?.id) {
-          console.log(data.userId, user?.id);
           const text = data.data || data.message || "New Blocker Alert!";
           toast.warning(text);
 

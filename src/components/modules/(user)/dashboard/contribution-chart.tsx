@@ -8,7 +8,7 @@ export function ContributionChart({ data }: ContributionChartProps) {
   const chartData = data || defaultData;
 
   const getIntensity = (value: number): string => {
-    const intensities = ['bg-zinc-900', 'bg-indigo-500/20', 'bg-indigo-500/40', 'bg-indigo-500/60', 'bg-indigo-500/80', 'bg-indigo-500'];
+    const intensities = ['bg-zinc-900', 'bg-primary/20', 'bg-primary/40', 'bg-primary/60', 'bg-primary/80', 'bg-primary'];
     return intensities[Math.min(value, 5)];
   };
 
@@ -25,7 +25,7 @@ export function ContributionChart({ data }: ContributionChartProps) {
         {chartData.map((value, index) => (
           <div
             key={index}
-            className={`w-3 h-3 rounded-sm ${getIntensity(value)} transition-colors duration-200 hover:ring-1 hover:ring-indigo-400 cursor-pointer`}
+            className={`w-3 h-3 rounded-sm ${getIntensity(value)} transition-colors duration-200 hover:ring-1 hover:ring-primary cursor-pointer`}
             title={`${value} contributions`}
           />
         ))}

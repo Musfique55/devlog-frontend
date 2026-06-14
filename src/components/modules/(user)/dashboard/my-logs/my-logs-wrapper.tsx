@@ -155,7 +155,7 @@ export default function MyLogsWrapper() {
         <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-zinc-500 mb-2 font-semibold">
           <span>Workspace</span>
           <span className="text-xs">›</span>
-          <span className="text-indigo-400">Personal Logs</span>
+          <span className="text-primary">Personal Logs</span>
         </div>
         <h1 className="text-4xl font-bold tracking-tighter text-foreground">
           Daily Log Activity
@@ -241,7 +241,7 @@ export default function MyLogsWrapper() {
                 <Button
                   key={index}
                   variant="ghost"
-                  className={`w-8 h-8 bg-indigo-500 text-white cursor-pointer text-xs font-bold ${currentPage === index + 1 ? "bg-indigo-900/60" : ""}`}
+                  className={`w-8 h-8 bg-primary text-white cursor-pointer text-xs font-bold ${currentPage === index + 1 ? "bg-primary/20" : ""}`}
                   onClick={() => setCurrentPage(index + 1)}
                 >
                   {index + 1}
@@ -250,7 +250,7 @@ export default function MyLogsWrapper() {
             ) : (
               <Button
                 variant="ghost"
-                className="w-8 h-8 bg-indigo-500 text-white cursor-pointer text-xs font-bold"
+                className="w-8 h-8 bg-primary text-white cursor-pointer text-xs font-bold"
               >
                 1
               </Button>
