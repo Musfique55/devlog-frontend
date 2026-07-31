@@ -22,7 +22,7 @@ This is the Next.js App Router frontend for DevLog. It handles:
 - Plan upgrade flow with Stripe checkout and payment result pages
 - Super admin dashboards for users/workspaces/platform stats
 - Auth flows (register, login, verify email, notice flow)
-**Backend API** → `https://devlog-backend-ruddy.vercel.app/api/v1`  
+**Backend API** → `https://devlog-backend-a8sc.onrender.com/api/v1`  
 **Frontend Stack** → Next.js + React Query + Tailwind CSS
 ---
 ## ✨ Core Features
@@ -193,6 +193,6 @@ src/
 <div align="center">
   <p>
     <a href="https://github.com/Musfique55/devlog-backend">Backend Repo</a> •
-    <a href="https://devlog-frontend-two.vercel.app/">Live Demo</a>
+    <a href="[https://devlog-frontend-two.vercel.app/](https://devlog-backend-a8sc.onrender.com/)">Live Demo</a>
   </p>
 </div>
